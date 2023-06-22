@@ -9,11 +9,11 @@ SHELL = /bin/bash
 # If COMPARE is 1, check the output md5sum after building
 COMPARE ?= 1
 # If NON_MATCHING is 1, define the NON_MATCHING C flag when building
-NON_MATCHING ?= 0
+NON_MATCHING ?= 1
 # If ORIG_COMPILER is 1, compile with QEMU_IRIX and the original compiler
 ORIG_COMPILER ?= 0
 # If COMPILER is "gcc", compile with GCC instead of IDO.
-COMPILER ?= ido
+COMPILER ?= gcc
 
 CFLAGS ?=
 CPPFLAGS ?=
@@ -26,14 +26,14 @@ ifneq ($(COMPILER),ido)
 endif
 
 ifeq ($(COMPILER),gcc)
-  CFLAGS += -DCOMPILER_GCC
+  CFLAGS += -DCOMPILER_GCC -fno-reorder-blocks -fno-optimize-sibling-calls
   CPPFLAGS += -DCOMPILER_GCC
   NON_MATCHING := 1
 endif
 
 # Set prefix to mips binutils binaries (mips-linux-gnu-ld => 'mips-linux-gnu-') - Change at your own risk!
 # In nearly all cases, not having 'mips-linux-gnu-*' binaries on the PATH is indicative of missing dependencies
-MIPS_BINUTILS_PREFIX ?= mips-linux-gnu-
+MIPS_BINUTILS_PREFIX ?= mips64-
 
 ifeq ($(NON_MATCHING),1)
   CFLAGS += -DNON_MATCHING -DAVOID_UB
@@ -265,7 +265,9 @@ setup:
 	$(MAKE) -C tools
 	python3 fixbaserom.py
 	python3 extract_baserom.py
-	python3 extract_assets.py -j$(N_THREADS)
+	python3 extract_debug.py
+	python3 extract_10u.py
+	python3 extract_assets.py -j$(N_THREADS) -f
 
 test: $(ROM)
 	$(EMULATOR) $(EMU_FLAGS) $<

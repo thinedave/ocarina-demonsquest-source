@@ -87,12 +87,12 @@ void FileSelect_SetKeyboardVtx(GameState* thisx) {
     }
 }
 
-static void* sNameLabelTextures[] = { gFileSelNameENGTex, gFileSelNameENGTex, gFileSelNameFRATex };
+static void* sNameLabelTextures[] = { gFileSelNameENGTex, gFileSelNameENGTex, gFileSelNameENGTex };
 
 static void* sBackspaceEndTextures[][2] = {
     { gFileSelBackspaceButtonTex, gFileSelENDButtonENGTex },
-    { gFileSelBackspaceButtonTex, gFileSelENDButtonGERTex },
-    { gFileSelBackspaceButtonTex, gFileSelENDButtonFRATex },
+    { gFileSelBackspaceButtonTex, gFileSelENDButtonENGTex },
+    { gFileSelBackspaceButtonTex, gFileSelENDButtonENGTex },
 };
 
 static u16 sBackspaceEndWidths[] = { 28, 44 };
@@ -734,30 +734,30 @@ typedef struct {
 
 static OptionsMenuTextureInfo sOptionsMenuHeaders[] = {
     {
-        { gFileSelOptionsENGTex, gFileSelOptionsGERTex, gFileSelOptionsENGTex },
+        { gFileSelOptionsENGTex, gFileSelOptionsENGTex, gFileSelOptionsENGTex },
         { 128, 128, 128 },
         16,
     },
     {
-        { gFileSelSOUNDENGTex, gFileSelSOUNDENGTex, gFileSelSOUNDFRATex },
+        { gFileSelSOUNDENGTex, gFileSelSOUNDENGTex, gFileSelSOUNDENGTex },
         { 64, 64, 64 },
         16,
     },
     {
-        { gFileSelLTargetingENGTex, gFileSelLTargetingGERTex, gFileSelLTargetingFRATex },
+        { gFileSelLTargetingENGTex, gFileSelLTargetingENGTex, gFileSelLTargetingENGTex },
         { 64, 144, 64 },
         16,
     },
     {
-        { gFileSelCheckBrightnessENGTex, gFileSelCheckBrightnessGERTex, gFileSelCheckBrightnessFRATex },
-        { 128, 128, 128 },
+        { gFileSelCheckBrightnessENGTex, gFileSelCheckBrightnessENGTex, gFileSelCheckBrightnessENGTex },
+        { 96, 96, 96 },
         16,
     },
 };
 
 static OptionsMenuTextureInfo sOptionsMenuSettings[] = {
     {
-        { gFileSelStereoENGTex, gFileSelStereoENGTex, gFileSelStereoFRATex },
+        { gFileSelStereoENGTex, gFileSelStereoENGTex, gFileSelStereoENGTex },
         { 48, 48, 48 },
         16,
     },
@@ -767,7 +767,7 @@ static OptionsMenuTextureInfo sOptionsMenuSettings[] = {
         16,
     },
     {
-        { gFileSelHeadsetENGTex, gFileSelHeadsetGERTex, gFileSelHeadsetFRATex },
+        { gFileSelHeadsetENGTex, gFileSelHeadsetENGTex, gFileSelHeadsetENGTex },
         { 48, 48, 48 },
         16,
     },
@@ -777,12 +777,12 @@ static OptionsMenuTextureInfo sOptionsMenuSettings[] = {
         16,
     },
     {
-        { gFileSelSwitchENGTex, gFileSelSwitchGERTex, gFileSelSwitchFRATex },
+        { gFileSelSwitchENGTex, gFileSelSwitchENGTex, gFileSelSwitchENGTex },
         { 48, 80, 48 },
         16,
     },
     {
-        { gFileSelHoldENGTex, gFileSelHoldGERTex, gFileSelHoldFRATex },
+        { gFileSelHoldENGTex, gFileSelHoldENGTex, gFileSelHoldENGTex },
         { 48, 80, 48 },
         16,
     },
@@ -874,12 +874,8 @@ void FileSelect_DrawOptionsImpl(GameState* thisx) {
             cursorPulseDir = 0;
         }
     }
-
-    if (gSaveContext.language == LANGUAGE_GER) {
-        gSPVertex(POLY_OPA_DISP++, D_80811E30, 32, 0);
-    } else {
-        gSPVertex(POLY_OPA_DISP++, D_80811D30, 32, 0);
-    }
+        
+    gSPVertex(POLY_OPA_DISP++, D_80811D30, 32, 0);
 
     gDPPipeSync(POLY_OPA_DISP++);
     gDPSetCombineLERP(POLY_OPA_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0, PRIMITIVE,
@@ -895,11 +891,7 @@ void FileSelect_DrawOptionsImpl(GameState* thisx) {
         gSP1Quadrangle(POLY_OPA_DISP++, vtx, vtx + 2, vtx + 3, vtx + 1, 0);
     }
 
-    if (gSaveContext.language == LANGUAGE_GER) {
-        gSPVertex(POLY_OPA_DISP++, D_80812130, 32, 0);
-    } else {
-        gSPVertex(POLY_OPA_DISP++, D_80811F30, 32, 0);
-    }
+    gSPVertex(POLY_OPA_DISP++, D_80811F30, 32, 0);
 
     for (i = 0, vtx = 0; i < 4; i++, vtx += 4) {
         gDPPipeSync(POLY_OPA_DISP++);

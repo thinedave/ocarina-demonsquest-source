@@ -8,59 +8,59 @@
 #include "terminal.h"
 
 static void* sEquipmentFRATexs[] = {
-    gPauseEquipment00FRATex, gPauseEquipment01Tex, gPauseEquipment02Tex, gPauseEquipment03Tex, gPauseEquipment04Tex,
-    gPauseEquipment10FRATex, gPauseEquipment11Tex, gPauseEquipment12Tex, gPauseEquipment13Tex, gPauseEquipment14Tex,
-    gPauseEquipment20FRATex, gPauseEquipment21Tex, gPauseEquipment22Tex, gPauseEquipment23Tex, gPauseEquipment24Tex,
+    gPauseEquipment00Tex, gPauseEquipment01Tex, gPauseEquipment02Tex, gPauseEquipment03Tex, gPauseEquipment04Tex,
+    gPauseEquipment10ENGTex, gPauseEquipment11Tex, gPauseEquipment12Tex, gPauseEquipment13Tex, gPauseEquipment14Tex,
+    gPauseEquipment20Tex, gPauseEquipment21Tex, gPauseEquipment22Tex, gPauseEquipment23Tex, gPauseEquipment24Tex,
 };
 static void* sSelectItemFRATexs[] = {
-    gPauseSelectItem00FRATex, gPauseSelectItem01Tex,    gPauseSelectItem02Tex,    gPauseSelectItem03Tex,
-    gPauseSelectItem04Tex,    gPauseSelectItem10FRATex, gPauseSelectItem11Tex,    gPauseSelectItem12Tex,
-    gPauseSelectItem13Tex,    gPauseSelectItem14Tex,    gPauseSelectItem20FRATex, gPauseSelectItem21Tex,
+    gPauseSelectItem00ENGTex, gPauseSelectItem01Tex,    gPauseSelectItem02Tex,    gPauseSelectItem03Tex,
+    gPauseSelectItem04Tex,    gPauseSelectItem10ENGTex, gPauseSelectItem11Tex,    gPauseSelectItem12Tex,
+    gPauseSelectItem13Tex,    gPauseSelectItem14Tex,    gPauseSelectItem20ENGTex, gPauseSelectItem21Tex,
     gPauseSelectItem22Tex,    gPauseSelectItem23Tex,    gPauseSelectItem24Tex,
 };
 static void* sMapFRATexs[] = {
     gPauseMap00Tex,    gPauseMap01Tex, gPauseMap02Tex, gPauseMap03Tex, gPauseMap04Tex,
-    gPauseMap10FRATex, gPauseMap11Tex, gPauseMap12Tex, gPauseMap13Tex, gPauseMap14Tex,
+    gPauseMap10ENGTex, gPauseMap11Tex, gPauseMap12Tex, gPauseMap13Tex, gPauseMap14Tex,
     gPauseMap20Tex,    gPauseMap21Tex, gPauseMap22Tex, gPauseMap23Tex, gPauseMap24Tex,
 };
 static void* sQuestStatusFRATexs[] = {
-    gPauseQuestStatus00Tex, gPauseQuestStatus01Tex,    gPauseQuestStatus02Tex, gPauseQuestStatus03Tex,
-    gPauseQuestStatus04Tex, gPauseQuestStatus10FRATex, gPauseQuestStatus11Tex, gPauseQuestStatus12Tex,
-    gPauseQuestStatus13Tex, gPauseQuestStatus14Tex,    gPauseQuestStatus20Tex, gPauseQuestStatus21Tex,
+    gPauseQuestStatus00ENGTex, gPauseQuestStatus01Tex,    gPauseQuestStatus02Tex, gPauseQuestStatus03Tex,
+    gPauseQuestStatus04Tex, gPauseQuestStatus10ENGTex, gPauseQuestStatus11Tex, gPauseQuestStatus12Tex,
+    gPauseQuestStatus13Tex, gPauseQuestStatus14Tex,    gPauseQuestStatus20ENGTex, gPauseQuestStatus21Tex,
     gPauseQuestStatus22Tex, gPauseQuestStatus23Tex,    gPauseQuestStatus24Tex,
 };
 static void* sSaveFRATexs[] = {
-    gPauseSave00FRATex, gPauseSave01Tex, gPauseSave02Tex, gPauseSave03Tex, gPauseSave04Tex,
-    gPauseSave10FRATex, gPauseSave11Tex, gPauseSave12Tex, gPauseSave13Tex, gPauseSave14Tex,
-    gPauseSave20FRATex, gPauseSave21Tex, gPauseSave22Tex, gPauseSave23Tex, gPauseSave24Tex,
+    gPauseSave00Tex, gPauseSave01Tex, gPauseSave02Tex, gPauseSave03Tex, gPauseSave04Tex,
+    gPauseSave10ENGTex, gPauseSave11Tex, gPauseSave12Tex, gPauseSave13Tex, gPauseSave14Tex,
+    gPauseSave20Tex, gPauseSave21Tex, gPauseSave22Tex, gPauseSave23Tex, gPauseSave24Tex,
 };
 
 static void* sEquipmentGERTexs[] = {
-    gPauseEquipment00GERTex, gPauseEquipment01Tex, gPauseEquipment02Tex, gPauseEquipment03Tex, gPauseEquipment04Tex,
-    gPauseEquipment10GERTex, gPauseEquipment11Tex, gPauseEquipment12Tex, gPauseEquipment13Tex, gPauseEquipment14Tex,
-    gPauseEquipment20GERTex, gPauseEquipment21Tex, gPauseEquipment22Tex, gPauseEquipment23Tex, gPauseEquipment24Tex,
+    gPauseEquipment00Tex, gPauseEquipment01Tex, gPauseEquipment02Tex, gPauseEquipment03Tex, gPauseEquipment04Tex,
+    gPauseEquipment10ENGTex, gPauseEquipment11Tex, gPauseEquipment12Tex, gPauseEquipment13Tex, gPauseEquipment14Tex,
+    gPauseEquipment20Tex, gPauseEquipment21Tex, gPauseEquipment22Tex, gPauseEquipment23Tex, gPauseEquipment24Tex,
 };
 static void* sSelectItemGERTexs[] = {
-    gPauseSelectItem00GERTex, gPauseSelectItem01Tex,    gPauseSelectItem02Tex,    gPauseSelectItem03Tex,
-    gPauseSelectItem04Tex,    gPauseSelectItem10GERTex, gPauseSelectItem11Tex,    gPauseSelectItem12Tex,
-    gPauseSelectItem13Tex,    gPauseSelectItem14Tex,    gPauseSelectItem20GERTex, gPauseSelectItem21Tex,
+    gPauseSelectItem00ENGTex, gPauseSelectItem01Tex,    gPauseSelectItem02Tex,    gPauseSelectItem03Tex,
+    gPauseSelectItem04Tex,    gPauseSelectItem10ENGTex, gPauseSelectItem11Tex,    gPauseSelectItem12Tex,
+    gPauseSelectItem13Tex,    gPauseSelectItem14Tex,    gPauseSelectItem20ENGTex, gPauseSelectItem21Tex,
     gPauseSelectItem22Tex,    gPauseSelectItem23Tex,    gPauseSelectItem24Tex,
 };
 static void* sMapGERTexs[] = {
     gPauseMap00Tex,    gPauseMap01Tex, gPauseMap02Tex, gPauseMap03Tex, gPauseMap04Tex,
-    gPauseMap10GERTex, gPauseMap11Tex, gPauseMap12Tex, gPauseMap13Tex, gPauseMap14Tex,
+    gPauseMap10ENGTex, gPauseMap11Tex, gPauseMap12Tex, gPauseMap13Tex, gPauseMap14Tex,
     gPauseMap20Tex,    gPauseMap21Tex, gPauseMap22Tex, gPauseMap23Tex, gPauseMap24Tex,
 };
 static void* sQuestStatusGERTexs[] = {
-    gPauseQuestStatus00Tex, gPauseQuestStatus01Tex,    gPauseQuestStatus02Tex, gPauseQuestStatus03Tex,
-    gPauseQuestStatus04Tex, gPauseQuestStatus10GERTex, gPauseQuestStatus11Tex, gPauseQuestStatus12Tex,
-    gPauseQuestStatus13Tex, gPauseQuestStatus14Tex,    gPauseQuestStatus20Tex, gPauseQuestStatus21Tex,
+    gPauseQuestStatus00ENGTex, gPauseQuestStatus01Tex,    gPauseQuestStatus02Tex, gPauseQuestStatus03Tex,
+    gPauseQuestStatus04Tex, gPauseQuestStatus10ENGTex, gPauseQuestStatus11Tex, gPauseQuestStatus12Tex,
+    gPauseQuestStatus13Tex, gPauseQuestStatus14Tex,    gPauseQuestStatus20ENGTex, gPauseQuestStatus21Tex,
     gPauseQuestStatus22Tex, gPauseQuestStatus23Tex,    gPauseQuestStatus24Tex,
 };
 static void* sSaveGERTexs[] = {
-    gPauseSave00Tex,    gPauseSave01Tex, gPauseSave02Tex, gPauseSave03Tex, gPauseSave04Tex,
-    gPauseSave10GERTex, gPauseSave11Tex, gPauseSave12Tex, gPauseSave13Tex, gPauseSave14Tex,
-    gPauseSave20GERTex, gPauseSave21Tex, gPauseSave22Tex, gPauseSave23Tex, gPauseSave24Tex,
+    gPauseSave00Tex, gPauseSave01Tex, gPauseSave02Tex, gPauseSave03Tex, gPauseSave04Tex,
+    gPauseSave10ENGTex, gPauseSave11Tex, gPauseSave12Tex, gPauseSave13Tex, gPauseSave14Tex,
+    gPauseSave20Tex, gPauseSave21Tex, gPauseSave22Tex, gPauseSave23Tex, gPauseSave24Tex,
 };
 
 static void* sEquipmentENGTexs[] = {
@@ -136,12 +136,12 @@ s16 D_8082AB2C[] = {
 };
 
 static u8 D_8082AB6C[][5] = {
-    { BTN_ENABLED, BTN_DISABLED, BTN_DISABLED, BTN_DISABLED, BTN_ENABLED },
-    { BTN_ENABLED, BTN_ENABLED, BTN_ENABLED, BTN_ENABLED, BTN_DISABLED },
-    { BTN_ENABLED, BTN_DISABLED, BTN_DISABLED, BTN_DISABLED, BTN_DISABLED },
-    { BTN_ENABLED, BTN_DISABLED, BTN_DISABLED, BTN_DISABLED, BTN_ENABLED },
-    { BTN_ENABLED, BTN_DISABLED, BTN_DISABLED, BTN_DISABLED, BTN_ENABLED },
-    { BTN_ENABLED, BTN_ENABLED, BTN_ENABLED, BTN_ENABLED, BTN_DISABLED },
+    { BTN_ENABLED, BTN_DISABLED, BTN_DISABLED, BTN_DISABLED, BTN_ENABLED }, // equip
+    { BTN_DISABLED, BTN_ENABLED, BTN_ENABLED, BTN_ENABLED, BTN_DISABLED },
+    { BTN_DISABLED, BTN_DISABLED, BTN_DISABLED, BTN_DISABLED, BTN_DISABLED },
+    { BTN_DISABLED, BTN_DISABLED, BTN_DISABLED, BTN_DISABLED, BTN_ENABLED }, // quest
+    { BTN_ENABLED, BTN_DISABLED, BTN_DISABLED, BTN_DISABLED, BTN_ENABLED }, // equip
+    { BTN_DISABLED, BTN_ENABLED, BTN_ENABLED, BTN_ENABLED, BTN_DISABLED },
 };
 
 static s16 D_8082AB8C = 0;
@@ -230,6 +230,25 @@ static u8 D_808321A8[5];
 static PreRender sPlayerPreRender;
 static void* sPreRenderCvg;
 
+static s16 sDungeonEntrances[] = {
+    ENTR_DEKU_TREE_0,             // SCENE_YDAN
+    ENTR_DODONGOS_CAVERN_0,             // SCENE_DDAN
+    ENTR_JABU_JABU_0,             // SCENE_BDAN
+    ENTR_FOREST_TEMPLE_0,           // SCENE_BMORI1
+    ENTR_FIRE_TEMPLE_0,            // SCENE_HIDAN
+    ENTR_WATER_TEMPLE_0,          // SCENE_MIZUSIN
+    ENTR_SPIRIT_TEMPLE_0,        // SCENE_JYASINZOU
+    ENTR_SHADOW_TEMPLE_0,          // SCENE_HAKADAN
+    ENTR_BOTTOM_OF_THE_WELL_0,        // SCENE_HAKADANCH
+    ENTR_ICE_CAVERN_0,      // SCENE_ICE_DOUKUTO
+    ENTR_GANONS_TOWER_0,            // SCENE_GANON
+    ENTR_GERUDO_TRAINING_GROUND_0,              // SCENE_MEN
+    ENTR_THIEVES_HIDEOUT_0,        // SCENE_GERUDOWAY
+    ENTR_INSIDE_GANONS_CASTLE_0,        // SCENE_GANONTIKA
+    ENTR_GANONS_TOWER_COLLAPSE_EXTERIOR_0,     // SCENE_GANON_SONOGO
+    ENTR_INSIDE_GANONS_CASTLE_COLLAPSE_0, // SCENE_GANONTIKA_SONOGO
+};
+
 void KaleidoScope_SetupPlayerPreRender(PlayState* play) {
     Gfx* gfx;
     Gfx* gfxRef;
@@ -258,7 +277,7 @@ void KaleidoScope_SetupPlayerPreRender(PlayState* play) {
 
 void KaleidoScope_ProcessPlayerPreRender(void) {
     Sleep_Msec(50);
-    PreRender_ApplyFilters(&sPlayerPreRender);
+    //PreRender_ApplyFilters(&sPlayerPreRender);
     PreRender_Destroy(&sPlayerPreRender);
 }
 
@@ -380,6 +399,7 @@ void KaleidoScope_SwitchPage(PauseContext* pauseCtx, u8 pt) {
         pauseCtx->cursorSpecialPos = PAUSE_CURSOR_PAGE_LEFT;
     }
 
+    gSaveContext.buttonStatus[0] = D_8082AB6C[pauseCtx->pageIndex + pt][0];
     gSaveContext.buttonStatus[1] = D_8082AB6C[pauseCtx->pageIndex + pt][1];
     gSaveContext.buttonStatus[2] = D_8082AB6C[pauseCtx->pageIndex + pt][2];
     gSaveContext.buttonStatus[3] = D_8082AB6C[pauseCtx->pageIndex + pt][3];
@@ -392,7 +412,7 @@ void KaleidoScope_SwitchPage(PauseContext* pauseCtx, u8 pt) {
 }
 
 void KaleidoScope_HandlePageToggles(PauseContext* pauseCtx, Input* input) {
-    if ((pauseCtx->debugState == 0) && CHECK_BTN_ALL(input->press.button, BTN_L)) {
+    if ((pauseCtx->debugState == 0) && CHECK_BTN_ALL(input->press.button, BTN_L) && false) {
         pauseCtx->debugState = 1;
         return;
     }
@@ -2351,7 +2371,7 @@ void func_808265BC(PlayState* play) {
         pauseCtx->unk_1E4 = 0;
         pauseCtx->state++;
         pauseCtx->alpha = 255;
-        Interface_LoadActionLabelB(play, DO_ACTION_SAVE);
+        //Interface_LoadActionLabelB(play, DO_ACTION_SAVE);
     } else if (pauseCtx->unk_1EA == 64) {
         pauseCtx->pageIndex = D_8082ABEC[pauseCtx->mode];
         pauseCtx->mode = (u16)(pauseCtx->pageIndex * 2) + 1;
@@ -2925,12 +2945,12 @@ void KaleidoScope_Update(PlayState* play) {
         case 6:
             switch (pauseCtx->unk_1E4) {
                 case 0:
-                    if (CHECK_BTN_ALL(input->press.button, BTN_START)) {
+                    if (CHECK_BTN_ALL(input->press.button, BTN_START) || CHECK_BTN_ALL(input->press.button, BTN_B)) {
                         Interface_SetDoAction(play, DO_ACTION_NONE);
                         pauseCtx->state = 0x12;
                         WREG(2) = -6240;
                         func_800F64E0(0);
-                    } else if (CHECK_BTN_ALL(input->press.button, BTN_B)) {
+                    }/* else if (CHECK_BTN_ALL(input->press.button, BTN_B)) {
                         pauseCtx->mode = 0;
                         pauseCtx->promptChoice = 0;
                         Audio_PlaySfxGeneral(NA_SE_SY_DECIDE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
@@ -2942,7 +2962,7 @@ void KaleidoScope_Update(PlayState* play) {
                         Interface_ChangeHudVisibilityMode(HUD_VISIBILITY_ALL);
                         pauseCtx->unk_1EC = 0;
                         pauseCtx->state = 7;
-                    }
+                    }*/
                     break;
 
                 case 1:
@@ -2975,7 +2995,7 @@ void KaleidoScope_Update(PlayState* play) {
                         func_800F64E0(0);
                         pauseCtx->unk_1E4 = 0;
                         break;
-                    } else if (CHECK_BTN_ALL(input->press.button, BTN_B)) {
+                    /*} else if (CHECK_BTN_ALL(input->press.button, BTN_B)) {
                         AudioOcarina_SetInstrument(OCARINA_INSTRUMENT_OFF);
                         pauseCtx->unk_1E4 = 0;
                         pauseCtx->mode = 0;
@@ -2989,7 +3009,7 @@ void KaleidoScope_Update(PlayState* play) {
                         Interface_ChangeHudVisibilityMode(HUD_VISIBILITY_ALL);
                         pauseCtx->unk_1EC = 0;
                         pauseCtx->state = 7;
-                    } else if (pauseCtx->ocarinaStaff->state == pauseCtx->ocarinaSongIdx) {
+                    */} else if (pauseCtx->ocarinaStaff->state == pauseCtx->ocarinaSongIdx) {
                         Audio_PlaySfxGeneral(NA_SE_SY_TRE_BOX_APPEAR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                              &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                         D_8082B258 = 0;
@@ -3025,7 +3045,7 @@ void KaleidoScope_Update(PlayState* play) {
                         WREG(2) = -6240;
                         func_800F64E0(0);
                         pauseCtx->unk_1E4 = 0;
-                    } else if (CHECK_BTN_ALL(input->press.button, BTN_B)) {
+                    }/* else if (CHECK_BTN_ALL(input->press.button, BTN_B)) {
                         AudioOcarina_SetInstrument(OCARINA_INSTRUMENT_OFF);
                         pauseCtx->unk_1E4 = 0;
                         pauseCtx->mode = 0;
@@ -3039,7 +3059,7 @@ void KaleidoScope_Update(PlayState* play) {
                         Interface_ChangeHudVisibilityMode(HUD_VISIBILITY_ALL);
                         pauseCtx->unk_1EC = 0;
                         pauseCtx->state = 7;
-                    }
+                    }*/
                     break;
 
                 case 9:
@@ -3277,7 +3297,7 @@ void KaleidoScope_Update(PlayState* play) {
         case 0xC:
             D_8082B260--;
             if (D_8082B260 == 0) {
-                pauseCtx->state = 0xD;
+                pauseCtx->state = 0x10; // skip a lot of things.
             }
             break;
 
@@ -3341,72 +3361,105 @@ void KaleidoScope_Update(PlayState* play) {
             break;
 
         case 0x10:
-            if (CHECK_BTN_ALL(input->press.button, BTN_A) || CHECK_BTN_ALL(input->press.button, BTN_START)) {
-                if (pauseCtx->promptChoice == 0) {
-                    Audio_PlaySfxGeneral(NA_SE_SY_PIECE_OF_HEART, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
-                                         &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-                    Play_SaveSceneFlags(play);
+            if (interfaceCtx->unk_244 != 255) {
+                interfaceCtx->unk_244 += 10;
+                if (interfaceCtx->unk_244 >= 255) {
+                    interfaceCtx->unk_244 = 255;
 
-                    switch (gSaveContext.entranceIndex) {
-                        case ENTR_DEKU_TREE_0:
-                        case ENTR_DODONGOS_CAVERN_0:
-                        case ENTR_JABU_JABU_0:
-                        case ENTR_FOREST_TEMPLE_0:
-                        case ENTR_FIRE_TEMPLE_0:
-                        case ENTR_WATER_TEMPLE_0:
-                        case ENTR_SPIRIT_TEMPLE_0:
-                        case ENTR_SHADOW_TEMPLE_0:
-                        case ENTR_GANONS_TOWER_0:
-                        case ENTR_GERUDO_TRAINING_GROUND_0:
-                        case ENTR_ICE_CAVERN_0:
-                        case ENTR_THIEVES_HIDEOUT_0:
-                        case ENTR_BOTTOM_OF_THE_WELL_0:
-                        case ENTR_INSIDE_GANONS_CASTLE_0:
-                        case ENTR_GANONS_TOWER_COLLAPSE_INTERIOR_0:
+                    //original game respawn points if you're not saving for some reason
+                    switch (play->sceneId) {
+                        case SCENE_DEKU_TREE:
+                        case SCENE_DODONGOS_CAVERN:
+                        case SCENE_JABU_JABU:
+                        case SCENE_FOREST_TEMPLE:
+                        case SCENE_FIRE_TEMPLE:
+                        case SCENE_WATER_TEMPLE:
+                        case SCENE_SPIRIT_TEMPLE:
+                        case SCENE_SHADOW_TEMPLE:
+                        case SCENE_GANONS_TOWER:
+                        case SCENE_GERUDO_TRAINING_GROUND:
+                        case SCENE_ICE_CAVERN:
+                        case SCENE_THIEVES_HIDEOUT:
+                        case SCENE_BOTTOM_OF_THE_WELL:
+                        case SCENE_INSIDE_GANONS_CASTLE:
+                        case SCENE_GANONS_TOWER_COLLAPSE_INTERIOR:
                             break;
 
-                        case ENTR_DEKU_TREE_BOSS_0:
+                        case SCENE_DEKU_TREE_BOSS:
                             gSaveContext.entranceIndex = ENTR_DEKU_TREE_0;
                             break;
 
-                        case ENTR_DODONGOS_CAVERN_BOSS_0:
+                        case SCENE_DODONGOS_CAVERN_BOSS:
                             gSaveContext.entranceIndex = ENTR_DODONGOS_CAVERN_0;
                             break;
 
-                        case ENTR_JABU_JABU_BOSS_0:
+                        case SCENE_JABU_JABU_BOSS:
                             gSaveContext.entranceIndex = ENTR_JABU_JABU_0;
                             break;
 
-                        case ENTR_FOREST_TEMPLE_BOSS_0:
+                        case SCENE_FOREST_TEMPLE_BOSS:
                             gSaveContext.entranceIndex = ENTR_FOREST_TEMPLE_0;
                             break;
 
-                        case ENTR_FIRE_TEMPLE_BOSS_0:
+                        case SCENE_FIRE_TEMPLE_BOSS:
                             gSaveContext.entranceIndex = ENTR_FIRE_TEMPLE_0;
                             break;
 
-                        case ENTR_WATER_TEMPLE_BOSS_0:
+                        case SCENE_WATER_TEMPLE_BOSS:
                             gSaveContext.entranceIndex = ENTR_WATER_TEMPLE_0;
                             break;
 
-                        case ENTR_SPIRIT_TEMPLE_BOSS_0:
+                        case SCENE_SPIRIT_TEMPLE_BOSS:
                             gSaveContext.entranceIndex = ENTR_SPIRIT_TEMPLE_0;
                             break;
 
-                        case ENTR_SHADOW_TEMPLE_BOSS_0:
+                        case SCENE_SHADOW_TEMPLE_BOSS:
                             gSaveContext.entranceIndex = ENTR_SHADOW_TEMPLE_0;
                             break;
 
-                        case ENTR_GANONDORF_BOSS_0:
+                        case SCENE_GANONDORF_BOSS:
                             gSaveContext.entranceIndex = ENTR_GANONS_TOWER_0;
                             break;
+                        default:
+                            if (gSaveContext.savedSceneId != SCENE_LINKS_HOUSE) {
+                                gSaveContext.entranceIndex = (LINK_AGE_IN_YEARS == YEARS_CHILD) ? ENTR_LINKS_HOUSE_0 : ENTR_TEMPLE_OF_TIME_7;
+                            }
+                            else {
+                                gSaveContext.entranceIndex = ENTR_LINKS_HOUSE_0;
+                            }
+                            break;
+                        }
+
+                    if (gSaveContext.savePoint != -1) {
+                        // start the game from the last save point
+                        gSaveContext.entranceIndex = gSaveContext.saveRespawnPoint.entranceIndex;
+                        gSaveContext.saveReturnFlag = 1;
                     }
-                } else {
-                    Audio_PlaySfxGeneral(NA_SE_SY_DECIDE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
-                                         &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                    play->nextEntranceIndex = gSaveContext.entranceIndex;
+                    play->transitionType = 0x1;
+                    play->transitionTrigger = 1;
+                    gSaveContext.health = gSaveContext.healthCapacity-gSaveContext.heartsBlocked;
+
+                    SEQCMD_RESET_AUDIO_HEAP(0, 10);
+                    gSaveContext.healthAccumulator = 0;
+                    gSaveContext.magicState = MAGIC_STATE_IDLE;
+                    gSaveContext.prevMagicState = MAGIC_STATE_IDLE;
+                    gSaveContext.magicCapacity = 0;
+                    gSaveContext.magicFillTarget = gSaveContext.magic;
+                    gSaveContext.magicLevel = gSaveContext.magic = 0;
+
+                    gSaveContext.deaths++;
+                    if (gSaveContext.deaths > 999) {
+                        gSaveContext.deaths = 999;
+                    }
+
                 }
 
-                pauseCtx->state = 0x11;
+                Play_SaveSceneFlags(play);
+                gSaveContext.savedSceneId = play->sceneId;
+                Sram_WriteSave(&play->sramCtx); // save
+
             }
             break;
 
@@ -3425,6 +3478,10 @@ void KaleidoScope_Update(PlayState* play) {
                         gSaveContext.respawnFlag = -2;
                         gSaveContext.nextTransitionType = TRANS_TYPE_FADE_BLACK;
                         gSaveContext.health = 0x30;
+                        if(gSaveContext.healthCapacity-gSaveContext.heartsBlocked<=0x20) {
+                            gSaveContext.health = 0x20;
+
+                        }
                         SEQCMD_RESET_AUDIO_HEAP(0, 10);
                         gSaveContext.healthAccumulator = 0;
                         gSaveContext.magicState = MAGIC_STATE_IDLE;

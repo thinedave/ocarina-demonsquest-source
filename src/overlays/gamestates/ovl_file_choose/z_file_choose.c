@@ -21,7 +21,7 @@ static Gfx sScreenFillSetupDL[] = {
 static s16 sFileInfoBoxPartWidths[] = { 36, 36, 36, 36, 24 };
 
 static s16 sWindowContentColors[2][3] = {
-    { 100, 150, 255 }, // blue
+    { 150, 150, 150 }, // blue
     { 100, 100, 100 }, // gray
 };
 
@@ -382,6 +382,7 @@ void FileSelect_PulsateCursor(GameState* thisx) {
     SramContext* sramCtx = &this->sramCtx;
     Input* debugInput = &this->state.input[2];
 
+    /*
     if (CHECK_BTN_ALL(debugInput->press.button, BTN_DLEFT)) {
         sramCtx->readBuff[SRAM_HEADER_LANGUAGE] = gSaveContext.language = LANGUAGE_ENG;
         *((u8*)0x80000002) = LANGUAGE_ENG;
@@ -396,8 +397,8 @@ void FileSelect_PulsateCursor(GameState* thisx) {
                      sramCtx->readBuff[SRAM_HEADER_ZTARGET], sramCtx->readBuff[SRAM_HEADER_LANGUAGE],
                      sramCtx->readBuff[SRAM_HEADER_MAGIC]);
     } else if (CHECK_BTN_ALL(debugInput->press.button, BTN_DUP)) {
-        sramCtx->readBuff[SRAM_HEADER_LANGUAGE] = gSaveContext.language = LANGUAGE_GER;
-        *((u8*)0x80000002) = LANGUAGE_GER;
+        sramCtx->readBuff[SRAM_HEADER_LANGUAGE] = gSaveContext.language = LANGUAGE_ENG;
+        *((u8*)0x80000002) = LANGUAGE_ENG;
 
         SsSram_ReadWrite(OS_K1_TO_PHYSICAL(0xA8000000), sramCtx->readBuff, 3, OS_WRITE);
         osSyncPrintf("1:read_buff[]=%x, %x, %x, %x\n", sramCtx->readBuff[SRAM_HEADER_SOUND],
@@ -408,8 +409,8 @@ void FileSelect_PulsateCursor(GameState* thisx) {
                      sramCtx->readBuff[SRAM_HEADER_ZTARGET], sramCtx->readBuff[SRAM_HEADER_LANGUAGE],
                      sramCtx->readBuff[SRAM_HEADER_MAGIC]);
     } else if (CHECK_BTN_ALL(debugInput->press.button, BTN_DRIGHT)) {
-        sramCtx->readBuff[SRAM_HEADER_LANGUAGE] = gSaveContext.language = LANGUAGE_FRA;
-        *((u8*)0x80000002) = LANGUAGE_FRA;
+        sramCtx->readBuff[SRAM_HEADER_LANGUAGE] = gSaveContext.language = LANGUAGE_ENG;
+        *((u8*)0x80000002) = LANGUAGE_ENG;
 
         SsSram_ReadWrite(OS_K1_TO_PHYSICAL(0xA8000000), sramCtx->readBuff, 3, OS_WRITE);
         osSyncPrintf("1:read_buff[]=%x, %x, %x, %x\n", sramCtx->readBuff[SRAM_HEADER_SOUND],
@@ -421,6 +422,7 @@ void FileSelect_PulsateCursor(GameState* thisx) {
                      sramCtx->readBuff[SRAM_HEADER_ZTARGET], sramCtx->readBuff[SRAM_HEADER_LANGUAGE],
                      sramCtx->readBuff[SRAM_HEADER_MAGIC]);
     }
+    */
 
     alphaStep = ABS(this->highlightColor[3] - cursorAlphaTargets[this->highlightPulseDir]) / XREG(35);
 
@@ -897,38 +899,38 @@ static void* sTitleLabels[3][9] = {
     { gFileSelPleaseSelectAFileENGTex, gFileSelOpenThisFileENGTex, gFileSelCopyWhichFileENGTex,
       gFileSelCopyToWhichFileENGTex, gFileSelAreYouSureENGTex, gFileSelFileCopiedENGTex, gFileSelEraseWhichFileENGTex,
       gFileSelAreYouSure2ENGTex, gFileSelFileErasedENGTex },
-    { gFileSelPleaseSelectAFileGERTex, gFileSelOpenThisFileGERTex, gFileSelWhichFile1GERTex,
-      gFileSelCopyToWhichFileGERTex, gFileSelAreYouSureGERTex, gFileSelFileCopiedGERTex, gFileSelWhichFile2GERTex,
-      gFileSelAreYouSure2GERTex, gFileSelFileErasedGERTex },
-    { gFileSelPleaseSelectAFileFRATex, gFileSelOpenThisFileFRATex, gFileSelCopyWhichFileFRATex,
-      gFileSelCopyToWhichFileFRATex, gFileSelAreYouSureFRATex, gFileSelFileCopiedFRATex, gFileSelEraseWhichFileFRATex,
-      gFileSelAreYouSure2FRATex, gFileSelFileErasedFRATex }
+    { gFileSelPleaseSelectAFileENGTex, gFileSelOpenThisFileENGTex, gFileSelCopyWhichFileENGTex,
+      gFileSelCopyToWhichFileENGTex, gFileSelAreYouSureENGTex, gFileSelFileCopiedENGTex, gFileSelEraseWhichFileENGTex,
+      gFileSelAreYouSure2ENGTex, gFileSelFileErasedENGTex },
+    { gFileSelPleaseSelectAFileENGTex, gFileSelOpenThisFileENGTex, gFileSelCopyWhichFileENGTex,
+      gFileSelCopyToWhichFileENGTex, gFileSelAreYouSureENGTex, gFileSelFileCopiedENGTex, gFileSelEraseWhichFileENGTex,
+      gFileSelAreYouSure2ENGTex, gFileSelFileErasedENGTex }
 };
 
 static void* sWarningLabels[3][5] = {
     { gFileSelNoFileToCopyENGTex, gFileSelNoFileToEraseENGTex, gFileSelNoEmptyFileENGTex, gFileSelFileEmptyENGTex,
       gFileSelFileInUseENGTex },
-    { gFileSelNoFileToCopyGERTex, gFileSelNoFileToEraseGERTex, gFileSelNoEmptyFileGERTex, gFileSelFileEmptyGERTex,
-      gFileSelFileInUseGERTex },
-    { gFileSelNoFileToCopyFRATex, gFileSelNoFileToEraseFRATex, gFileSelNoEmptyFileFRATex, gFileSelFileEmptyFRATex,
-      gFileSelFileInUseFRATex },
+    { gFileSelNoFileToCopyENGTex, gFileSelNoFileToEraseENGTex, gFileSelNoEmptyFileENGTex, gFileSelFileEmptyENGTex,
+      gFileSelFileInUseENGTex },
+    { gFileSelNoFileToCopyENGTex, gFileSelNoFileToEraseENGTex, gFileSelNoEmptyFileENGTex, gFileSelFileEmptyENGTex,
+      gFileSelFileInUseENGTex },
 };
 
 static void* sFileButtonTextures[3][3] = {
     { gFileSelFile1ButtonENGTex, gFileSelFile2ButtonENGTex, gFileSelFile3ButtonENGTex },
-    { gFileSelFile1ButtonGERTex, gFileSelFile2ButtonGERTex, gFileSelFile3ButtonGERTex },
-    { gFileSelFile1ButtonFRATex, gFileSelFile2ButtonFRATex, gFileSelFile3ButtonFRATex },
+    { gFileSelFile1ButtonENGTex, gFileSelFile2ButtonENGTex, gFileSelFile3ButtonENGTex },
+    { gFileSelFile1ButtonENGTex, gFileSelFile2ButtonENGTex, gFileSelFile3ButtonENGTex },
 };
 
 static void* sActionButtonTextures[3][4] = {
     { gFileSelCopyButtonENGTex, gFileSelEraseButtonENGTex, gFileSelYesButtonENGTex, gFileSelQuitButtonENGTex },
-    { gFileSelCopyButtonGERTex, gFileSelEraseButtonGERTex, gFileSelYesButtonGERTex, gFileSelQuitButtonGERTex },
-    { gFileSelCopyButtonFRATex, gFileSelEraseButtonFRATex, gFileSelYesButtonFRATex, gFileSelQuitButtonFRATex },
+    { gFileSelCopyButtonENGTex, gFileSelEraseButtonENGTex, gFileSelYesButtonENGTex, gFileSelQuitButtonENGTex },
+    { gFileSelCopyButtonENGTex, gFileSelEraseButtonENGTex, gFileSelYesButtonENGTex, gFileSelQuitButtonENGTex },
 };
 
 static void* sOptionsButtonTextures[] = {
     gFileSelOptionsButtonENGTex,
-    gFileSelOptionsButtonGERTex,
+    gFileSelOptionsButtonENGTex,
     gFileSelOptionsButtonENGTex,
 };
 
@@ -1439,7 +1441,7 @@ void FileSelect_LoadGame(GameState* thisx) {
     u16 swordEquipValue;
     s32 pad;
 
-    if (this->buttonIndex == FS_BTN_SELECT_FILE_1) {
+    if (this->buttonIndex == FS_BTN_SELECT_FILE_1 && false) {
         Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                              &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         gSaveContext.fileNum = this->buttonIndex;
@@ -1591,8 +1593,8 @@ static void (*sFileSelectUpdateFuncs[])(GameState*) = {
 void FileSelect_Main(GameState* thisx) {
     static void* controlsTextures[] = {
         gFileSelControlsENGTex,
-        gFileSelControlsGERTex,
-        gFileSelControlsFRATex,
+        gFileSelControlsENGTex,
+        gFileSelControlsENGTex,
     };
     FileSelectState* this = (FileSelectState*)thisx;
     Input* input = &this->state.input[0];
@@ -1786,7 +1788,7 @@ void FileSelect_InitContext(GameState* thisx) {
     this->nextTitleLabel = FS_TITLE_OPEN_FILE;
     this->highlightPulseDir = 1;
     this->unk_1CAAC = 0xC;
-    this->highlightColor[0] = 155;
+    this->highlightColor[0] = 255;
     this->highlightColor[1] = 255;
     this->highlightColor[2] = 255;
     this->highlightColor[3] = 70;
@@ -1797,9 +1799,9 @@ void FileSelect_InitContext(GameState* thisx) {
     this->kbdX = this->kbdY = this->charIndex = 0;
     this->kbdButton = FS_KBD_BTN_NONE;
 
-    this->windowColor[0] = 100;
+    this->windowColor[0] = 150;
     this->windowColor[1] = 150;
-    this->windowColor[2] = 255;
+    this->windowColor[2] = 150;
 
     this->windowAlpha = this->titleAlpha[0] = this->titleAlpha[1] = this->fileButtonAlpha[0] =
         this->fileButtonAlpha[1] = this->fileButtonAlpha[2] = this->nameBoxAlpha[0] = this->nameBoxAlpha[1] =
@@ -1826,8 +1828,8 @@ void FileSelect_InitContext(GameState* thisx) {
 
     Letterbox_SetSizeTarget(0);
 
-    gSaveContext.skyboxTime = CLOCK_TIME(0, 0);
-    gSaveContext.dayTime = CLOCK_TIME(0, 0);
+    gSaveContext.skyboxTime = CLOCK_TIME(20, 0);
+    gSaveContext.dayTime = CLOCK_TIME(20, 0);
 
     Skybox_Init(&this->state, &this->skyboxCtx, SKYBOX_NORMAL_SKY);
 

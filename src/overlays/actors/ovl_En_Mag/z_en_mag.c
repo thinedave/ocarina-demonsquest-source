@@ -53,6 +53,8 @@ void EnMag_Init(Actor* thisx, PlayState* play) {
     VREG(23) = 10;
     VREG(24) = 8;
 
+    this->showBuildInfo = false;
+
     this->effectScroll = 0;
     this->unk_E30C = 0;
 
@@ -121,12 +123,12 @@ void EnMag_Update(Actor* thisx, PlayState* play) {
                 this->effectPrimLodFrac = 128.0f;
                 this->effectAlpha = 255.0f;
 
-                this->effectPrimColor[0] = 170;
+                this->effectPrimColor[0] = 255;
                 this->effectPrimColor[1] = 255.0f;
                 this->effectPrimColor[2] = 255.0f;
-                this->effectEnvColor[0] = 200.0f;
-                this->effectEnvColor[1] = 255.0f;
-                this->effectEnvColor[2] = 0;
+                this->effectEnvColor[0] = 160.0f;
+                this->effectEnvColor[1] = 160.0f;
+                this->effectEnvColor[2] = 160;
 
                 this->globalState = MAG_STATE_DISPLAY;
                 sDelayTimer = 20;
@@ -137,7 +139,10 @@ void EnMag_Update(Actor* thisx, PlayState* play) {
             if (sDelayTimer == 0) {
                 if (CHECK_BTN_ALL(play->state.input[0].press.button, BTN_START) ||
                     CHECK_BTN_ALL(play->state.input[0].press.button, BTN_A) ||
-                    CHECK_BTN_ALL(play->state.input[0].press.button, BTN_B)) {
+                    CHECK_BTN_ALL(play->state.input[0].press.button, BTN_B) ||
+                    CHECK_BTN_ALL(play->state.input[0].press.button, BTN_Z) ||
+                    CHECK_BTN_ALL(play->state.input[0].press.button, BTN_L) ||
+                    CHECK_BTN_ALL(play->state.input[0].press.button, BTN_R)) {
 
                     if (play->transitionTrigger != TRANS_TRIGGER_START) {
                         Audio_SetCutsceneFlag(0);
@@ -166,10 +171,11 @@ void EnMag_Update(Actor* thisx, PlayState* play) {
             this->effectPrimLodFrac += 0.8f;
 
             this->effectPrimColor[0] += 6.375f;
-            this->effectPrimColor[1] += 3.875f;
-            this->effectPrimColor[2] += 2.125f;
-            this->effectEnvColor[0] += 6.375f;
-            this->effectEnvColor[1] += 3.875f;
+            this->effectPrimColor[1] += 6.375f;
+            this->effectPrimColor[2] += 6.375f;
+            this->effectEnvColor[0] += 4;
+            this->effectEnvColor[1] += 4;
+            this->effectEnvColor[2] += 4;
 
             this->effectFadeInTimer--;
 
@@ -187,8 +193,8 @@ void EnMag_Update(Actor* thisx, PlayState* play) {
                 this->effectFadeInState = 1;
             }
         } else if (this->effectFadeInState == 1) {
-            this->effectPrimColor[0] += -2.125f;
-            this->effectEnvColor[0] += -1.375f;
+            this->effectPrimColor[0] += -6.375f;
+            this->effectEnvColor[0] += -4;
 
             this->effectPrimLodFrac += 2.4f;
 
@@ -267,6 +273,19 @@ void EnMag_DrawTextureI8(Gfx** gfxp, void* texture, s16 texWidth, s16 texHeight,
     Gfx* gfx = *gfxp;
 
     gDPLoadTextureBlock(gfx++, texture, G_IM_FMT_I, G_IM_SIZ_8b, texWidth, texHeight, 0, G_TX_NOMIRROR | G_TX_WRAP,
+                        G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+    gSPTextureRectangle(gfx++, rectLeft << 2, rectTop << 2, (rectLeft + rectWidth) << 2, (rectTop + rectHeight) << 2,
+                        G_TX_RENDERTILE, 0, 0, dsdx, dtdy);
+
+    *gfxp = gfx;
+}
+
+void EnMag_DrawTextureIA8(Gfx** gfxp, void* texture, s16 texWidth, s16 texHeight, s16 rectLeft, s16 rectTop,
+                         s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy) {
+    Gfx* gfx = *gfxp;
+
+    gDPLoadTextureBlock(gfx++, texture, G_IM_FMT_IA, G_IM_SIZ_8b, texWidth, texHeight, 0, G_TX_NOMIRROR | G_TX_WRAP,
                         G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
     gSPTextureRectangle(gfx++, rectLeft << 2, rectTop << 2, (rectLeft + rectWidth) << 2, (rectTop + rectHeight) << 2,
@@ -378,9 +397,14 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxp) {
     static u8 noControllerFontIndices[] = {
         0x17, 0x18, 0x0C, 0x18, 0x17, 0x1D, 0x1B, 0x18, 0x15, 0x15, 0x0E, 0x1B,
     };
+    /* vanilla
     static u8 pressStartFontIndices[] = {
         0x19, 0x1B, 0x0E, 0x1C, 0x1C, 0x1C, 0x1D, 0x0A, 0x1B, 0x1D,
     };
+    */
+
+    static char pressStartFontIndices[] = "PRESS ANY BUTTON";
+
     static void* effectMaskTextures[] = {
         gTitleEffectMask00Tex, gTitleEffectMask01Tex, gTitleEffectMask02Tex,
         gTitleEffectMask10Tex, gTitleEffectMask11Tex, gTitleEffectMask12Tex,
@@ -406,9 +430,9 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxp) {
     gDPSetCombineLERP(gfx++, TEXEL1, PRIMITIVE, PRIM_LOD_FRAC, TEXEL0, TEXEL1, 1, PRIM_LOD_FRAC, TEXEL0, PRIMITIVE,
                       ENVIRONMENT, COMBINED, ENVIRONMENT, COMBINED, 0, PRIMITIVE, 0);
 
-    gDPSetPrimColor(gfx++, 0, (s16)this->effectPrimLodFrac, (s16)this->effectPrimColor[0],
-                    (s16)this->effectPrimColor[1], (s16)this->effectPrimColor[2], (s16)this->effectAlpha);
-    gDPSetEnvColor(gfx++, (s16)this->effectEnvColor[0], (s16)this->effectEnvColor[1], (s16)this->effectEnvColor[2],
+    gDPSetPrimColor(gfx++, 0, (s16)this->effectPrimLodFrac, 255,
+                    255, 255, (s16)this->effectAlpha);
+    gDPSetEnvColor(gfx++, 160, 160, 160,
                    255);
 
     if ((s16)this->effectPrimLodFrac != 0) {
@@ -440,15 +464,15 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxp) {
     }
 
     gDPSetPrimColor(gfx++, 0, 0, 0, 0, 0, (s16)this->mainAlpha);
-    gDPSetEnvColor(gfx++, 0, 0, 100, 255);
+    gDPSetEnvColor(gfx++, 0, 0, 0, 0);
 
     if ((s16)this->mainAlpha != 0) {
         EnMag_DrawTextureI8(&gfx, gTitleTheLegendOfTextTex, 72, 8, 146, 73, 72, 8, 1024, 1024);
         EnMag_DrawTextureI8(&gfx, gTitleOcarinaOfTimeTMTextTex, 96, 8, 144, 127, 96, 8, 1024, 1024);
 
         gDPPipeSync(gfx++);
-        gDPSetPrimColor(gfx++, 0, 0, 100, 150, 255, (s16)this->mainAlpha);
-        gDPSetEnvColor(gfx++, 20, 80, 160, 255);
+        gDPSetPrimColor(gfx++, 0, 0, 255, 255, 255, (s16)this->mainAlpha);
+        gDPSetEnvColor(gfx++, 255, 255, 255, 255);
 
         EnMag_DrawTextureI8(&gfx, gTitleTheLegendOfTextTex, 72, 8, 145, 72, 72, 8, 1024, 1024);
         EnMag_DrawTextureI8(&gfx, gTitleOcarinaOfTimeTMTextTex, 96, 8, 143, 126, 96, 8, 1024, 1024);
@@ -456,7 +480,7 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxp) {
         gDPPipeSync(gfx++);
         gDPSetPrimColor(gfx++, 0, 0, 255, 255, 255, (s16)this->subAlpha);
 
-        EnMag_DrawImageRGBA32(&gfx, 174, 145, (u8*)gTitleMasterQuestSubtitleTex, 128, 32);
+        EnMag_DrawImageRGBA32(&gfx, 174, 148, (u8*)gTitleMasterQuestSubtitleTex, 128, 32);
     }
 
     Gfx_SetupDL_39Ptr(&gfx);
@@ -468,11 +492,22 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxp) {
                     (s16)this->copyrightAlpha);
 
     if ((s16)this->copyrightAlpha != 0) {
-        gDPLoadTextureBlock(gfx++, gTitleCopyright19982003Tex, G_IM_FMT_IA, G_IM_SIZ_8b, 160, 16, 0,
+        /* vanilla
+        gDPLoadTextureBlock(gfx++, gTitleCopyright19982003Tex, G_IM_FMT_IA, G_IM_SIZ_8b, 128, 16, 0,
                             G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                             G_TX_NOLOD, G_TX_NOLOD);
 
         gSPTextureRectangle(gfx++, 78 << 2, 198 << 2, 238 << 2, 214 << 2, G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
+        */
+
+       EnMag_DrawTextureIA8(&gfx, gTitleCopyright19982003Tex, 160, 16, 13, 199, 160, 16, 1024, 1024);
+
+       EnMag_DrawTextureIA8(&gfx, gTitleCreditDave2022Tex, 160, 16, 158, 184, 160, 16, 1024, 1024);
+
+       EnMag_DrawTextureIA8(&gfx, gTitleCreditHylianModdingTex, 160, 16, 158, 200, 160, 16, 1024, 1024);
+
+       EnMag_DrawTextureIA8(&gfx, gTitleCreditDecompTex, 160, 16, 158, 213, 160, 16, 1024, 1024);
+
     }
 
     if (gSaveContext.fileNum == 0xFEDC) {
@@ -518,34 +553,42 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxp) {
             textAlpha = 255;
         }
 
+        u8 textX = 160 - (7*(ARRAY_COUNT(pressStartFontIndices)*.5));
+
         // Text Shadow
         gDPPipeSync(gfx++);
         gDPSetCombineLERP(gfx++, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE,
                           0);
         gDPSetPrimColor(gfx++, 0, 0, 0, 0, 0, textAlpha);
 
-        rectLeft = YREG(7) + 1;
+        // rectLeft = YREG(7) + 1; // vanilla
+        rectLeft = textX + 1;
         for (i = 0; i < ARRAY_COUNT(pressStartFontIndices); i++) {
-            EnMag_DrawCharTexture(&gfx, font->fontBuf + pressStartFontIndices[i] * FONT_CHAR_TEX_SIZE, rectLeft,
-                                  YREG(10) + 172);
+            EnMag_DrawCharTexture(&gfx, font->fontBuf + (pressStartFontIndices[i] - 0x37) * FONT_CHAR_TEX_SIZE, rectLeft,
+                                  YREG(10) + 168);
             rectLeft += YREG(8);
+            /* vanilla
             if (i == 4) {
                 rectLeft += YREG(9);
             }
+            */
         }
 
         // Actual Text
         gDPPipeSync(gfx++);
         gDPSetPrimColor(gfx++, 0, 0, YREG(4), YREG(5), YREG(6), textAlpha);
 
-        rectLeft = YREG(7);
+        // rectLeft = YREG(7); // vanilla
+        rectLeft = textX;
         for (i = 0; i < ARRAY_COUNT(pressStartFontIndices); i++) {
-            EnMag_DrawCharTexture(&gfx, font->fontBuf + pressStartFontIndices[i] * FONT_CHAR_TEX_SIZE, rectLeft,
-                                  YREG(10) + 171);
+            EnMag_DrawCharTexture(&gfx, font->fontBuf + (pressStartFontIndices[i] - 0x37) * FONT_CHAR_TEX_SIZE, rectLeft,
+                                  YREG(10) + 167);
             rectLeft += YREG(8);
+            /* vanilla
             if (i == 4) {
                 rectLeft += YREG(9);
             }
+            */
         }
     }
 
@@ -560,6 +603,52 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxp) {
     }
 
     *gfxp = gfx;
+}
+
+void EnMag_DrawBuildInfo(Actor* thisx, PlayState* play) {
+    EnMag* this = (EnMag*)thisx;
+    GfxPrint printer;
+    Gfx* gfx;
+
+    if (CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DUP) &&
+    CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT) &&
+    !this->showBuildInfo) {
+        Audio_PlaySfxGeneral(NA_SE_SY_ATTENTION_URGENCY, &gSfxDefaultPos, 4,
+        &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+        this->showBuildInfo = true;
+
+    }
+
+    if(!this->showBuildInfo) {return;}
+    
+    OPEN_DISPS(play->state.gfxCtx, __FILE__, __LINE__);
+
+    gfx = POLY_OPA_DISP + 1;
+    gSPDisplayList(OVERLAY_DISP++, gfx);
+
+    GfxPrint_Init(&printer);
+    GfxPrint_Open(&printer, gfx);
+
+    GfxPrint_SetColor(&printer, 255, 255, 0, 255);
+    GfxPrint_SetPos(&printer, 1, 1);
+    GfxPrint_Printf(&printer, "[OOTDQ] BUILD SUCCESSFUL");
+
+    GfxPrint_SetPos(&printer, 1, 2);
+    GfxPrint_Printf(&printer, "[OOTDQ] BUILD DATE: %s", __DATE__);
+
+    GfxPrint_SetPos(&printer, 1, 3);
+    GfxPrint_Printf(&printer, "[OOTDQ] BUILD TIME: %s", __TIME__);
+
+    gfx = GfxPrint_Close(&printer);
+    GfxPrint_Destroy(&printer);
+
+    gSPEndDisplayList(gfx++);
+    gSPBranchList(POLY_OPA_DISP, gfx);
+    POLY_OPA_DISP = gfx;
+
+    CLOSE_DISPS(play->state.gfxCtx, __FILE__, __LINE__);
+
 }
 
 void EnMag_Draw(Actor* thisx, PlayState* play) {
@@ -580,4 +669,7 @@ void EnMag_Draw(Actor* thisx, PlayState* play) {
     POLY_OPA_DISP = gfx;
 
     CLOSE_DISPS(play->state.gfxCtx, "../z_en_mag.c", 1161);
+
+    EnMag_DrawBuildInfo(thisx, play);
+
 }
