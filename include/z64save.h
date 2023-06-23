@@ -183,6 +183,11 @@ typedef struct {
     /* 0x0022 */ u16 deaths;
     /* 0x0024 */ char playerName[8];
     /* 0x002C */ s16 n64ddFlag;
+    u8  shieldDurabilityDeku;
+    u8  shieldDurabilityHylian;
+    u8  shieldDurabilityMirror;
+    u8 heartsBlocked;
+    u8 permHealthCapacity;
     /* 0x002E */ s16 healthCapacity; // "max_life"
     /* 0x0030 */ s16 health; // "now_life"
     /* 0x0032 */ s8 magicLevel; // 0 for no magic/new load, 1 for magic, 2 for double magic
@@ -222,6 +227,8 @@ typedef struct {
     /* 0x12C6 */ u8 scarecrowSpawnSong[0x80];
     /* 0x1346 */ char unk_1346[0x02];
     /* 0x1348 */ HorseData horseData;
+    s16 savePoint;
+    RespawnData saveRespawnPoint;
     /* 0x1352 */ u16 checksum; // "check_sum"
     /* 0x1354 */ s32 fileNum; // "file_no"
     /* 0x1358 */ char unk_1358[0x0004];
@@ -284,6 +291,7 @@ typedef struct {
     /* 0x1420 */ s16 worldMapArea;
     /* 0x1422 */ s16 sunsSongState; // controls the effects of suns song
     /* 0x1424 */ s16 healthAccumulator;
+    u8 saveReturnFlag;
 } SaveContext; // size = 0x1428
 
 typedef enum {

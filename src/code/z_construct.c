@@ -72,6 +72,31 @@ void Interface_Init(PlayState* play) {
                             (uintptr_t)_do_action_staticSegmentRomStart + doActionOffset, DO_ACTION_TEX_SIZE,
                             "../z_construct.c", 178);
 
+    //dpad item textures awesome
+    interfaceCtx->dpadItemSegment = GameState_Alloc(&play->state, 0x6000, __FILE__, __LINE__);
+
+    osSyncPrintf("LETS LOAD THESE FUCKING DPAD ITEMS AT=%x\n", 0x6000);
+    osSyncPrintf("parameter->dpadItemSegment=%x\n", interfaceCtx->dpadItemSegment);
+
+    ASSERT(interfaceCtx->dpadItemSegment != NULL, "parameter->dpadItemSegment != NULL", "../z_construct.c", 193);
+
+    u64 dpadItems[6] = {
+        ITEM_TUNIC_KOKIRI, //0x0000
+        ITEM_TUNIC_GORON,  //0x1000
+        ITEM_TUNIC_ZORA,   //0x2000
+        ITEM_BOOTS_KOKIRI, //0x3000
+        ITEM_BOOTS_IRON,   //0x4000
+        ITEM_BOOTS_HOVER,  //0x5000
+
+    };
+
+    osSyncPrintf("Register_Item[%x, %x, %x, %x, %x, %x]\n", dpadItems[0], dpadItems[1], dpadItems[2], dpadItems[3], dpadItems[4], dpadItems[5]);
+
+    for(u8 i = 0; i <= 5; i++) {
+        DmaMgr_RequestSyncDebug(interfaceCtx->dpadItemSegment + (0x1000 * i), (uintptr_t)_icon_item_staticSegmentRomStart + (dpadItems[i] * 0x1000), 0x1000, __FILE__, __LINE__);
+
+    }
+
     interfaceCtx->iconItemSegment = GameState_Alloc(&play->state, ICON_ITEM_SEGMENT_SIZE, "../z_construct.c", 190);
 
     // "Icon Item Texture Initialization = %x"
@@ -158,16 +183,16 @@ void Interface_Init(PlayState* play) {
     interfaceCtx->unk_23C = interfaceCtx->unk_242 = 0;
 
     R_ITEM_BTN_X(0) = B_BUTTON_X;
-    R_B_BTN_COLOR(0) = 255;
-    R_B_BTN_COLOR(1) = 30;
-    R_B_BTN_COLOR(2) = 30;
+    R_B_BTN_COLOR(0) = 42;
+    R_B_BTN_COLOR(1) = 91;
+    R_B_BTN_COLOR(2) = 42;
     R_ITEM_ICON_X(0) = B_BUTTON_X;
     R_ITEM_AMMO_X(0) = B_BUTTON_X + 2;
     R_A_BTN_X = A_BUTTON_X;
     R_A_ICON_X = A_BUTTON_X;
-    R_A_BTN_COLOR(0) = 0;
-    R_A_BTN_COLOR(1) = 200;
-    R_A_BTN_COLOR(2) = 50;
+    R_A_BTN_COLOR(0) = 60;
+    R_A_BTN_COLOR(1) = 65;
+    R_A_BTN_COLOR(2) = 150;
 }
 
 #define TEXTBOX_SEGMENT_SIZE \

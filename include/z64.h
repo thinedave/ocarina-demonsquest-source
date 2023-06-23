@@ -421,6 +421,7 @@ typedef struct {
     /* 0x025E */ s16    mapPaletteIndex; // "map_palete_no"
     /* 0x0260 */ u8     unk_260;
     /* 0x0261 */ u8     unk_261;
+    u8*                 dpadItemSegment;
     struct {
         /* 0x0262 */ u8    hGauge;     // "h_gage"; unknown?
         /* 0x0263 */ u8    bButton;    // "b_button"
@@ -877,6 +878,9 @@ typedef struct PlayState {
     /* 0x1242B */ u8 viewpoint; // toggleable camera setting by shops or player. Is also equal to the bgCamIndex + 1
     /* 0x1242C */ SceneTableEntry* loadedScene;
     /* 0x12430 */ char unk_12430[0xE8];
+    s16 stamina;
+    s16 stability;
+    s16 poise;
 } PlayState; // size = 0x12518
 
 typedef struct {

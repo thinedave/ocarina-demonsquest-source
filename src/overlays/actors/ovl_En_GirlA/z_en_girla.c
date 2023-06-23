@@ -445,16 +445,8 @@ s32 EnGirlA_CanBuy_Bombs(PlayState* play, EnGirlA* this) {
 }
 
 s32 EnGirlA_CanBuy_DekuNuts(PlayState* play, EnGirlA* this) {
-    if ((CUR_CAPACITY(UPG_DEKU_NUTS) != 0) && (AMMO(ITEM_DEKU_NUT) >= CUR_CAPACITY(UPG_DEKU_NUTS))) {
-        return CANBUY_RESULT_CANT_GET_NOW;
-    }
-    if (gSaveContext.rupees < this->basePrice) {
-        return CANBUY_RESULT_NEED_RUPEES;
-    }
-    if (Item_CheckObtainability(ITEM_DEKU_NUT) == ITEM_NONE) {
-        return CANBUY_RESULT_SUCCESS_FANFARE;
-    }
-    return CANBUY_RESULT_SUCCESS;
+    return CANBUY_RESULT_CANT_GET_NOW;
+
 }
 
 s32 EnGirlA_CanBuy_DekuSticks(PlayState* play, EnGirlA* this) {
@@ -762,11 +754,13 @@ void EnGirlA_ItemGive_Longsword(PlayState* play, EnGirlA* this) {
 
 void EnGirlA_ItemGive_HylianShield(PlayState* play, EnGirlA* this) {
     Item_Give(play, ITEM_SHIELD_HYLIAN);
+    gSaveContext.shieldDurabilityHylian = 50;
     Rupees_ChangeBy(-this->basePrice);
 }
 
 void EnGirlA_ItemGive_DekuShield(PlayState* play, EnGirlA* this) {
     Item_Give(play, ITEM_SHIELD_DEKU);
+    gSaveContext.shieldDurabilityDeku = 25;
     Rupees_ChangeBy(-this->basePrice);
 }
 

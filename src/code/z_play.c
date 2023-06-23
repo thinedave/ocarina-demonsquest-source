@@ -444,6 +444,11 @@ void Play_Init(GameState* thisx) {
         // Presumably the ROM was larger at a previous point in development when this debug feature was used.
         DmaMgr_DmaRomToRam(0x03FEB000, gDebugCutsceneScript, sizeof(sDebugCutsceneScriptBuf));
     }
+
+    this->poise = 100;
+    this->stability = 100;
+    this->stamina = 100;
+
 }
 
 void Play_Update(PlayState* this) {
@@ -1128,7 +1133,7 @@ void Play_Draw(PlayState* this) {
                 // content and can be used by `PreRender_ApplyFilters` below.
                 Sched_FlushTaskQueue();
 
-                PreRender_ApplyFilters(&this->pauseBgPreRender);
+                //PreRender_ApplyFilters(&this->pauseBgPreRender);
 
                 R_PAUSE_BG_PRERENDER_STATE = PAUSE_BG_PRERENDER_READY;
             } else if (R_PAUSE_BG_PRERENDER_STATE >= PAUSE_BG_PRERENDER_MAX) {

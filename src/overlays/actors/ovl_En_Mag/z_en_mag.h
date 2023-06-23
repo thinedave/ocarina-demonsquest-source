@@ -30,6 +30,7 @@ typedef struct EnMag {
     /* 0xE31C */ s32 unk_E31C;
     /* 0xE320 */ s32 unk_E320;
     /* 0xE324 */ char unk_E324[0x0004];
+    bool showBuildInfo;
 } EnMag; // size = 0xE328
 
 typedef enum {

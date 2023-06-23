@@ -7716,14 +7716,14 @@ Vec3s Camera_Update(Camera* camera) {
     }
 
     // enable/disable debug cam
-    if (CHECK_BTN_ALL(D_8015BD7C->state.input[2].press.button, BTN_START)) {
+    /*if (CHECK_BTN_ALL(D_8015BD7C->state.input[2].press.button, BTN_START)) {
         gDebugCamEnabled ^= 1;
         if (gDebugCamEnabled) {
             DebugCamera_Enable(&D_8015BD80, camera);
         } else if (camera->play->csCtx.state != CS_STATE_IDLE) {
             Cutscene_StopManual(camera->play, &camera->play->csCtx);
         }
-    }
+    }*/
 
     // Debug cam update
     if (gDebugCamEnabled) {
@@ -7802,9 +7802,9 @@ Vec3s Camera_Update(Camera* camera) {
                      CAM_BINANG_TO_DEG(camera->camDir.x), camera->camDir.y, CAM_BINANG_TO_DEG(camera->camDir.y));
     }
 
-    if (camera->timer != -1 && CHECK_BTN_ALL(D_8015BD7C->state.input[0].press.button, BTN_DRIGHT)) {
+    /*if (camera->timer != -1 && CHECK_BTN_ALL(D_8015BD7C->state.input[0].press.button, BTN_DRIGHT)) {
         camera->timer = 0;
-    }
+    }*/
 
     if (R_DEBUG_CAM_UPDATE) {
         osSyncPrintf("camera: out (%f %f %f) (%f %f %f)\n", camera->at.x, camera->at.y, camera->at.z, camera->eye.x,

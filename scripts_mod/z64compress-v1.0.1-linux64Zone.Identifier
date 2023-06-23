@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://github.com/
+HostUrl=https://objects.githubusercontent.com/github-production-release-asset-2e65be/362990802/564867af-d26c-4cc3-b7a7-b45001871899?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20221114%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221114T001337Z&X-Amz-Expires=300&X-Amz-Signature=5b8e6164b24e524e5b0c7f1b08ed58ddfe68765c94d53ee3f53af3ec742b2614&X-Amz-SignedHeaders=host&actor_id=94513260&key_id=0&repo_id=362990802&response-content-disposition=attachment%3B%20filename%3Dz64compress-v1.0.1-linux64&response-content-type=application%2Foctet-stream

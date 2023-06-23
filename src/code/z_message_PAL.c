@@ -3317,6 +3317,7 @@ void Message_Update(PlayState* play) {
             }
             if ((s32)(gSaveContext.inventory.questItems & 0xF0000000) == (4 << QUEST_HEART_PIECE_COUNT)) {
                 gSaveContext.inventory.questItems ^= (4 << QUEST_HEART_PIECE_COUNT);
+                gSaveContext.permHealthCapacity += 0x10;
                 gSaveContext.healthCapacity += 0x10;
                 gSaveContext.health += 0x10;
             }

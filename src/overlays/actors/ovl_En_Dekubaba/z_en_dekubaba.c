@@ -992,11 +992,11 @@ void EnDekubaba_ShrinkDie(EnDekubaba* this, PlayState* play) {
     if (Math_StepToF(&this->actor.scale.x, this->size * 0.1f * 0.01f, this->size * 0.1f * 0.01f)) {
         func_800286CC(play, &this->actor.home.pos, &sZeroVec, &sZeroVec, this->size * 500.0f, this->size * 100.0f);
         if (this->actor.dropFlag == 0) {
-            Item_DropCollectible(play, &this->actor.world.pos, ITEM00_NUTS);
+            Item_DropCollectible(play, &this->actor.world.pos, ITEM00_STICK);
 
             if (this->actor.params == DEKUBABA_BIG) {
-                Item_DropCollectible(play, &this->actor.world.pos, ITEM00_NUTS);
-                Item_DropCollectible(play, &this->actor.world.pos, ITEM00_NUTS);
+                Item_DropCollectible(play, &this->actor.world.pos, ITEM00_STICK);
+                Item_DropCollectible(play, &this->actor.world.pos, ITEM00_STICK);
             }
         } else {
             Item_DropCollectibleRandom(play, &this->actor, &this->actor.world.pos, 0x30);

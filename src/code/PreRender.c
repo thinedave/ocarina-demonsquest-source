@@ -784,16 +784,18 @@ void PreRender_ApplyFilters(PreRender* this) {
 
                 cvg >>= 5;
                 cvg++;
+                /*
                 if (cvg != 8) {
                     // If this pixel has only partial coverage, perform the Video Filter interpolation on it
                     PreRender_AntiAliasFilter(this, x, y);
                 }
+                */
             }
         }
 
         if ((R_HREG_MODE == HREG_MODE_PRERENDER ? R_PRERENDER_DIVOT_CONTROL : 0) != 0) {
             // Apply divot filter
-            PreRender_DivotFilter(this);
+            //PreRender_DivotFilter(this);
         }
     }
 }

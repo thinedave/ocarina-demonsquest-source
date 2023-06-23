@@ -560,9 +560,9 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
         titleDemoSkipped = true;
     }
 
-    if ((csCtx->curFrame == cmd->startFrame) || titleDemoSkipped ||
+    if ((csCtx->curFrame == cmd->startFrame) || titleDemoSkipped/* ||
         ((csCtx->curFrame > 20) && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_START) &&
-         (gSaveContext.fileNum != 0xFEDC))) {
+         (gSaveContext.fileNum != 0xFEDC))*/) {
         csCtx->state = CS_STATE_RUN_UNSTOPPABLE;
         Audio_SetCutsceneFlag(0);
         gSaveContext.cutsceneTransitionControl = 1;
@@ -1778,10 +1778,10 @@ void Cutscene_ProcessScript(PlayState* play, CutsceneContext* csCtx, u8* script)
         return;
     }
 
-    if (CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT)) {
+    /*if (CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT)) {
         csCtx->state = CS_STATE_STOP;
         return;
-    }
+    }*/
 
     for (i = 0; i < totalEntries; i++) {
         MemCpy(&cmdType, script, sizeof(cmdType));

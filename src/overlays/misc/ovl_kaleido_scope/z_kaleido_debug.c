@@ -374,8 +374,10 @@ void KaleidoScope_DrawDebugEditor(PlayState* play) {
             } else if (CHECK_BTN_ALL(input->press.button, BTN_CDOWN) ||
                        CHECK_BTN_ALL(input->press.button, BTN_CRIGHT)) {
                 gSaveContext.healthCapacity += 0x10;
+                gSaveContext.permHealthCapacity += 0x10;
                 if (gSaveContext.healthCapacity >= 0x140) {
                     gSaveContext.healthCapacity = 0x140;
+                    gSaveContext.permHealthCapacity = 0x140;
                 }
             }
             break;

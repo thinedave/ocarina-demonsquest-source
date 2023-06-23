@@ -10,6 +10,11 @@ typedef struct {
     /* 0x06 */ s16 deaths;
     /* 0x08 */ char playerName[8];
     /* 0x10 */ s16 n64ddFlag;
+    u8  shieldDurabilityDeku;
+    u8  shieldDurabilityHylian;
+    u8  shieldDurabilityMirror;
+    u8 heartsBlocked;
+    u8 permHealthCapacity;
     /* 0x12 */ s16 healthCapacity; // "max_life"
     /* 0x14 */ s16 health;         // "now_life"
     /* 0x16 */ s8 magicLevel;
@@ -54,6 +59,8 @@ typedef struct {
     /* 0x12AA */ u8 scarecrowSpawnSong[0x80];
     /* 0x132A */ char unk_132A[0x02];
     /* 0x132C */ HorseData horseData;
+    s16 savePoint; // save point
+    RespawnData saveRespawnPoint;
     /* 0x1336 */ u16 checksum; // "check_sum"
 } SaveInfo;                    // size = 0x1338
 
@@ -101,6 +108,11 @@ static SavePlayerData sNewSavePlayerData = {
     0,                                                  // deaths
     { 0x3E, 0x3E, 0x3E, 0x3E, 0x3E, 0x3E, 0x3E, 0x3E }, // playerName
     0,                                                  // n64ddFlag
+    25,                                                 // shieldDurabilityDeku
+    50,                                                 // shieldDurabilityHylian
+    75,                                                 // shieldDurabilityMirror
+    0x00,                                               // heartsBlocked
+    0x30,                                               // permHeathCapacity
     0x30,                                               // healthCapacity
     0x30,                                               // defense
     0,                                                  // magicLevel
@@ -208,8 +220,12 @@ void Sram_InitNewSave(void) {
     bzero(&SAVE_INFO, sizeof(SaveInfo));
     gSaveContext.totalDays = 0;
     gSaveContext.bgsDayCount = 0;
+    gSaveContext.savePoint = -1; // default save point
 
     SAVE_PLAYER_DATA = sNewSavePlayerData;
+    gSaveContext.shieldDurabilityDeku = 25;
+    gSaveContext.shieldDurabilityHylian = 50;
+    gSaveContext.shieldDurabilityMirror = 75;
     gSaveContext.equips = sNewSaveEquips;
     gSaveContext.inventory = sNewSaveInventory;
 
@@ -229,6 +245,11 @@ static SavePlayerData sDebugSavePlayerData = {
     0,                                                  // deaths
     { 0x15, 0x12, 0x17, 0x14, 0x3E, 0x3E, 0x3E, 0x3E }, // playerName ( "LINK" )
     0,                                                  // n64ddFlag
+    25,                                                 // shieldDurabilityDeku
+    50,                                                 // shieldDurabilityHylian
+    75,                                                 // shieldDurabilityMirror
+    0x20,                                               // heartsBlocked
+    0xE0,                                               // permHeathCapacity
     0xE0,                                               // healthCapacity
     0xE0,                                               // health
     0,                                                  // magicLevel
@@ -352,6 +373,9 @@ void Sram_InitDebugSave(void) {
     gSaveContext.bgsDayCount = 0;
 
     SAVE_PLAYER_DATA = sDebugSavePlayerData;
+    gSaveContext.shieldDurabilityDeku = 25;
+    gSaveContext.shieldDurabilityHylian = 50;
+    gSaveContext.shieldDurabilityMirror = 75;
     gSaveContext.equips = sDebugSaveEquips;
     gSaveContext.inventory = sDebugSaveInventory;
 
@@ -379,6 +403,8 @@ void Sram_InitDebugSave(void) {
     gSaveContext.entranceIndex = ENTR_HYRULE_FIELD_0;
     gSaveContext.magicLevel = 0;
     gSaveContext.sceneFlags[SCENE_WATER_TEMPLE].swch = 0x40000000;
+
+    gSaveContext.savePoint = -1; // debug default save point
 }
 
 static s16 sDungeonEntrances[] = {
@@ -425,6 +451,7 @@ void Sram_OpenSave(SramContext* sramCtx) {
     osSyncPrintf("SCENE_DATA_ID = %d   SceneNo = %d\n", gSaveContext.savedSceneId,
                  ((void)0, gSaveContext.entranceIndex));
 
+    //vanilla entrances
     switch (gSaveContext.savedSceneId) {
         case SCENE_DEKU_TREE:
         case SCENE_DODONGOS_CAVERN:
@@ -493,12 +520,14 @@ void Sram_OpenSave(SramContext* sramCtx) {
             break;
     }
 
+    if (gSaveContext.savePoint != -1) {
+        // start the game from the last save point
+        gSaveContext.entranceIndex = gSaveContext.saveRespawnPoint.entranceIndex;
+        gSaveContext.saveReturnFlag = 1;
+    }
+
     osSyncPrintf("scene_no = %d\n", gSaveContext.entranceIndex);
     osSyncPrintf(VT_RST);
-
-    if (gSaveContext.health < 0x30) {
-        gSaveContext.health = 0x30;
-    }
 
     if (gSaveContext.scarecrowLongSongSet) {
         osSyncPrintf(VT_FGCOL(BLUE));
@@ -686,20 +715,7 @@ void Sram_VerifyAndLoadAllSaves(FileSelectState* fileSelect, SramContext* sramCt
                 bzero(&gSaveContext.totalDays, sizeof(s32));
                 bzero(&gSaveContext.bgsDayCount, sizeof(s32));
 
-                if (!slotNum) {
-                    Sram_InitDebugSave();
-                    gSaveContext.newf[0] = 'Z';
-                    gSaveContext.newf[1] = 'E';
-                    gSaveContext.newf[2] = 'L';
-                    gSaveContext.newf[3] = 'D';
-                    gSaveContext.newf[4] = 'A';
-                    gSaveContext.newf[5] = 'Z';
-                    osSyncPrintf("newf=%x,%x,%x,%x,%x,%x\n", gSaveContext.newf[0], gSaveContext.newf[1],
-                                 gSaveContext.newf[2], gSaveContext.newf[3], gSaveContext.newf[4],
-                                 gSaveContext.newf[5]);
-                } else {
-                    Sram_InitNewSave();
-                }
+                Sram_InitNewSave();
 
                 ptr = (u16*)&gSaveContext;
                 osSyncPrintf("\n--------------------------------------------------------------\n");
@@ -784,20 +800,12 @@ void Sram_InitSave(FileSelectState* fileSelect, SramContext* sramCtx) {
     u16* ptr;
     u16 checksum;
 
-    if (fileSelect->buttonIndex != 0) {
-        Sram_InitNewSave();
-    } else {
-        Sram_InitDebugSave();
-    }
+    Sram_InitNewSave();
 
     gSaveContext.entranceIndex = ENTR_LINKS_HOUSE_0;
     gSaveContext.linkAge = LINK_AGE_CHILD;
     gSaveContext.dayTime = CLOCK_TIME(10, 0);
     gSaveContext.cutsceneIndex = 0xFFF1;
-
-    if (fileSelect->buttonIndex == 0) {
-        gSaveContext.cutsceneIndex = 0;
-    }
 
     for (offset = 0; offset < 8; offset++) {
         gSaveContext.playerName[offset] = fileSelect->fileNames[fileSelect->buttonIndex][offset];

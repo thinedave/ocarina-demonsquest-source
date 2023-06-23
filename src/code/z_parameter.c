@@ -1159,6 +1159,18 @@ Gfx* Gfx_TextureIA8(Gfx* displayListHead, void* texture, s16 textureWidth, s16 t
     return displayListHead;
 }
 
+Gfx* Gfx_TextureRGBA32(Gfx* displayListHead, void* texture, s16 textureWidth, s16 textureHeight, s16 rectLeft, s16 rectTop,
+                    s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy) {
+    gDPLoadTextureBlock(displayListHead++, texture, G_IM_FMT_RGBA, G_IM_SIZ_32b, textureWidth, textureHeight, 0,
+                        G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                        G_TX_NOLOD);
+
+    gSPTextureRectangle(displayListHead++, (rectLeft+(textureWidth/2)) << 2, (rectTop+(textureHeight/2)) << 2, ((rectLeft + rectWidth)+(textureWidth/2)) << 2,
+                        ((rectTop + rectHeight)+(textureWidth/2)) << 2, G_TX_RENDERTILE, 0, 0, dsdx, dtdy);
+
+    return displayListHead;
+}
+
 Gfx* Gfx_TextureI8(Gfx* displayListHead, void* texture, s16 textureWidth, s16 textureHeight, s16 rectLeft, s16 rectTop,
                    s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy) {
     gDPLoadTextureBlock(displayListHead++, texture, G_IM_FMT_I, G_IM_SIZ_8b, textureWidth, textureHeight, 0,
@@ -1361,6 +1373,23 @@ u8 Item_Give(PlayState* play, u8 item) {
     osSyncPrintf(VT_FGCOL(YELLOW));
     osSyncPrintf("item_get_setting=%d  pt=%d  z=%x\n", item, slot, gSaveContext.inventory.items[slot]);
     osSyncPrintf(VT_RST);
+
+    switch(item) {
+        case ITEM_SHIELD_HYLIAN:
+            gSaveContext.shieldDurabilityHylian = 50;
+            break;
+
+        case ITEM_SHIELD_DEKU:
+            gSaveContext.shieldDurabilityDeku = 25;
+            break;
+
+        case ITEM_SHIELD_MIRROR:
+            gSaveContext.shieldDurabilityMirror = 75;
+            break;
+        default:
+            break;
+
+    }
 
     if ((item >= ITEM_MEDALLION_FOREST) && (item <= ITEM_MEDALLION_LIGHT)) {
         gSaveContext.inventory.questItems |= gBitFlags[item - ITEM_MEDALLION_FOREST + QUEST_MEDALLION_FOREST];
@@ -1711,6 +1740,7 @@ u8 Item_Give(PlayState* play, u8 item) {
         return ITEM_NONE;
     } else if (item == ITEM_HEART_CONTAINER) {
         gSaveContext.healthCapacity += 0x10;
+        gSaveContext.permHealthCapacity += 0x10;
         gSaveContext.health += 0x10;
         return ITEM_NONE;
     } else if (item == ITEM_RECOVERY_HEART) {
@@ -2199,8 +2229,8 @@ s32 Health_ChangeBy(PlayState* play, s16 amount) {
 
     gSaveContext.health += amount;
 
-    if (gSaveContext.health > gSaveContext.healthCapacity) {
-        gSaveContext.health = gSaveContext.healthCapacity;
+    if (gSaveContext.health > gSaveContext.healthCapacity-gSaveContext.heartsBlocked) {
+        gSaveContext.health = gSaveContext.healthCapacity-gSaveContext.heartsBlocked;
     }
 
     heartCount = gSaveContext.health % 0x10;
@@ -2229,6 +2259,7 @@ s32 Health_ChangeBy(PlayState* play, s16 amount) {
 
 void Health_GiveHearts(s16 hearts) {
     gSaveContext.healthCapacity += hearts * 0x10;
+    gSaveContext.permHealthCapacity += hearts * 0x10;
 }
 
 void Rupees_ChangeBy(s16 rupeeChange) {
@@ -2620,6 +2651,9 @@ void Magic_Update(PlayState* play) {
     }
 }
 
+u16 curMeterY = 30;
+u16 magicMeterX = 239;
+
 void Magic_DrawMeter(PlayState* play) {
     InterfaceContext* interfaceCtx = &play->interfaceCtx;
     s16 magicMeterY;
@@ -2638,18 +2672,18 @@ void Magic_DrawMeter(PlayState* play) {
         gDPSetPrimColor(OVERLAY_DISP++, 0, 0, sMagicBorderR, sMagicBorderG, sMagicBorderB, interfaceCtx->magicAlpha);
         gDPSetEnvColor(OVERLAY_DISP++, 100, 50, 50, 255);
 
-        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterEndTex, 8, 16, R_MAGIC_METER_X, magicMeterY, 8, 16,
-                                      1 << 10, 1 << 10);
+        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterEndTex, 8, 16, R_MAGIC_METER_X, magicMeterY, 8, 10,
+                                      1 << 10, 1.6 * (1 << 10));
 
         OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterMidTex, 24, 16, R_MAGIC_METER_X + 8, magicMeterY,
-                                      gSaveContext.magicCapacity, 16, 1 << 10, 1 << 10);
+                                      gSaveContext.magicCapacity, 10, 1 << 10, 1.6 * (1 << 10));
 
         gDPLoadTextureBlock(OVERLAY_DISP++, gMagicMeterEndTex, G_IM_FMT_IA, G_IM_SIZ_8b, 8, 16, 0,
                             G_TX_MIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 3, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
         gSPTextureRectangle(OVERLAY_DISP++, (R_MAGIC_METER_X + gSaveContext.magicCapacity + 8) << 2, magicMeterY << 2,
-                            (R_MAGIC_METER_X + gSaveContext.magicCapacity + 16) << 2, (magicMeterY + 16) << 2,
-                            G_TX_RENDERTILE, 256, 0, 1 << 10, 1 << 10);
+                            (R_MAGIC_METER_X + gSaveContext.magicCapacity + 16) << 2, (magicMeterY + 10) << 2,
+                            G_TX_RENDERTILE, 256, 0, 1 << 10, 1.6 * (1 << 10));
 
         gDPPipeSync(OVERLAY_DISP++);
         gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE, PRIMITIVE,
@@ -2664,18 +2698,18 @@ void Magic_DrawMeter(PlayState* play) {
                                  G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
                                  G_TX_NOLOD, G_TX_NOLOD);
 
-            gSPTextureRectangle(OVERLAY_DISP++, R_MAGIC_FILL_X << 2, (magicMeterY + 3) << 2,
-                                (R_MAGIC_FILL_X + gSaveContext.magic) << 2, (magicMeterY + 10) << 2, G_TX_RENDERTILE, 0,
-                                0, 1 << 10, 1 << 10);
+            gSPTextureRectangle(OVERLAY_DISP++, R_MAGIC_FILL_X << 2, (magicMeterY + 2) << 2,
+                                (R_MAGIC_FILL_X + gSaveContext.magic) << 2, (magicMeterY + 6) << 2, G_TX_RENDERTILE, 0,
+                                0, 1 << 10, 1.6 * (1 << 10));
 
             // Fill the rest of the meter with the normal magic color
             gDPPipeSync(OVERLAY_DISP++);
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, R_MAGIC_FILL_COLOR(0), R_MAGIC_FILL_COLOR(1), R_MAGIC_FILL_COLOR(2),
                             interfaceCtx->magicAlpha);
 
-            gSPTextureRectangle(OVERLAY_DISP++, R_MAGIC_FILL_X << 2, (magicMeterY + 3) << 2,
-                                (R_MAGIC_FILL_X + gSaveContext.magicTarget) << 2, (magicMeterY + 10) << 2,
-                                G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
+            gSPTextureRectangle(OVERLAY_DISP++, R_MAGIC_FILL_X << 2, (magicMeterY + 2) << 2,
+                                (R_MAGIC_FILL_X + gSaveContext.magicTarget) << 2, (magicMeterY + 6) << 2,
+                                G_TX_RENDERTILE, 0, 0, 1 << 10, 1.6 * (1 << 10));
         } else {
             // Fill the whole meter with the normal magic color
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, R_MAGIC_FILL_COLOR(0), R_MAGIC_FILL_COLOR(1), R_MAGIC_FILL_COLOR(2),
@@ -2685,13 +2719,400 @@ void Magic_DrawMeter(PlayState* play) {
                                  G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
                                  G_TX_NOLOD, G_TX_NOLOD);
 
-            gSPTextureRectangle(OVERLAY_DISP++, R_MAGIC_FILL_X << 2, (magicMeterY + 3) << 2,
-                                (R_MAGIC_FILL_X + gSaveContext.magic) << 2, (magicMeterY + 10) << 2, G_TX_RENDERTILE, 0,
-                                0, 1 << 10, 1 << 10);
+            gSPTextureRectangle(OVERLAY_DISP++, R_MAGIC_FILL_X << 2, (magicMeterY + 2) << 2,
+                                (R_MAGIC_FILL_X + gSaveContext.magic) << 2, (magicMeterY + 6) << 2, G_TX_RENDERTILE, 0,
+                                0, 1 << 10, 1.6 * (1 << 10));
         }
     }
 
     CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", 2731);
+}
+
+void Interface_DrawImageRGBA32(Gfx* gfx, s16 centerX, s16 centerY, u8* source, u32 width, u32 height) {
+    //Gfx* gfx = *gfxp;
+    u8* curTexture;
+    s32 textureCount;
+    u32 rectLeft;
+    u32 rectTop;
+    u32 textureHeight;
+    s32 remainingSize;
+    s32 textureSize;
+    s32 pad;
+    s32 i;
+
+    Gfx_SetupDL_56Ptr(&gfx);
+
+    curTexture = source;
+    rectLeft = centerX - (width / 2);
+    rectTop = centerY - (height / 2);
+    textureHeight = 4096 / (width << 2);
+    remainingSize = (width * height) << 2;
+    textureSize = (width * textureHeight) << 2;
+    textureCount = remainingSize / textureSize;
+    if ((remainingSize % textureSize) != 0) {
+        textureCount += 1;
+    }
+
+    gDPSetTileCustom(gfx++, G_IM_FMT_RGBA, G_IM_SIZ_32b, width, textureHeight, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+                     G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+    remainingSize -= textureSize;
+
+    for (i = 0; i < textureCount; i++) {
+        gDPSetTextureImage(gfx++, G_IM_FMT_RGBA, G_IM_SIZ_32b, width, curTexture);
+
+        gDPLoadSync(gfx++);
+        gDPLoadTile(gfx++, G_TX_LOADTILE, 0, 0, (width - 1) << 2, (textureHeight - 1) << 2);
+
+        gSPTextureRectangle(gfx++, rectLeft << 2, rectTop << 2, (rectLeft + (s32)width) << 2,
+                            (rectTop + textureHeight) << 2, G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
+
+        curTexture += textureSize;
+        rectTop += textureHeight;
+
+        if ((remainingSize - textureSize) < 0) {
+            if (remainingSize > 0) {
+                textureHeight = remainingSize / (s32)(width << 2);
+                remainingSize -= textureSize;
+
+                gDPSetTileCustom(gfx++, G_IM_FMT_RGBA, G_IM_SIZ_32b, width, textureHeight, 0,
+                                 G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+                                 G_TX_NOLOD, G_TX_NOLOD);
+            }
+        } else {
+            remainingSize -= textureSize;
+        }
+    }
+
+    //*gfxp = gfx;
+}
+
+void Durability_DrawMeter(PlayState* play) {
+    InterfaceContext* interfaceCtx = &play->interfaceCtx;
+    Player* player = GET_PLAYER(play);
+    u8 durMeterY;
+    u8 capacity = 0;
+    u8 durability = 0;
+    u32 shieldOffset = 0;
+
+    switch(player->currentShield) {
+        case PLAYER_SHIELD_DEKU:
+            durability = gSaveContext.shieldDurabilityDeku;
+            capacity = 25;
+            shieldOffset = 0x6000;
+            break;
+
+        case PLAYER_SHIELD_HYLIAN:
+            durability = gSaveContext.shieldDurabilityHylian;
+            capacity = 50;
+            shieldOffset = 0x7000;
+            break;
+
+        case PLAYER_SHIELD_MIRROR:
+            shieldOffset = 0x8000;
+            break;
+        
+        default:
+            durability = 0;
+            capacity = 0;
+            shieldOffset = 0;
+            break;
+
+    }
+
+    OPEN_DISPS(play->state.gfxCtx, "../z_parameter.c", __LINE__);
+
+        durMeterY = 175;
+
+        Gfx_SetupDL_39Overlay(play->state.gfxCtx);
+
+        /*
+
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->magicAlpha);
+        gDPSetEnvColor(OVERLAY_DISP++, 100, 50, 50, 255);
+
+        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterEndTex, 8, 16, R_MAGIC_METER_X, durMeterY, 8, 16,
+                                      1 << 10, 1 << 10);
+
+        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterMidTex, 24, 16, R_MAGIC_METER_X + 8, durMeterY,
+                                      capacity, 16, 1 << 10, 1 << 10);
+
+        gDPLoadTextureBlock(OVERLAY_DISP++, gMagicMeterEndTex, G_IM_FMT_IA, G_IM_SIZ_8b, 8, 16, 0,
+                            G_TX_MIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 3, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+        gSPTextureRectangle(OVERLAY_DISP++, (R_MAGIC_METER_X + capacity + 8) << 2, durMeterY << 2,
+                            (R_MAGIC_METER_X + capacity + 16) << 2, (durMeterY + 16) << 2,
+                            G_TX_RENDERTILE, 256, 0, 1 << 10, 1 << 10);
+
+        gDPPipeSync(OVERLAY_DISP++);
+        gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE, PRIMITIVE,
+                          ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE);
+        gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
+
+        // Fill the whole meter with the normal magic color
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 200, 150, 0,
+                        interfaceCtx->magicAlpha);
+
+        gDPLoadMultiBlock_4b(OVERLAY_DISP++, gMagicMeterFillTex, 0x0000, G_TX_RENDERTILE, G_IM_FMT_I, 16, 16, 0,
+                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                             G_TX_NOLOD, G_TX_NOLOD);
+
+        gSPTextureRectangle(OVERLAY_DISP++, R_MAGIC_FILL_X << 2, (durMeterY + 3) << 2,
+                            (R_MAGIC_FILL_X + durability) << 2, (durMeterY + 10) << 2, G_TX_RENDERTILE, 0,
+                            0, 1 << 10, 1 << 10);
+
+        */
+
+        /*
+        ITEM_SHIELD_KOKIRI, //0x6000
+        ITEM_SHIELD_HYLIAN, //0x7000
+        ITEM_SHIELD_MIRROR, //0x8000
+        */
+        
+        if (capacity != 0) {
+            durMeterY = 175;
+
+            Gfx_SetupDL_39Overlay(play->state.gfxCtx);
+
+            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->magicAlpha);
+            gDPSetEnvColor(OVERLAY_DISP++, 100, 50, 50, 255);
+
+            OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterEndTex, 8, 16, R_MAGIC_METER_X, durMeterY, 8, 16,
+                                          1 << 10, 1 << 10);
+
+            OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterMidTex, 24, 16, R_MAGIC_METER_X + 8, durMeterY,
+                                          capacity, 16, 1 << 10, 1 << 10);
+
+            gDPLoadTextureBlock(OVERLAY_DISP++, gMagicMeterEndTex, G_IM_FMT_IA, G_IM_SIZ_8b, 8, 16, 0,
+                                G_TX_MIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 3, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+            gSPTextureRectangle(OVERLAY_DISP++, (R_MAGIC_METER_X + capacity + 8) << 2, durMeterY << 2,
+                                (R_MAGIC_METER_X + capacity + 16) << 2, (durMeterY + 16) << 2,
+                                G_TX_RENDERTILE, 256, 0, 1 << 10, 1 << 10);
+
+            gDPPipeSync(OVERLAY_DISP++);
+            gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE, PRIMITIVE,
+                              ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE);
+            gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
+
+            // Fill the whole meter with the normal magic color
+            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 200, 150, 0,
+                            interfaceCtx->magicAlpha);
+
+            gDPLoadMultiBlock_4b(OVERLAY_DISP++, gMagicMeterFillTex, 0x0000, G_TX_RENDERTILE, G_IM_FMT_I, 16, 16, 0,
+                                 G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                                 G_TX_NOLOD, G_TX_NOLOD);
+
+            gSPTextureRectangle(OVERLAY_DISP++, R_MAGIC_FILL_X << 2, (durMeterY + 3) << 2,
+                                (R_MAGIC_FILL_X + durability) << 2, (durMeterY + 10) << 2, G_TX_RENDERTILE, 0,
+                                0, 1 << 10, 1 << 10);
+
+        }
+
+    CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", __LINE__);
+    
+}
+
+s16 curPoise;
+u8 SMALL_METER_X = 187;
+
+void Poise_DrawMeter(PlayState* play, u16 meterY) {
+    InterfaceContext* interfaceCtx = &play->interfaceCtx;
+    Player* player = GET_PLAYER(play);
+    u8 poise = play->poise;
+
+    Math_SmoothStepToS(&curPoise, poise, 1, 3, 0);
+
+    OPEN_DISPS(play->state.gfxCtx, "../z_parameter.c", __LINE__);
+
+    if(curPoise < 100 && curPoise > 0) {
+        Gfx_SetupDL_39Overlay(play->state.gfxCtx);
+    
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, sMagicBorderR, sMagicBorderG, sMagicBorderB, interfaceCtx->magicAlpha);
+        gDPSetEnvColor(OVERLAY_DISP++, 100, 50, 50, 255);
+    
+        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterEndTex, 8, 16, SMALL_METER_X, meterY, 8, 10,
+                                      1 << 10, 1.6 * (1 << 10));
+    
+        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterMidTex, 24, 16, SMALL_METER_X + 8, meterY,
+                                      100, 10, 1 << 10,1.6 * (1 << 10));
+    
+        gDPLoadTextureBlock(OVERLAY_DISP++, gMagicMeterEndTex, G_IM_FMT_IA, G_IM_SIZ_8b, 8, 16, 0,
+                            G_TX_MIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 3, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    
+        gSPTextureRectangle(OVERLAY_DISP++, (SMALL_METER_X + 100 + 8) << 2, meterY << 2,
+                            (SMALL_METER_X + 100 + 16) << 2, (meterY + 10) << 2,
+                            G_TX_RENDERTILE, 256, 0, 1 << 10, 1.6 * (1 << 10));
+    
+        gDPPipeSync(OVERLAY_DISP++);
+        gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE, PRIMITIVE,
+                          ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE);
+        gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
+    
+        // Fill the whole meter with the normal magic color
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 140, 173, 183,
+                        interfaceCtx->magicAlpha);
+    
+        gDPLoadMultiBlock_4b(OVERLAY_DISP++, gMagicMeterFillTex, 0x0000, G_TX_RENDERTILE, G_IM_FMT_I, 16, 16, 0,
+                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                             G_TX_NOLOD, G_TX_NOLOD);
+    
+        gSPTextureRectangle(OVERLAY_DISP++, (SMALL_METER_X+8) << 2, (meterY + 2) << 2,
+                            ((SMALL_METER_X+8) + curPoise) << 2, (meterY + 6) << 2, G_TX_RENDERTILE, 0,
+                            0, 1 << 10, 1.6 * (1 << 10));
+
+        gDPPipeSync(OVERLAY_DISP++);
+        /*(gDPSetOtherMode(OVERLAY_DISP++,
+                        G_AD_DISABLE | G_CD_DISABLE | G_CK_NONE | G_TC_FILT | G_TF_POINT | G_TT_NONE | G_TL_TILE |
+                            G_TD_CLAMP | G_TP_NONE | G_CYC_1CYCLE | G_PM_NPRIMITIVE,
+                        G_RM_OPA_SURF | G_RM_OPA_SURF2);
+        gDPSetCombineMode(OVERLAY_DISP++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);*/
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 111, 138, 145, interfaceCtx->magicAlpha);
+
+        u8 segmentX = 20;
+
+        //for(u8 i = 1; i < 5; i++) {
+            gDPPipeSync(OVERLAY_DISP++);
+            gSPTextureRectangle(OVERLAY_DISP++, ((SMALL_METER_X+8) + segmentX) << 2, (meterY + 2) << 2, (((SMALL_METER_X+8) + segmentX) + 1) << 2, (meterY + 6) << 2, G_TX_RENDERTILE, 0, 0, 1 << 10, 1.6 * (1 << 10));
+
+        //    segmentX += 20;
+
+        //}
+    
+    }
+    
+    CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", __LINE__);
+    
+}
+
+s16 curStamina;
+
+void Stamina_DrawMeter(PlayState* play) {
+    InterfaceContext* interfaceCtx = &play->interfaceCtx;
+    Player* player = GET_PLAYER(play);
+    u8 stamina = play->stamina;
+    u16 meterY;
+
+    if (gSaveContext.healthCapacity > 0xA0) {
+        meterY = R_MAGIC_METER_Y_LOWER+9; // two rows of hearts
+    } else {
+        meterY = R_MAGIC_METER_Y_HIGHER+9; // one row of hearts
+    }
+
+    Math_SmoothStepToS(&curStamina, stamina, 1, 3, 0);
+
+    OPEN_DISPS(play->state.gfxCtx, "../z_parameter.c", __LINE__);
+
+    Gfx_SetupDL_39Overlay(play->state.gfxCtx);
+
+    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, sMagicBorderR, sMagicBorderG, sMagicBorderB, interfaceCtx->magicAlpha);
+    gDPSetEnvColor(OVERLAY_DISP++, 100, 50, 50, 255);
+
+    OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterEndTex, 8, 16, R_MAGIC_METER_X, meterY, 8, 10,
+                                  1 << 10, 1.6 * (1 << 10));
+
+    OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterMidTex, 24, 16, R_MAGIC_METER_X + 8, meterY,
+                                  100, 10, 1 << 10,1.6 * (1 << 10));
+
+    gDPLoadTextureBlock(OVERLAY_DISP++, gMagicMeterEndTex, G_IM_FMT_IA, G_IM_SIZ_8b, 8, 16, 0,
+                        G_TX_MIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 3, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+    gSPTextureRectangle(OVERLAY_DISP++, (R_MAGIC_METER_X + 100 + 8) << 2, meterY << 2,
+                        (R_MAGIC_METER_X + 100 + 16) << 2, (meterY + 10) << 2,
+                        G_TX_RENDERTILE, 256, 0, 1 << 10, 1.6 * (1 << 10));
+
+    gDPPipeSync(OVERLAY_DISP++);
+    gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE, PRIMITIVE,
+                      ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE);
+    gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
+
+    // Fill the whole meter with the normal magic color
+    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 234, 210, 89,
+                    interfaceCtx->magicAlpha);
+
+    gDPLoadMultiBlock_4b(OVERLAY_DISP++, gMagicMeterFillTex, 0x0000, G_TX_RENDERTILE, G_IM_FMT_I, 16, 16, 0,
+                         G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                         G_TX_NOLOD, G_TX_NOLOD);
+
+    gSPTextureRectangle(OVERLAY_DISP++, (R_MAGIC_METER_X+8) << 2, (meterY + 2) << 2,
+                        ((R_MAGIC_METER_X+8) + curStamina) << 2, (meterY + 6) << 2, G_TX_RENDERTILE, 0,
+                        0, 1 << 10, 1.6 * (1 << 10));
+
+    gDPPipeSync(OVERLAY_DISP++);
+    /*(gDPSetOtherMode(OVERLAY_DISP++,
+                    G_AD_DISABLE | G_CD_DISABLE | G_CK_NONE | G_TC_FILT | G_TF_POINT | G_TT_NONE | G_TL_TILE |
+                        G_TD_CLAMP | G_TP_NONE | G_CYC_1CYCLE | G_PM_NPRIMITIVE,
+                    G_RM_OPA_SURF | G_RM_OPA_SURF2);
+    gDPSetCombineMode(OVERLAY_DISP++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);*/
+    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 188, 169, 73, interfaceCtx->magicAlpha);
+
+    u8 segmentX = 20;
+
+    //for(u8 i = 1; i < 5; i++) {
+        gDPPipeSync(OVERLAY_DISP++);
+        gSPTextureRectangle(OVERLAY_DISP++, ((R_MAGIC_METER_X+8) + segmentX) << 2, (meterY + 2) << 2, (((R_MAGIC_METER_X+8) + segmentX) + 1) << 2, (meterY + 6) << 2, G_TX_RENDERTILE, 0, 0, 1 << 10, 1.6 * (1 << 10));
+
+    //    segmentX += 20;
+
+    //}
+    
+    CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", __LINE__);
+    
+}
+
+s16 curStability;
+
+void Stability_DrawMeter(PlayState* play, u16 meterY) {
+    InterfaceContext* interfaceCtx = &play->interfaceCtx;
+    Player* player = GET_PLAYER(play);
+    u8 stability = play->stability;
+
+    if(true) {return;}
+
+    Math_SmoothStepToS(&curStability, stability, 1, 3, 0);
+
+    OPEN_DISPS(play->state.gfxCtx, "../z_parameter.c", __LINE__);
+
+    if(curStability < 100 && curStability > 0) {
+        Gfx_SetupDL_39Overlay(play->state.gfxCtx);
+    
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, sMagicBorderR, sMagicBorderG, sMagicBorderB, interfaceCtx->magicAlpha);
+        gDPSetEnvColor(OVERLAY_DISP++, 100, 50, 50, 255);
+    
+        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterEndTex, 8, 16, SMALL_METER_X, meterY, 8, 10,
+                                      1 << 10, 1.6 * (1 << 10));
+    
+        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterMidTex, 24, 16, SMALL_METER_X + 8, meterY,
+                                      100, 10, 1 << 10,1.6 * (1 << 10));
+    
+        gDPLoadTextureBlock(OVERLAY_DISP++, gMagicMeterEndTex, G_IM_FMT_IA, G_IM_SIZ_8b, 8, 16, 0,
+                            G_TX_MIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 3, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    
+        gSPTextureRectangle(OVERLAY_DISP++, (SMALL_METER_X + 100 + 8) << 2, meterY << 2,
+                            (SMALL_METER_X + 100 + 16) << 2, (meterY + 10) << 2,
+                            G_TX_RENDERTILE, 256, 0, 1 << 10, 1.6 * (1 << 10));
+    
+        gDPPipeSync(OVERLAY_DISP++);
+        gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE, PRIMITIVE,
+                          ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE);
+        gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
+    
+        // Fill the whole meter with the normal magic color
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 124, 89, 66,
+                        interfaceCtx->magicAlpha);
+    
+        gDPLoadMultiBlock_4b(OVERLAY_DISP++, gMagicMeterFillTex, 0x0000, G_TX_RENDERTILE, G_IM_FMT_I, 16, 16, 0,
+                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                             G_TX_NOLOD, G_TX_NOLOD);
+    
+        gSPTextureRectangle(OVERLAY_DISP++, (SMALL_METER_X+8) << 2, (meterY + 2) << 2,
+                            ((SMALL_METER_X+8) + curStability) << 2, (meterY + 6) << 2, G_TX_RENDERTILE, 0,
+                            0, 1 << 10, 1.6 * (1 << 10));
+    
+    }
+    
+    CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", __LINE__);
+    
 }
 
 void Interface_SetSubTimer(s16 seconds) {
@@ -3090,6 +3511,9 @@ void func_8008A994(InterfaceContext* interfaceCtx) {
     View_ApplyOrthoToOverlay(&interfaceCtx->view);
 }
 
+u8 Interface_DPadPage = 0;
+bool Interface_DPadPressed = false;
+
 void Interface_Draw(PlayState* play) {
     static s16 magicArrowEffectsR[] = { 255, 100, 255 };
     static s16 magicArrowEffectsG[] = { 0, 100, 255 };
@@ -3236,7 +3660,9 @@ void Interface_Draw(PlayState* play) {
         }
 
         Magic_DrawMeter(play);
+        Durability_DrawMeter(play);
         Minimap_Draw(play);
+        Stamina_DrawMeter(play);
 
         if ((R_PAUSE_BG_PRERENDER_STATE != PAUSE_BG_PRERENDER_PROCESS) &&
             (R_PAUSE_BG_PRERENDER_STATE != PAUSE_BG_PRERENDER_READY)) {
@@ -3934,6 +4360,237 @@ void Interface_Draw(PlayState* play) {
         gDPFillRectangle(OVERLAY_DISP++, 0, 0, gScreenWidth - 1, gScreenHeight - 1);
     }
 
+    Player* player = GET_PLAYER(play);
+
+    if(LINK_AGE_IN_YEARS == YEARS_ADULT) {
+        gSPSegment(OVERLAY_DISP++, 0x08, interfaceCtx->dpadItemSegment);
+
+        //DPad
+        gDPPipeSync(OVERLAY_DISP++);
+        gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->magicAlpha);
+        gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
+        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gInterfaceDpadTex, 24, 24, 270, 78, 24, 24, 1 << 10, 1 << 10);
+
+        /*
+        ITEM_TUNIC_KOKIRI, //0x0000
+        ITEM_TUNIC_GORON,  //0x1000
+        ITEM_TUNIC_ZORA,   //0x2000
+        ITEM_BOOTS_KOKIRI, //0x3000
+        ITEM_BOOTS_IRON,   //0x4000
+        ITEM_BOOTS_HOVER,  //0x5000
+
+        420 = dont show
+        */
+
+        u32 dPadOffset[3] = {
+            420,
+            420,
+            420,
+        };
+        f32 dPadScale[3][2] = {
+            {1.00f, 0.00f},
+            {1.00f, 0.00f},
+            {1.00f, 0.00f}
+
+        };
+
+        if(!CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DDOWN) &&
+        !CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DLEFT) &&
+        !CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DRIGHT) &&
+        !CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DUP)) {
+            Interface_DPadPressed = false;
+
+        }
+
+        if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DDOWN)) {
+            Interface_DPadPage = 0;
+            Interface_DPadPressed = true;
+
+            Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+        }
+
+        if(CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DLEFT)) {
+            dPadScale[0][0] = 1.25f;
+            dPadScale[0][1] = -.25f;
+
+        }
+        
+        if(CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DUP)) {
+            dPadScale[1][0] = 1.25f;
+            dPadScale[1][1] = -.25f;
+
+        }
+
+        if(CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DRIGHT)) {
+            dPadScale[2][0] = 1.25f;
+            dPadScale[2][1] = -.25f;
+
+        }
+
+        switch(Interface_DPadPage) {
+            case 0:
+                if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT) && !Interface_DPadPressed) {
+                    Interface_DPadPage = 1;
+                    Interface_DPadPressed = true;
+
+                    Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                        &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                }else if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT) && !Interface_DPadPressed) {
+                    Interface_DPadPage = 2;
+                    Interface_DPadPressed = true;
+
+                    Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                        &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                }
+
+                dPadOffset[0] = 0x0000;
+
+                if(player->currentTunic == PLAYER_TUNIC_GORON) {
+                    dPadOffset[0] = 0x1000;
+
+                }else if(player->currentTunic == PLAYER_TUNIC_ZORA) {
+                    dPadOffset[0] = 0x2000;
+
+                }
+
+                dPadOffset[1] = 420;
+
+                dPadOffset[2] = 0x3000;
+
+                if(player->currentBoots == PLAYER_BOOTS_IRON) {
+                    dPadOffset[2] = 0x4000;
+
+                }else if(player->currentBoots == PLAYER_BOOTS_HOVER) {
+                    dPadOffset[2] = 0x5000;
+
+                }
+                break;
+
+            case 1:
+                if(CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_KOKIRI)) {
+                    dPadOffset[0] = 0x0000;
+
+                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_KOKIRI)) {
+                        Interface_DPadPressed = true;
+                        Inventory_ChangeEquipment(EQUIP_TYPE_TUNIC, EQUIP_VALUE_TUNIC_KOKIRI);
+                        Player_SetEquipmentData(play, player);
+
+                        Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                    }
+                }
+
+                if(CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_ZORA)) {
+                    dPadOffset[2] = 0x2000;
+
+                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_ZORA)) {
+                        Interface_DPadPressed = true;
+                        Inventory_ChangeEquipment(EQUIP_TYPE_TUNIC, EQUIP_VALUE_TUNIC_ZORA);
+                        Player_SetEquipmentData(play, player);
+
+                        Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                    }
+                }
+
+                if(CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_GORON)) {
+                    dPadOffset[1] = 0x1000;
+
+                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DUP) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_GORON)) {
+                        Interface_DPadPressed = true;
+                        Inventory_ChangeEquipment(EQUIP_TYPE_TUNIC, EQUIP_VALUE_TUNIC_GORON);
+                        Player_SetEquipmentData(play, player);
+
+                        Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                    }
+                }
+
+                break;
+
+            case 2:
+                if(CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_KOKIRI)) {
+                    dPadOffset[0] = 0x3000;
+
+                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_KOKIRI)) {
+                        Interface_DPadPressed = true;
+                        Inventory_ChangeEquipment(EQUIP_TYPE_BOOTS, EQUIP_VALUE_BOOTS_KOKIRI);
+                        Player_SetEquipmentData(play, player);
+
+                        Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                    }
+                }
+
+                if(CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_HOVER)) {
+                    dPadOffset[2] = 0x5000;
+
+                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_HOVER)) {
+                        Interface_DPadPressed = true;
+                        Inventory_ChangeEquipment(EQUIP_TYPE_BOOTS, EQUIP_VALUE_BOOTS_HOVER);
+                        Player_SetEquipmentData(play, player);
+
+                        Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                    }
+                }
+
+                if(CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_IRON)) {
+                    dPadOffset[1] = 0x4000;
+
+                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DUP) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_IRON)) {
+                        Interface_DPadPressed = true;
+                        Inventory_ChangeEquipment(EQUIP_TYPE_BOOTS, EQUIP_VALUE_BOOTS_IRON);
+                        Player_SetEquipmentData(play, player);
+
+                        Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                    }
+                }
+
+                break;
+
+        }
+
+        if(dPadOffset[0] != 420) {
+            gDPPipeSync(OVERLAY_DISP++);
+            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->magicAlpha);
+            gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+            OVERLAY_DISP = Gfx_TextureRGBA32(OVERLAY_DISP, interfaceCtx->dpadItemSegment + dPadOffset[0], 32, 32, 245, 64, 16 * dPadScale[0][0], 16 * dPadScale[0][0], (2+dPadScale[0][1]) * (1 << 10), (2+dPadScale[0][1]) * (1 << 10));
+
+        }
+
+        if(dPadOffset[1] != 420) {
+            gDPPipeSync(OVERLAY_DISP++);
+            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->magicAlpha);
+            gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+            OVERLAY_DISP = Gfx_TextureRGBA32(OVERLAY_DISP, interfaceCtx->dpadItemSegment + dPadOffset[1], 32, 32, 257, 53, 16 * dPadScale[1][0], 16 * dPadScale[1][0], (2+dPadScale[1][1]) * (1 << 10), (2+dPadScale[1][1]) * (1 << 10));
+
+        }
+
+        if(dPadOffset[2] != 420) {
+            gDPPipeSync(OVERLAY_DISP++);
+            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->magicAlpha);
+            gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+            OVERLAY_DISP = Gfx_TextureRGBA32(OVERLAY_DISP, interfaceCtx->dpadItemSegment + dPadOffset[2], 32, 32, 271, 64, 16 * dPadScale[2][0], 16 * dPadScale[2][0], (2+dPadScale[2][1]) * (1 << 10), (2+dPadScale[2][1]) * (1 << 10));
+
+        }
+
+        gSPSegment(OVERLAY_DISP++, 0x08, interfaceCtx->iconItemSegment);
+    
+    }
+
     CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", 4269);
 }
 
@@ -3948,7 +4605,7 @@ void Interface_Update(PlayState* play) {
     u16 action;
     Input* debugInput = &play->state.input[2];
 
-    if (CHECK_BTN_ALL(debugInput->press.button, BTN_DLEFT)) {
+    /*if (CHECK_BTN_ALL(debugInput->press.button, BTN_DLEFT)) {
         gSaveContext.language = LANGUAGE_ENG;
         osSyncPrintf("J_N=%x J_N=%x\n", gSaveContext.language, &gSaveContext.language);
     } else if (CHECK_BTN_ALL(debugInput->press.button, BTN_DUP)) {
@@ -3957,7 +4614,7 @@ void Interface_Update(PlayState* play) {
     } else if (CHECK_BTN_ALL(debugInput->press.button, BTN_DRIGHT)) {
         gSaveContext.language = LANGUAGE_FRA;
         osSyncPrintf("J_N=%x J_N=%x\n", gSaveContext.language, &gSaveContext.language);
-    }
+    }*/
 
     if ((play->pauseCtx.state == 0) && (play->pauseCtx.debugState == 0)) {
         if ((gSaveContext.minigameState == 1) || !IS_CUTSCENE_LAYER ||
@@ -4085,12 +4742,11 @@ void Interface_Update(PlayState* play) {
                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         }
 
-        osSyncPrintf("now_life=%d  max_life=%d\n", gSaveContext.health, gSaveContext.healthCapacity);
+        osSyncPrintf("now_life=%d  max_life=%d\n", gSaveContext.health, gSaveContext.healthCapacity-gSaveContext.heartsBlocked);
 
-        if (gSaveContext.health >= gSaveContext.healthCapacity) {
-            gSaveContext.health = gSaveContext.healthCapacity;
-            osSyncPrintf("S_Private.now_life=%d  S_Private.max_life=%d\n", gSaveContext.health,
-                         gSaveContext.healthCapacity);
+        if (gSaveContext.health >= gSaveContext.healthCapacity-gSaveContext.heartsBlocked) {
+            gSaveContext.health = gSaveContext.healthCapacity-gSaveContext.heartsBlocked;
+            osSyncPrintf("S_Private.now_life=%d  S_Private.max_life=%d\n", gSaveContext.health, gSaveContext.healthCapacity-gSaveContext.heartsBlocked);
             gSaveContext.healthAccumulator = 0;
         }
     }

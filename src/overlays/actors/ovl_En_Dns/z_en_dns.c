@@ -87,7 +87,7 @@ static char* D_809F0424[] = {
     "緑のくすり売り          ", "デクの棒持てる数を増やす", "デクの実持てる数を増やす",
 };
 
-static DnsItemEntry D_809F0450 = { 20, 5, GI_DEKU_NUTS_5_2, func_809EF5A4, func_809EFA28 };
+static DnsItemEntry D_809F0450 = { 20, 5, GI_DEKU_STICKS_1, func_809EF5A4, func_809EFA28 };
 
 static DnsItemEntry D_809F0460 = { 15, 1, GI_DEKU_STICKS_1, func_809EF658, func_809EF9F8 };
 

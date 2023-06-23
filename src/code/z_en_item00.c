@@ -82,7 +82,7 @@ static u8 sItemDropIds[] = {
     ITEM00_NONE,           ITEM00_RECOVERY_HEART, ITEM00_NONE,           ITEM00_NONE,           ITEM00_RECOVERY_HEART,
     ITEM00_NONE,           ITEM00_SEEDS,          ITEM00_SEEDS,          ITEM00_NONE,           ITEM00_BOMBS_A,
     ITEM00_NONE,           ITEM00_FLEXIBLE,       ITEM00_MAGIC_SMALL,    ITEM00_RUPEE_GREEN,    ITEM00_RUPEE_GREEN,
-    ITEM00_NUTS,           ITEM00_NONE,           ITEM00_SEEDS,          ITEM00_SEEDS,          ITEM00_NUTS,
+    ITEM00_NONE,           ITEM00_NONE,           ITEM00_SEEDS,          ITEM00_SEEDS,          ITEM00_NONE,
     ITEM00_RECOVERY_HEART, ITEM00_RECOVERY_HEART, ITEM00_SEEDS,          ITEM00_NONE,           ITEM00_FLEXIBLE,
     ITEM00_NONE,           ITEM00_NONE,           ITEM00_NONE,           ITEM00_NONE,           ITEM00_RUPEE_GREEN,
     ITEM00_RUPEE_GREEN,    ITEM00_SEEDS,          ITEM00_BOMBS_A,        ITEM00_MAGIC_SMALL,    ITEM00_BOMBS_A,
@@ -114,9 +114,9 @@ static u8 sItemDropIds[] = {
     ITEM00_RUPEE_RED,      ITEM00_RUPEE_BLUE,     ITEM00_RUPEE_BLUE,     ITEM00_RUPEE_BLUE,     ITEM00_RUPEE_RED,
     ITEM00_RUPEE_RED,      ITEM00_RUPEE_BLUE,     ITEM00_RUPEE_RED,      ITEM00_RUPEE_BLUE,     ITEM00_RUPEE_RED,
     ITEM00_RUPEE_RED,      ITEM00_RUPEE_RED,      ITEM00_RUPEE_RED,      ITEM00_SEEDS,          ITEM00_NONE,
-    ITEM00_NUTS,           ITEM00_NONE,           ITEM00_STICK,          ITEM00_NONE,           ITEM00_NONE,
-    ITEM00_SEEDS,          ITEM00_NONE,           ITEM00_NONE,           ITEM00_NONE,           ITEM00_NUTS,
-    ITEM00_NONE,           ITEM00_NUTS,           ITEM00_RECOVERY_HEART, ITEM00_SEEDS,          ITEM00_RECOVERY_HEART,
+    ITEM00_NONE,           ITEM00_NONE,           ITEM00_STICK,          ITEM00_NONE,           ITEM00_NONE,
+    ITEM00_SEEDS,          ITEM00_NONE,           ITEM00_NONE,           ITEM00_NONE,           ITEM00_NONE,
+    ITEM00_NONE,           ITEM00_NONE,           ITEM00_RECOVERY_HEART, ITEM00_SEEDS,          ITEM00_RECOVERY_HEART,
     ITEM00_NONE,           ITEM00_SEEDS,          ITEM00_NONE,           ITEM00_RECOVERY_HEART, ITEM00_NONE,
     ITEM00_NONE,           ITEM00_RECOVERY_HEART, ITEM00_RECOVERY_HEART, ITEM00_NONE,           ITEM00_NONE,
     ITEM00_RECOVERY_HEART, ITEM00_NONE,           ITEM00_RECOVERY_HEART, ITEM00_SEEDS,          ITEM00_FLEXIBLE,
@@ -335,7 +335,7 @@ void EnItem00_Init(Actor* thisx, PlayState* play) {
             getItemId = GI_DEKU_SEEDS_5;
             break;
         case ITEM00_NUTS:
-            getItemId = GI_DEKU_NUTS_5;
+            getItemId = GI_NONE;
             break;
         case ITEM00_STICK:
             getItemId = GI_DEKU_STICKS_1;
@@ -635,7 +635,7 @@ void EnItem00_Update(Actor* thisx, PlayState* play) {
             getItemId = GI_DEKU_STICKS_1;
             break;
         case ITEM00_NUTS:
-            getItemId = GI_DEKU_NUTS_5;
+            getItemId = GI_NONE;
             break;
         case ITEM00_RECOVERY_HEART:
             Item_Give(play, ITEM_RECOVERY_HEART);

@@ -111,6 +111,8 @@ void func_800C4344(GameState* gameState) {
 }
 
 void GameState_DrawInputDisplay(u16 input, Gfx** gfx) {
+    if (true) {return;}
+
     static const u16 sInpDispBtnColors[] = {
         GPACK_RGBA5551(255, 255, 0, 1),   GPACK_RGBA5551(255, 255, 0, 1),   GPACK_RGBA5551(255, 255, 0, 1),
         GPACK_RGBA5551(255, 255, 0, 1),   GPACK_RGBA5551(120, 120, 120, 1), GPACK_RGBA5551(120, 120, 120, 1),

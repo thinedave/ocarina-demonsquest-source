@@ -1905,6 +1905,12 @@ beginseg
 endseg
 
 beginseg
+    name "ovl_Savespot"
+    include "build/src/overlays/actors/ovl_Savespot/z_savespot.o"
+    include "build/src/overlays/actors/ovl_Savespot/ovl_Savespot_reloc.o"
+endseg
+
+beginseg
     name "ovl_En_Bom_Bowl_Man"
     include "build/src/overlays/actors/ovl_En_Bom_Bowl_Man/z_en_bom_bowl_man.o"
     include "build/src/overlays/actors/ovl_En_Bom_Bowl_Man/ovl_En_Bom_Bowl_Man_reloc.o"
