@@ -4591,6 +4591,62 @@ void Interface_Draw(PlayState* play) {
     
     }
 
+    OSThread* thread = __osGetActiveQueue();
+    GfxPrint printer;
+    Gfx* gfx;
+
+    u32 curActorVramStart = 0;
+
+    /*(u32)ovl.loadedRamAddr > (ovl.vramStart + (ovl.vramEnd - ovl.vramStart))*/
+
+    //OPEN_DISPS(play->state.gfxCtx);
+
+    // the dlist will be written in the opa buffer because that buffer is larger,
+    // but executed from the overlay buffer (overlay draws last, for example the hud is drawn to overlay)
+    gfx = POLY_OPA_DISP + 1;
+    gSPDisplayList(OVERLAY_DISP++, gfx);
+
+    // initialize GfxPrint struct
+    GfxPrint_Init(&printer);
+    GfxPrint_Open(&printer, gfx);
+
+    GfxPrint_SetColor(&printer, 255, 255, 255, 255);
+
+    u8 printPos = 10;
+    
+    GfxPrint_SetPos(&printer, 1, printPos);
+    GfxPrint_Printf(&printer, "PC:%08xH", (u32)thread->context.pc);
+
+    printPos += 2;
+
+    GfxPrint_SetPos(&printer, 1, printPos);
+
+    for(s32 i = 0; i < ACTOR_ID_MAX; i++) {
+        ActorOverlay ovl = gActorOverlayTable[i];
+
+        if(ovl.loadedRamAddr == NULL || (u32)thread->context.pc < (u32)ovl.loadedRamAddr || (u32)thread->context.pc >= (u32)ovl.loadedRamAddr + ((u32)ovl.vramEnd - (u32)ovl.vramStart)) {continue;}
+
+        curActorVramStart = (u32)ovl.loadedRamAddr + (u32)ovl.vramStart;
+        GfxPrint_Printf(&printer, "FOUND  %08xH", curActorVramStart);
+
+        printPos += 2;
+
+    }
+
+    GfxPrint_SetPos(&printer, 1, printPos);
+    GfxPrint_Printf(&printer, "ADR:%08xH", (u32)thread->context.pc - curActorVramStart);
+
+    // end of text printing
+    gfx = GfxPrint_Close(&printer);
+    GfxPrint_Destroy(&printer);
+
+    gSPEndDisplayList(gfx++);
+    // make the opa dlist jump over the part that will be executed as part of overlay
+    gSPBranchList(POLY_OPA_DISP, gfx);
+    POLY_OPA_DISP = gfx;
+
+    //CLOSE_DISPS(play->state.gfxCtx);
+
     CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", 4269);
 }
 

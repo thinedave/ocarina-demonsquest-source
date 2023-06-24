@@ -31,7 +31,6 @@ bool Player_HasPerfected = false;
 bool Player_CanPerfect = true;
 bool Player_WasShieldUp = false;
 bool Player_StoredDoubleDamage = false;
-bool Player_SwordOut = false;
 s8 Player_SwordOutTimer = -3;
 
 typedef struct {
@@ -1683,7 +1682,7 @@ void func_80832440(PlayState* play, Player* this) {
 }
 
 s32 func_80832528(PlayState* play, Player* this) {
-    Player_SwordOut = false;
+    play->swordOut = false;
     if (this->heldItemAction >= PLAYER_IA_FISHING_POLE) {
         func_80835F44(play, this, ITEM_NONE);
         return 1;
@@ -2494,7 +2493,7 @@ void func_80834594(PlayState* play, Player* this) {
     if (this->heldItemAction != PLAYER_IA_NONE) {
         if (func_8008F2BC(this, this->heldItemAction) >= 0) {
             func_808328EC(this, NA_SE_IT_SWORD_PUTAWAY);
-            Player_SwordOut = false;
+            play->swordOut = false;
         } else {
             func_808328EC(this, NA_SE_PL_CHANGE_ARMS);
         }
@@ -5486,7 +5485,7 @@ s32 func_8083B040(Player* this, PlayState* play) {
                 return 0;
             }
 
-            this->stateFlags1 |= PLAYER_STATE1_28 | PLAYER_STATE1_29;
+            //this->stateFlags1 |= PLAYER_STATE1_28/* | PLAYER_STATE1_29*/;
         }
 
         func_80832224(this);
@@ -9795,8 +9794,6 @@ void Player_InitCommon(Player* this, PlayState* play, FlexSkeletonHeader* skelHe
     Collider_InitQuad(play, &this->shieldQuad);
     Collider_SetQuad(play, &this->shieldQuad, &this->actor, &D_808546A0);
 
-    Player_SwordOut = false;
-
 }
 
 static void (*D_80854738[])(PlayState* play, Player* this) = {
@@ -10743,7 +10740,7 @@ void Player_UpdateCommon(Player* this, PlayState* play, Input* input) {
     Player_SwordOutTimer--;
 
     if(Player_SwordOutTimer <= 0 && Player_SwordOutTimer > -2) {
-        Player_SwordOut = true;
+        play->swordOut = true;
 
     }else if(Player_SwordOutTimer < -3) {
         Player_SwordOutTimer = -3;
@@ -13645,7 +13642,7 @@ void Player_UpdateBunnyEars(Player* this) {
 
 s32 func_80850224(Player* this, PlayState* play) {
     if (func_8083C6B8(play, this) == 0) {
-        if (func_8083BB20(this) != 0 && play->stamina > 20 && Player_SwordOut == true) {
+        if (func_8083BB20(this) != 0 && play->stamina > 20 && play->swordOut == true) {
             s32 sp24 = func_80837818(this);
 
             Player_ChangeStamina(play, -20);
@@ -13653,11 +13650,11 @@ s32 func_80850224(Player* this, PlayState* play) {
 
             if (sp24 >= PLAYER_MWA_SPIN_ATTACK_1H) {
                 this->stateFlags2 |= PLAYER_STATE2_17;
-                func_80837530(play, this, 0);
+                func_80837530(play, this, 0); //possible cause of bug
                 return 1;
             }
         } else {
-            if((func_8083BB20(this) != 0 || this->heldItemAction == PLAYER_IA_FISHING_POLE) && Player_SwordOut == false) {
+            if((func_8083BB20(this) != 0 || this->heldItemAction == PLAYER_IA_FISHING_POLE) && play->swordOut == false) {
                 Player_SwordOutTimer = 2;
 
             }
@@ -13671,7 +13668,7 @@ s32 func_80850224(Player* this, PlayState* play) {
 
 static Vec3f D_80854A40 = { 0.0f, 40.0f, 45.0f };
 
-void func_808502D0(Player* this, PlayState* play) {
+void func_808502D0(Player* this, PlayState* play) { //swing weapon
     struct_80854190* sp44 = &D_80854190[this->meleeWeaponAnimation];
 
     this->stateFlags2 |= PLAYER_STATE2_5;

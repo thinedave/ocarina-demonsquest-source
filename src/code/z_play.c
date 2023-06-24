@@ -448,6 +448,7 @@ void Play_Init(GameState* thisx) {
     this->poise = 100;
     this->stability = 100;
     this->stamina = 100;
+    this->swordOut = false;
 
 }
 

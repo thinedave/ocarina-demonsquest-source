@@ -881,6 +881,7 @@ typedef struct PlayState {
     s16 stamina;
     s16 stability;
     s16 poise;
+    bool swordOut;
 } PlayState; // size = 0x12518
 
 typedef struct {
