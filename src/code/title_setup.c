@@ -7,7 +7,7 @@ typedef enum {
 
 } StartupMode;
 
-const StartupMode STARTUP_MODE = MAP_SELECT;
+const StartupMode STARTUP_MODE = NORMAL;
 
 void Setup_InitImpl(SetupState* this) {
     osSyncPrintf("ゼルダ共通データ初期化\n"); // "Zelda common data initalization"

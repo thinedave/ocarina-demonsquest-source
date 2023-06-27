@@ -13650,7 +13650,7 @@ s32 func_80850224(Player* this, PlayState* play) {
 
             if (sp24 >= PLAYER_MWA_SPIN_ATTACK_1H) {
                 this->stateFlags2 |= PLAYER_STATE2_17;
-                func_80837530(play, this, 0); //possible cause of bug
+                func_80837530(play, this, 0);
                 return 1;
             }
         } else {

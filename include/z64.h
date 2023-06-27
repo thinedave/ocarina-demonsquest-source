@@ -966,6 +966,7 @@ typedef struct {
     /* 0x1CAD2 */ s16 kbdY;
     /* 0x1CAD4 */ s16 newFileNameCharCount;
     /* 0x1CAD6 */ s16 unk_1CAD6[5];
+    bool wantsDemonsCurse[3];
 } FileSelectState; // size = 0x1CAE0
 
 // Macros for `EntranceInfo.field`

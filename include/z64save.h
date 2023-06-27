@@ -292,6 +292,7 @@ typedef struct {
     /* 0x1422 */ s16 sunsSongState; // controls the effects of suns song
     /* 0x1424 */ s16 healthAccumulator;
     u8 saveReturnFlag;
+    bool demonsCurse;
 } SaveContext; // size = 0x1428
 
 typedef enum {

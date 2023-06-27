@@ -417,6 +417,7 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxp) {
     u16 i, j, k;
     u16 rectLeft;
     u16 rectTop;
+    u8 textX;
 
     gSPSegment(gfx++, 0x06, play->objectCtx.status[this->actor.objBankIndex].segment);
 
@@ -553,7 +554,7 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxp) {
             textAlpha = 255;
         }
 
-        u8 textX = 160 - (7*(ARRAY_COUNT(pressStartFontIndices)*.5));
+        textX = 160 - (7*(ARRAY_COUNT(pressStartFontIndices)*.5));
 
         // Text Shadow
         gDPPipeSync(gfx++);

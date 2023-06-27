@@ -3983,9 +3983,9 @@ void Interface_Draw(PlayState* play) {
                     gSaveContext.timerX[TIMER_ID_MAIN] -= svar1;
 
                     if (gSaveContext.healthCapacity > 0xA0) {
-                        svar1 = (gSaveContext.timerY[TIMER_ID_MAIN] - 54) / sTimerStateTimer; // two rows of hearts
+                        svar1 = (gSaveContext.timerY[TIMER_ID_MAIN] - 62) / sTimerStateTimer; // two rows of hearts
                     } else {
-                        svar1 = (gSaveContext.timerY[TIMER_ID_MAIN] - 46) / sTimerStateTimer; // one row of hearts
+                        svar1 = (gSaveContext.timerY[TIMER_ID_MAIN] - 54) / sTimerStateTimer; // one row of hearts
                     }
                     gSaveContext.timerY[TIMER_ID_MAIN] -= svar1;
 
@@ -3995,9 +3995,9 @@ void Interface_Draw(PlayState* play) {
                         gSaveContext.timerX[TIMER_ID_MAIN] = 26;
 
                         if (gSaveContext.healthCapacity > 0xA0) {
-                            gSaveContext.timerY[TIMER_ID_MAIN] = 54; // two rows of hearts
+                            gSaveContext.timerY[TIMER_ID_MAIN] = 62; // two rows of hearts
                         } else {
-                            gSaveContext.timerY[TIMER_ID_MAIN] = 46; // one row of hearts
+                            gSaveContext.timerY[TIMER_ID_MAIN] = 54; // one row of hearts
                         }
 
                         if (gSaveContext.timerState == TIMER_STATE_ENV_HAZARD_MOVE) {
@@ -4012,9 +4012,9 @@ void Interface_Draw(PlayState* play) {
                     if ((gSaveContext.timerState == TIMER_STATE_ENV_HAZARD_TICK) ||
                         (gSaveContext.timerState == TIMER_STATE_DOWN_TICK)) {
                         if (gSaveContext.healthCapacity > 0xA0) {
-                            gSaveContext.timerY[TIMER_ID_MAIN] = 54; // two rows of hearts
+                            gSaveContext.timerY[TIMER_ID_MAIN] = 62; // two rows of hearts
                         } else {
-                            gSaveContext.timerY[TIMER_ID_MAIN] = 46; // one row of hearts
+                            gSaveContext.timerY[TIMER_ID_MAIN] = 54; // one row of hearts
                         }
                     }
 
@@ -4064,9 +4064,9 @@ void Interface_Draw(PlayState* play) {
                     gSaveContext.timerX[TIMER_ID_MAIN] -= svar1;
 
                     if (gSaveContext.healthCapacity > 0xA0) {
-                        svar1 = (gSaveContext.timerY[TIMER_ID_MAIN] - 54) / sTimerStateTimer; // two rows of hearts
+                        svar1 = (gSaveContext.timerY[TIMER_ID_MAIN] - 62) / sTimerStateTimer; // two rows of hearts
                     } else {
-                        svar1 = (gSaveContext.timerY[TIMER_ID_MAIN] - 46) / sTimerStateTimer; // one row of hearts
+                        svar1 = (gSaveContext.timerY[TIMER_ID_MAIN] - 54) / sTimerStateTimer; // one row of hearts
                     }
                     gSaveContext.timerY[TIMER_ID_MAIN] -= svar1;
 
@@ -4075,9 +4075,9 @@ void Interface_Draw(PlayState* play) {
                         sTimerStateTimer = 20;
                         gSaveContext.timerX[TIMER_ID_MAIN] = 26;
                         if (gSaveContext.healthCapacity > 0xA0) {
-                            gSaveContext.timerY[TIMER_ID_MAIN] = 54; // two rows of hearts
+                            gSaveContext.timerY[TIMER_ID_MAIN] = 62; // two rows of hearts
                         } else {
-                            gSaveContext.timerY[TIMER_ID_MAIN] = 46; // one row of hearts
+                            gSaveContext.timerY[TIMER_ID_MAIN] = 54; // one row of hearts
                         }
 
                         gSaveContext.timerState = TIMER_STATE_UP_TICK;
@@ -4086,9 +4086,9 @@ void Interface_Draw(PlayState* play) {
                 case TIMER_STATE_UP_TICK:
                     if (gSaveContext.timerState == TIMER_STATE_UP_TICK) {
                         if (gSaveContext.healthCapacity > 0xA0) {
-                            gSaveContext.timerY[TIMER_ID_MAIN] = 54; // two rows of hearts
+                            gSaveContext.timerY[TIMER_ID_MAIN] = 62; // two rows of hearts
                         } else {
-                            gSaveContext.timerY[TIMER_ID_MAIN] = 46; // one row of hearts
+                            gSaveContext.timerY[TIMER_ID_MAIN] = 54; // one row of hearts
                         }
                     }
 
@@ -4171,10 +4171,10 @@ void Interface_Draw(PlayState* play) {
                             gSaveContext.timerX[TIMER_ID_SUB] -= svar1;
                             if (gSaveContext.healthCapacity > 0xA0) {
                                 // two rows of hearts
-                                svar1 = (gSaveContext.timerY[TIMER_ID_SUB] - 54) / sSubTimerStateTimer;
+                                svar1 = (gSaveContext.timerY[TIMER_ID_SUB] - 62) / sSubTimerStateTimer;
                             } else {
                                 // one row of hearts
-                                svar1 = (gSaveContext.timerY[TIMER_ID_SUB] - 46) / sSubTimerStateTimer;
+                                svar1 = (gSaveContext.timerY[TIMER_ID_SUB] - 54) / sSubTimerStateTimer;
                             }
                             gSaveContext.timerY[TIMER_ID_SUB] -= svar1;
 
@@ -4184,9 +4184,9 @@ void Interface_Draw(PlayState* play) {
                                 gSaveContext.timerX[TIMER_ID_SUB] = 26;
 
                                 if (gSaveContext.healthCapacity > 0xA0) {
-                                    gSaveContext.timerY[TIMER_ID_SUB] = 54; // two rows of hearts
+                                    gSaveContext.timerY[TIMER_ID_SUB] = 62; // two rows of hearts
                                 } else {
-                                    gSaveContext.timerY[TIMER_ID_SUB] = 46; // one row of hearts
+                                    gSaveContext.timerY[TIMER_ID_SUB] = 54; // one row of hearts
                                 }
 
                                 if (gSaveContext.subTimerState == SUBTIMER_STATE_DOWN_MOVE) {
@@ -4201,9 +4201,9 @@ void Interface_Draw(PlayState* play) {
                             if ((gSaveContext.subTimerState == SUBTIMER_STATE_DOWN_TICK) ||
                                 (gSaveContext.subTimerState == SUBTIMER_STATE_UP_TICK)) {
                                 if (gSaveContext.healthCapacity > 0xA0) {
-                                    gSaveContext.timerY[TIMER_ID_SUB] = 54; // two rows of hearts
+                                    gSaveContext.timerY[TIMER_ID_SUB] = 62; // two rows of hearts
                                 } else {
-                                    gSaveContext.timerY[TIMER_ID_SUB] = 46; // one row of hearts
+                                    gSaveContext.timerY[TIMER_ID_SUB] = 54; // one row of hearts
                                 }
                             }
 
@@ -4591,13 +4591,14 @@ void Interface_Draw(PlayState* play) {
     
     }
 
+    /*
     OSThread* thread = __osGetActiveQueue();
     GfxPrint printer;
     Gfx* gfx;
 
     u32 curActorVramStart = 0;
 
-    /*(u32)ovl.loadedRamAddr > (ovl.vramStart + (ovl.vramEnd - ovl.vramStart))*/
+    //(u32)ovl.loadedRamAddr > (ovl.vramStart + (ovl.vramEnd - ovl.vramStart))
 
     //OPEN_DISPS(play->state.gfxCtx);
 
@@ -4646,6 +4647,7 @@ void Interface_Draw(PlayState* play) {
     POLY_OPA_DISP = gfx;
 
     //CLOSE_DISPS(play->state.gfxCtx);
+    */
 
     CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", 4269);
 }

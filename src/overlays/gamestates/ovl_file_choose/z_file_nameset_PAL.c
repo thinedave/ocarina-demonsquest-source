@@ -542,7 +542,7 @@ void FileSelect_UpdateKeyboardCursor(GameState* thisx) {
             Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
             this->kbdX--;
-            if (this->kbdX < 3) {
+            if (this->kbdX < 2) {
                 this->kbdX = 4;
             }
         } else if (this->stickAdjX > 30) {

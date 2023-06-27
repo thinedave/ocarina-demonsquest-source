@@ -226,6 +226,7 @@ void Sram_InitNewSave(void) {
     gSaveContext.shieldDurabilityDeku = 25;
     gSaveContext.shieldDurabilityHylian = 50;
     gSaveContext.shieldDurabilityMirror = 75;
+    gSaveContext.demonsCurse = false;
     gSaveContext.equips = sNewSaveEquips;
     gSaveContext.inventory = sNewSaveInventory;
 
@@ -376,6 +377,7 @@ void Sram_InitDebugSave(void) {
     gSaveContext.shieldDurabilityDeku = 25;
     gSaveContext.shieldDurabilityHylian = 50;
     gSaveContext.shieldDurabilityMirror = 75;
+    gSaveContext.demonsCurse = true;
     gSaveContext.equips = sDebugSaveEquips;
     gSaveContext.inventory = sDebugSaveInventory;
 
