@@ -465,16 +465,16 @@ void FileSelect_SetWindowVtx(GameState* thisx) {
         tmp2 = (i == 3) ? 0x30 : 0x40;
 
         for (j = 0, tmp3 = 0x50; j < 5; j++, x += 4, tmp3 -= 0x20) {
-            this->windowVtx[x].v.ob[0] = this->windowVtx[x + 2].v.ob[0] = tmp;
+            this->windowVtx[x].v.vector[0] = this->windowVtx[x + 2].v.vector[0] = tmp;
 
-            this->windowVtx[x + 1].v.ob[0] = this->windowVtx[x + 3].v.ob[0] = tmp + tmp2;
+            this->windowVtx[x + 1].v.vector[0] = this->windowVtx[x + 3].v.vector[0] = tmp + tmp2;
 
-            this->windowVtx[x].v.ob[1] = this->windowVtx[x + 1].v.ob[1] = tmp3;
+            this->windowVtx[x].v.vector[1] = this->windowVtx[x + 1].v.vector[1] = tmp3;
 
-            this->windowVtx[x + 2].v.ob[1] = this->windowVtx[x + 3].v.ob[1] = tmp3 - 0x20;
+            this->windowVtx[x + 2].v.vector[1] = this->windowVtx[x + 3].v.vector[1] = tmp3 - 0x20;
 
-            this->windowVtx[x].v.ob[2] = this->windowVtx[x + 1].v.ob[2] = this->windowVtx[x + 2].v.ob[2] =
-                this->windowVtx[x + 3].v.ob[2] = 0;
+            this->windowVtx[x].v.vector[2] = this->windowVtx[x + 1].v.vector[2] = this->windowVtx[x + 2].v.vector[2] =
+                this->windowVtx[x + 3].v.vector[2] = 0;
 
             this->windowVtx[x].v.flag = this->windowVtx[x + 1].v.flag = this->windowVtx[x + 2].v.flag =
                 this->windowVtx[x + 3].v.flag = 0;
@@ -486,13 +486,13 @@ void FileSelect_SetWindowVtx(GameState* thisx) {
 
             this->windowVtx[x + 2].v.tc[1] = this->windowVtx[x + 3].v.tc[1] = 0x400;
 
-            this->windowVtx[x].v.cn[0] = this->windowVtx[x + 2].v.cn[0] = this->windowVtx[x].v.cn[1] =
-                this->windowVtx[x + 2].v.cn[1] = this->windowVtx[x].v.cn[2] = this->windowVtx[x + 2].v.cn[2] =
-                    this->windowVtx[x + 1].v.cn[0] = this->windowVtx[x + 3].v.cn[0] = this->windowVtx[x + 1].v.cn[1] =
-                        this->windowVtx[x + 3].v.cn[1] = this->windowVtx[x + 1].v.cn[2] =
-                            this->windowVtx[x + 3].v.cn[2] = this->windowVtx[x].v.cn[3] =
-                                this->windowVtx[x + 2].v.cn[3] = this->windowVtx[x + 1].v.cn[3] =
-                                    this->windowVtx[x + 3].v.cn[3] = 255;
+            this->windowVtx[x].v.color[0] = this->windowVtx[x + 2].v.color[0] = this->windowVtx[x].v.color[1] =
+                this->windowVtx[x + 2].v.color[1] = this->windowVtx[x].v.color[2] = this->windowVtx[x + 2].v.color[2] =
+                    this->windowVtx[x + 1].v.color[0] = this->windowVtx[x + 3].v.color[0] = this->windowVtx[x + 1].v.color[1] =
+                        this->windowVtx[x + 3].v.color[1] = this->windowVtx[x + 1].v.color[2] =
+                            this->windowVtx[x + 3].v.color[2] = this->windowVtx[x].v.color[3] =
+                                this->windowVtx[x + 2].v.color[3] = this->windowVtx[x + 1].v.color[3] =
+                                    this->windowVtx[x + 3].v.color[3] = 255;
         }
     }
 }
@@ -518,16 +518,16 @@ void FileSelect_SetWindowContentVtx(GameState* thisx) {
     this->windowContentVtx = Graph_Alloc(this->state.gfxCtx, 0x288 * sizeof(Vtx));
 
     for (phi_t2 = 0; phi_t2 < 0x288; phi_t2 += 4) {
-        this->windowContentVtx[phi_t2].v.ob[0] = this->windowContentVtx[phi_t2 + 2].v.ob[0] = 0x12C;
-        this->windowContentVtx[phi_t2 + 1].v.ob[0] = this->windowContentVtx[phi_t2 + 3].v.ob[0] =
-            this->windowContentVtx[phi_t2].v.ob[0] + 0x10;
+        this->windowContentVtx[phi_t2].v.vector[0] = this->windowContentVtx[phi_t2 + 2].v.vector[0] = 0x12C;
+        this->windowContentVtx[phi_t2 + 1].v.vector[0] = this->windowContentVtx[phi_t2 + 3].v.vector[0] =
+            this->windowContentVtx[phi_t2].v.vector[0] + 0x10;
 
-        this->windowContentVtx[phi_t2].v.ob[1] = this->windowContentVtx[phi_t2 + 1].v.ob[1] = 0;
-        this->windowContentVtx[phi_t2 + 2].v.ob[1] = this->windowContentVtx[phi_t2 + 3].v.ob[1] =
-            this->windowContentVtx[phi_t2].v.ob[1] - 0x10;
+        this->windowContentVtx[phi_t2].v.vector[1] = this->windowContentVtx[phi_t2 + 1].v.vector[1] = 0;
+        this->windowContentVtx[phi_t2 + 2].v.vector[1] = this->windowContentVtx[phi_t2 + 3].v.vector[1] =
+            this->windowContentVtx[phi_t2].v.vector[1] - 0x10;
 
-        this->windowContentVtx[phi_t2].v.ob[2] = this->windowContentVtx[phi_t2 + 1].v.ob[2] =
-            this->windowContentVtx[phi_t2 + 2].v.ob[2] = this->windowContentVtx[phi_t2 + 3].v.ob[2] = 0;
+        this->windowContentVtx[phi_t2].v.vector[2] = this->windowContentVtx[phi_t2 + 1].v.vector[2] =
+            this->windowContentVtx[phi_t2 + 2].v.vector[2] = this->windowContentVtx[phi_t2 + 3].v.vector[2] = 0;
 
         this->windowContentVtx[phi_t2].v.flag = this->windowContentVtx[phi_t2 + 1].v.flag =
             this->windowContentVtx[phi_t2 + 2].v.flag = this->windowContentVtx[phi_t2 + 3].v.flag = 0;
@@ -538,36 +538,36 @@ void FileSelect_SetWindowContentVtx(GameState* thisx) {
         this->windowContentVtx[phi_t2 + 1].v.tc[0] = this->windowContentVtx[phi_t2 + 2].v.tc[1] =
             this->windowContentVtx[phi_t2 + 3].v.tc[0] = this->windowContentVtx[phi_t2 + 3].v.tc[1] = 0x200;
 
-        this->windowContentVtx[phi_t2].v.cn[0] = this->windowContentVtx[phi_t2 + 1].v.cn[0] =
-            this->windowContentVtx[phi_t2 + 2].v.cn[0] = this->windowContentVtx[phi_t2 + 3].v.cn[0] =
-                this->windowContentVtx[phi_t2].v.cn[1] = this->windowContentVtx[phi_t2 + 1].v.cn[1] =
-                    this->windowContentVtx[phi_t2 + 2].v.cn[1] = this->windowContentVtx[phi_t2 + 3].v.cn[1] =
-                        this->windowContentVtx[phi_t2].v.cn[2] = this->windowContentVtx[phi_t2 + 1].v.cn[2] =
-                            this->windowContentVtx[phi_t2 + 2].v.cn[2] = this->windowContentVtx[phi_t2 + 3].v.cn[2] =
-                                this->windowContentVtx[phi_t2].v.cn[3] = this->windowContentVtx[phi_t2 + 1].v.cn[3] =
-                                    this->windowContentVtx[phi_t2 + 2].v.cn[3] =
-                                        this->windowContentVtx[phi_t2 + 3].v.cn[3] = 0xFF;
+        this->windowContentVtx[phi_t2].v.color[0] = this->windowContentVtx[phi_t2 + 1].v.color[0] =
+            this->windowContentVtx[phi_t2 + 2].v.color[0] = this->windowContentVtx[phi_t2 + 3].v.color[0] =
+                this->windowContentVtx[phi_t2].v.color[1] = this->windowContentVtx[phi_t2 + 1].v.color[1] =
+                    this->windowContentVtx[phi_t2 + 2].v.color[1] = this->windowContentVtx[phi_t2 + 3].v.color[1] =
+                        this->windowContentVtx[phi_t2].v.color[2] = this->windowContentVtx[phi_t2 + 1].v.color[2] =
+                            this->windowContentVtx[phi_t2 + 2].v.color[2] = this->windowContentVtx[phi_t2 + 3].v.color[2] =
+                                this->windowContentVtx[phi_t2].v.color[3] = this->windowContentVtx[phi_t2 + 1].v.color[3] =
+                                    this->windowContentVtx[phi_t2 + 2].v.color[3] =
+                                        this->windowContentVtx[phi_t2 + 3].v.color[3] = 0xFF;
     }
 
-    this->windowContentVtx[0].v.ob[0] = this->windowContentVtx[2].v.ob[0] = this->windowPosX;
-    this->windowContentVtx[1].v.ob[0] = this->windowContentVtx[3].v.ob[0] = this->windowContentVtx[0].v.ob[0] + 0x80;
-    this->windowContentVtx[0].v.ob[1] = this->windowContentVtx[1].v.ob[1] = 0x48;
-    this->windowContentVtx[2].v.ob[1] = this->windowContentVtx[3].v.ob[1] = this->windowContentVtx[0].v.ob[1] - 0x10;
+    this->windowContentVtx[0].v.vector[0] = this->windowContentVtx[2].v.vector[0] = this->windowPosX;
+    this->windowContentVtx[1].v.vector[0] = this->windowContentVtx[3].v.vector[0] = this->windowContentVtx[0].v.vector[0] + 0x80;
+    this->windowContentVtx[0].v.vector[1] = this->windowContentVtx[1].v.vector[1] = 0x48;
+    this->windowContentVtx[2].v.vector[1] = this->windowContentVtx[3].v.vector[1] = this->windowContentVtx[0].v.vector[1] - 0x10;
     this->windowContentVtx[1].v.tc[0] = this->windowContentVtx[3].v.tc[0] = 0x1000;
 
     for (phi_a1 = 0, phi_t2 = 4; phi_a1 < 3; phi_a1++) {
         phi_t0 = this->windowPosX - 6;
 
         for (phi_t5 = 0; phi_t5 < 5; phi_t5++, phi_t2 += 4) {
-            this->windowContentVtx[phi_t2].v.ob[0] = this->windowContentVtx[phi_t2 + 2].v.ob[0] = phi_t0;
-            this->windowContentVtx[phi_t2 + 1].v.ob[0] = this->windowContentVtx[phi_t2 + 3].v.ob[0] =
-                this->windowContentVtx[phi_t2].v.ob[0] + sFileInfoBoxPartWidths[phi_t5];
+            this->windowContentVtx[phi_t2].v.vector[0] = this->windowContentVtx[phi_t2 + 2].v.vector[0] = phi_t0;
+            this->windowContentVtx[phi_t2 + 1].v.vector[0] = this->windowContentVtx[phi_t2 + 3].v.vector[0] =
+                this->windowContentVtx[phi_t2].v.vector[0] + sFileInfoBoxPartWidths[phi_t5];
 
-            this->windowContentVtx[phi_t2].v.ob[1] = this->windowContentVtx[phi_t2 + 1].v.ob[1] =
+            this->windowContentVtx[phi_t2].v.vector[1] = this->windowContentVtx[phi_t2 + 1].v.vector[1] =
                 this->fileNamesY[phi_a1] + 0x2C;
 
-            this->windowContentVtx[phi_t2 + 2].v.ob[1] = this->windowContentVtx[phi_t2 + 3].v.ob[1] =
-                this->windowContentVtx[phi_t2].v.ob[1] - 0x38;
+            this->windowContentVtx[phi_t2 + 2].v.vector[1] = this->windowContentVtx[phi_t2 + 3].v.vector[1] =
+                this->windowContentVtx[phi_t2].v.vector[1] - 0x38;
 
             this->windowContentVtx[phi_t2 + 1].v.tc[0] = this->windowContentVtx[phi_t2 + 3].v.tc[0] =
                 sFileInfoBoxPartWidths[phi_t5] << 5;
@@ -580,28 +580,28 @@ void FileSelect_SetWindowContentVtx(GameState* thisx) {
     phi_ra = 0x2C;
 
     for (phi_t5 = 0; phi_t5 < 3; phi_t5++, phi_t2 += 20, phi_ra -= 0x10) {
-        this->windowContentVtx[phi_t2].v.ob[0] = this->windowContentVtx[phi_t2 + 2].v.ob[0] = phi_t0;
+        this->windowContentVtx[phi_t2].v.vector[0] = this->windowContentVtx[phi_t2 + 2].v.vector[0] = phi_t0;
 
-        this->windowContentVtx[phi_t2 + 1].v.ob[0] = this->windowContentVtx[phi_t2 + 3].v.ob[0] =
-            this->windowContentVtx[phi_t2].v.ob[0] + 0x40;
+        this->windowContentVtx[phi_t2 + 1].v.vector[0] = this->windowContentVtx[phi_t2 + 3].v.vector[0] =
+            this->windowContentVtx[phi_t2].v.vector[0] + 0x40;
 
-        this->windowContentVtx[phi_t2].v.ob[1] = this->windowContentVtx[phi_t2 + 1].v.ob[1] =
+        this->windowContentVtx[phi_t2].v.vector[1] = this->windowContentVtx[phi_t2 + 1].v.vector[1] =
             this->buttonYOffsets[phi_t5] + phi_ra;
-        this->windowContentVtx[phi_t2 + 2].v.ob[1] = this->windowContentVtx[phi_t2 + 3].v.ob[1] =
-            this->windowContentVtx[phi_t2].v.ob[1] - 0x10;
+        this->windowContentVtx[phi_t2 + 2].v.vector[1] = this->windowContentVtx[phi_t2 + 3].v.vector[1] =
+            this->windowContentVtx[phi_t2].v.vector[1] - 0x10;
 
         this->windowContentVtx[phi_t2 + 1].v.tc[0] = this->windowContentVtx[phi_t2 + 3].v.tc[0] = 0x800;
 
-        this->windowContentVtx[phi_t2 + 4].v.ob[0] = this->windowContentVtx[phi_t2 + 6].v.ob[0] = phi_t0 + 0x40;
+        this->windowContentVtx[phi_t2 + 4].v.vector[0] = this->windowContentVtx[phi_t2 + 6].v.vector[0] = phi_t0 + 0x40;
 
-        this->windowContentVtx[phi_t2 + 5].v.ob[0] = this->windowContentVtx[phi_t2 + 7].v.ob[0] =
-            this->windowContentVtx[phi_t2 + 4].v.ob[0] + 0x6C;
+        this->windowContentVtx[phi_t2 + 5].v.vector[0] = this->windowContentVtx[phi_t2 + 7].v.vector[0] =
+            this->windowContentVtx[phi_t2 + 4].v.vector[0] + 0x6C;
 
-        this->windowContentVtx[phi_t2 + 4].v.ob[1] = this->windowContentVtx[phi_t2 + 5].v.ob[1] =
+        this->windowContentVtx[phi_t2 + 4].v.vector[1] = this->windowContentVtx[phi_t2 + 5].v.vector[1] =
             this->buttonYOffsets[phi_t5] + phi_ra;
 
-        this->windowContentVtx[phi_t2 + 6].v.ob[1] = this->windowContentVtx[phi_t2 + 7].v.ob[1] =
-            this->windowContentVtx[phi_t2 + 4].v.ob[1] - 0x10;
+        this->windowContentVtx[phi_t2 + 6].v.vector[1] = this->windowContentVtx[phi_t2 + 7].v.vector[1] =
+            this->windowContentVtx[phi_t2 + 4].v.vector[1] - 0x10;
 
         this->windowContentVtx[phi_t2 + 5].v.tc[0] = this->windowContentVtx[phi_t2 + 7].v.tc[0] = 0xD80;
 
@@ -614,36 +614,36 @@ void FileSelect_SetWindowContentVtx(GameState* thisx) {
             temp_t1 = phi_ra + this->buttonYOffsets[phi_t5] + this->fileNamesY[phi_t5];
         }
 
-        this->windowContentVtx[phi_t2 + 8].v.ob[0] = this->windowContentVtx[phi_t2 + 10].v.ob[0] = phi_t0 + 0xA8;
+        this->windowContentVtx[phi_t2 + 8].v.vector[0] = this->windowContentVtx[phi_t2 + 10].v.vector[0] = phi_t0 + 0xA8;
 
-        this->windowContentVtx[phi_t2 + 9].v.ob[0] = this->windowContentVtx[phi_t2 + 11].v.ob[0] =
-            this->windowContentVtx[phi_t2 + 8].v.ob[0] + 0x2C;
+        this->windowContentVtx[phi_t2 + 9].v.vector[0] = this->windowContentVtx[phi_t2 + 11].v.vector[0] =
+            this->windowContentVtx[phi_t2 + 8].v.vector[0] + 0x2C;
 
-        this->windowContentVtx[phi_t2 + 8].v.ob[1] = this->windowContentVtx[phi_t2 + 9].v.ob[1] = temp_t1;
-        this->windowContentVtx[phi_t2 + 10].v.ob[1] = this->windowContentVtx[phi_t2 + 11].v.ob[1] =
-            this->windowContentVtx[phi_t2 + 8].v.ob[1] - 0x10;
+        this->windowContentVtx[phi_t2 + 8].v.vector[1] = this->windowContentVtx[phi_t2 + 9].v.vector[1] = temp_t1;
+        this->windowContentVtx[phi_t2 + 10].v.vector[1] = this->windowContentVtx[phi_t2 + 11].v.vector[1] =
+            this->windowContentVtx[phi_t2 + 8].v.vector[1] - 0x10;
 
         this->windowContentVtx[phi_t2 + 9].v.tc[0] = this->windowContentVtx[phi_t2 + 11].v.tc[0] = 0x580;
-        this->windowContentVtx[phi_t2 + 12].v.ob[0] = this->windowContentVtx[phi_t2 + 14].v.ob[0] = phi_t0 + 0x34;
-        this->windowContentVtx[phi_t2 + 13].v.ob[0] = this->windowContentVtx[phi_t2 + 15].v.ob[0] =
-            this->windowContentVtx[phi_t2 + 12].v.ob[0] + 0x18;
+        this->windowContentVtx[phi_t2 + 12].v.vector[0] = this->windowContentVtx[phi_t2 + 14].v.vector[0] = phi_t0 + 0x34;
+        this->windowContentVtx[phi_t2 + 13].v.vector[0] = this->windowContentVtx[phi_t2 + 15].v.vector[0] =
+            this->windowContentVtx[phi_t2 + 12].v.vector[0] + 0x18;
 
-        this->windowContentVtx[phi_t2 + 12].v.ob[1] = this->windowContentVtx[phi_t2 + 13].v.ob[1] =
+        this->windowContentVtx[phi_t2 + 12].v.vector[1] = this->windowContentVtx[phi_t2 + 13].v.vector[1] =
             this->buttonYOffsets[phi_t5] + phi_ra;
 
-        this->windowContentVtx[phi_t2 + 14].v.ob[1] = this->windowContentVtx[phi_t2 + 15].v.ob[1] =
-            this->windowContentVtx[phi_t2 + 12].v.ob[1] - 0x10;
+        this->windowContentVtx[phi_t2 + 14].v.vector[1] = this->windowContentVtx[phi_t2 + 15].v.vector[1] =
+            this->windowContentVtx[phi_t2 + 12].v.vector[1] - 0x10;
 
         this->windowContentVtx[phi_t2 + 13].v.tc[0] = this->windowContentVtx[phi_t2 + 15].v.tc[0] = 0x300;
-        this->windowContentVtx[phi_t2 + 16].v.ob[0] = this->windowContentVtx[phi_t2 + 18].v.ob[0] = phi_t0 + 0x9C;
-        this->windowContentVtx[phi_t2 + 17].v.ob[0] = this->windowContentVtx[phi_t2 + 19].v.ob[0] =
-            this->windowContentVtx[phi_t2 + 16].v.ob[0] + 0x18;
+        this->windowContentVtx[phi_t2 + 16].v.vector[0] = this->windowContentVtx[phi_t2 + 18].v.vector[0] = phi_t0 + 0x9C;
+        this->windowContentVtx[phi_t2 + 17].v.vector[0] = this->windowContentVtx[phi_t2 + 19].v.vector[0] =
+            this->windowContentVtx[phi_t2 + 16].v.vector[0] + 0x18;
 
-        this->windowContentVtx[phi_t2 + 16].v.ob[1] = this->windowContentVtx[phi_t2 + 17].v.ob[1] =
+        this->windowContentVtx[phi_t2 + 16].v.vector[1] = this->windowContentVtx[phi_t2 + 17].v.vector[1] =
             this->buttonYOffsets[phi_t5] + phi_ra;
 
-        this->windowContentVtx[phi_t2 + 18].v.ob[1] = this->windowContentVtx[phi_t2 + 19].v.ob[1] =
-            this->windowContentVtx[phi_t2 + 16].v.ob[1] - 0x10;
+        this->windowContentVtx[phi_t2 + 18].v.vector[1] = this->windowContentVtx[phi_t2 + 19].v.vector[1] =
+            this->windowContentVtx[phi_t2 + 16].v.vector[1] - 0x10;
 
         this->windowContentVtx[phi_t2 + 17].v.tc[0] = this->windowContentVtx[phi_t2 + 19].v.tc[0] = 0x300;
     }
@@ -666,25 +666,25 @@ void FileSelect_SetWindowContentVtx(GameState* thisx) {
             temp_t1 += 2;
 
             for (phi_a1 = 0; phi_a1 < 8; phi_a1++, phi_t2 += 4, phi_t0 += WREG(40)) {
-                this->windowContentVtx[phi_t2].v.ob[0] = this->windowContentVtx[phi_t2 + 2].v.ob[0] =
+                this->windowContentVtx[phi_t2].v.vector[0] = this->windowContentVtx[phi_t2 + 2].v.vector[0] =
                     WREG(41) + phi_t0 + 0x40;
-                this->windowContentVtx[phi_t2 + 1].v.ob[0] = this->windowContentVtx[phi_t2 + 3].v.ob[0] =
-                    this->windowContentVtx[phi_t2].v.ob[0] + WREG(42);
-                this->windowContentVtx[phi_t2].v.ob[1] = this->windowContentVtx[phi_t2 + 1].v.ob[1] = temp_t1 - 3;
-                this->windowContentVtx[phi_t2 + 2].v.ob[1] = this->windowContentVtx[phi_t2 + 3].v.ob[1] =
-                    this->windowContentVtx[phi_t2].v.ob[1] - WREG(43);
+                this->windowContentVtx[phi_t2 + 1].v.vector[0] = this->windowContentVtx[phi_t2 + 3].v.vector[0] =
+                    this->windowContentVtx[phi_t2].v.vector[0] + WREG(42);
+                this->windowContentVtx[phi_t2].v.vector[1] = this->windowContentVtx[phi_t2 + 1].v.vector[1] = temp_t1 - 3;
+                this->windowContentVtx[phi_t2 + 2].v.vector[1] = this->windowContentVtx[phi_t2 + 3].v.vector[1] =
+                    this->windowContentVtx[phi_t2].v.vector[1] - WREG(43);
             }
 
             phi_t0 = this->windowPosX - 14;
             temp_t1 -= 0x16;
 
             for (phi_a1 = 0; phi_a1 < 4; phi_a1++, phi_t2 += 4) {
-                this->windowContentVtx[phi_t2].v.ob[0] = this->windowContentVtx[phi_t2 + 2].v.ob[0] = phi_t0;
-                this->windowContentVtx[phi_t2 + 1].v.ob[0] = this->windowContentVtx[phi_t2 + 3].v.ob[0] =
-                    this->windowContentVtx[phi_t2].v.ob[0] + D_80812820[phi_a1];
-                this->windowContentVtx[phi_t2].v.ob[1] = this->windowContentVtx[phi_t2 + 1].v.ob[1] = temp_t1;
-                this->windowContentVtx[phi_t2 + 2].v.ob[1] = this->windowContentVtx[phi_t2 + 3].v.ob[1] =
-                    this->windowContentVtx[phi_t2].v.ob[1] - D_80812828[phi_a1];
+                this->windowContentVtx[phi_t2].v.vector[0] = this->windowContentVtx[phi_t2 + 2].v.vector[0] = phi_t0;
+                this->windowContentVtx[phi_t2 + 1].v.vector[0] = this->windowContentVtx[phi_t2 + 3].v.vector[0] =
+                    this->windowContentVtx[phi_t2].v.vector[0] + D_80812820[phi_a1];
+                this->windowContentVtx[phi_t2].v.vector[1] = this->windowContentVtx[phi_t2 + 1].v.vector[1] = temp_t1;
+                this->windowContentVtx[phi_t2 + 2].v.vector[1] = this->windowContentVtx[phi_t2 + 3].v.vector[1] =
+                    this->windowContentVtx[phi_t2].v.vector[1] - D_80812828[phi_a1];
                 phi_t0 += D_80812818[phi_a1];
             }
 
@@ -694,12 +694,12 @@ void FileSelect_SetWindowContentVtx(GameState* thisx) {
             temp_t1 += 4;
 
             for (phi_a1 = 0; phi_a1 < 20; phi_a1++, phi_t2 += 4, phi_t0 += 9) {
-                this->windowContentVtx[phi_t2].v.ob[0] = this->windowContentVtx[phi_t2 + 2].v.ob[0] = phi_t0;
-                this->windowContentVtx[phi_t2 + 1].v.ob[0] = this->windowContentVtx[phi_t2 + 3].v.ob[0] =
-                    this->windowContentVtx[phi_t2].v.ob[0] + 0xA;
-                this->windowContentVtx[phi_t2].v.ob[1] = this->windowContentVtx[phi_t2 + 1].v.ob[1] = temp_t1;
-                this->windowContentVtx[phi_t2 + 2].v.ob[1] = this->windowContentVtx[phi_t2 + 3].v.ob[1] =
-                    this->windowContentVtx[phi_t2].v.ob[1] - 0xA;
+                this->windowContentVtx[phi_t2].v.vector[0] = this->windowContentVtx[phi_t2 + 2].v.vector[0] = phi_t0;
+                this->windowContentVtx[phi_t2 + 1].v.vector[0] = this->windowContentVtx[phi_t2 + 3].v.vector[0] =
+                    this->windowContentVtx[phi_t2].v.vector[0] + 0xA;
+                this->windowContentVtx[phi_t2].v.vector[1] = this->windowContentVtx[phi_t2 + 1].v.vector[1] = temp_t1;
+                this->windowContentVtx[phi_t2 + 2].v.vector[1] = this->windowContentVtx[phi_t2 + 3].v.vector[1] =
+                    this->windowContentVtx[phi_t2].v.vector[1] - 0xA;
 
                 if (phi_a1 == 9) {
                     phi_t0 = this->windowPosX + 54;
@@ -711,12 +711,12 @@ void FileSelect_SetWindowContentVtx(GameState* thisx) {
             temp_t1 -= 0xA;
 
             for (phi_a1 = 0; phi_a1 < 10; phi_a1++, phi_t2 += 4, phi_t0 += 0x10) {
-                this->windowContentVtx[phi_t2].v.ob[0] = this->windowContentVtx[phi_t2 + 2].v.ob[0] = phi_t0;
-                this->windowContentVtx[phi_t2 + 1].v.ob[0] = this->windowContentVtx[phi_t2 + 3].v.ob[0] =
-                    this->windowContentVtx[phi_t2].v.ob[0] + 0x10;
-                this->windowContentVtx[phi_t2].v.ob[1] = this->windowContentVtx[phi_t2 + 1].v.ob[1] = temp_t1;
-                this->windowContentVtx[phi_t2 + 2].v.ob[1] = this->windowContentVtx[phi_t2 + 3].v.ob[1] =
-                    this->windowContentVtx[phi_t2].v.ob[1] - 0x10;
+                this->windowContentVtx[phi_t2].v.vector[0] = this->windowContentVtx[phi_t2 + 2].v.vector[0] = phi_t0;
+                this->windowContentVtx[phi_t2 + 1].v.vector[0] = this->windowContentVtx[phi_t2 + 3].v.vector[0] =
+                    this->windowContentVtx[phi_t2].v.vector[0] + 0x10;
+                this->windowContentVtx[phi_t2].v.vector[1] = this->windowContentVtx[phi_t2 + 1].v.vector[1] = temp_t1;
+                this->windowContentVtx[phi_t2 + 2].v.vector[1] = this->windowContentVtx[phi_t2 + 3].v.vector[1] =
+                    this->windowContentVtx[phi_t2].v.vector[1] - 0x10;
             }
         } else {
             phi_t2 += 0xA8;
@@ -727,23 +727,23 @@ void FileSelect_SetWindowContentVtx(GameState* thisx) {
     phi_ra = -0xC;
 
     for (phi_t5 = 0; phi_t5 < 2; phi_t5++, phi_t2 += 4, phi_ra -= 0x10) {
-        this->windowContentVtx[phi_t2].v.ob[0] = this->windowContentVtx[phi_t2 + 2].v.ob[0] = phi_t0;
-        this->windowContentVtx[phi_t2 + 1].v.ob[0] = this->windowContentVtx[phi_t2 + 3].v.ob[0] =
-            this->windowContentVtx[phi_t2].v.ob[0] + 0x40;
-        this->windowContentVtx[phi_t2].v.ob[1] = this->windowContentVtx[phi_t2 + 1].v.ob[1] =
+        this->windowContentVtx[phi_t2].v.vector[0] = this->windowContentVtx[phi_t2 + 2].v.vector[0] = phi_t0;
+        this->windowContentVtx[phi_t2 + 1].v.vector[0] = this->windowContentVtx[phi_t2 + 3].v.vector[0] =
+            this->windowContentVtx[phi_t2].v.vector[0] + 0x40;
+        this->windowContentVtx[phi_t2].v.vector[1] = this->windowContentVtx[phi_t2 + 1].v.vector[1] =
             this->buttonYOffsets[phi_t5 + 3] + phi_ra;
-        this->windowContentVtx[phi_t2 + 2].v.ob[1] = this->windowContentVtx[phi_t2 + 3].v.ob[1] =
-            this->windowContentVtx[phi_t2].v.ob[1] - 0x10;
+        this->windowContentVtx[phi_t2 + 2].v.vector[1] = this->windowContentVtx[phi_t2 + 3].v.vector[1] =
+            this->windowContentVtx[phi_t2].v.vector[1] - 0x10;
         this->windowContentVtx[phi_t2 + 1].v.tc[0] = this->windowContentVtx[phi_t2 + 3].v.tc[0] = 0x800;
     }
 
-    this->windowContentVtx[phi_t2].v.ob[0] = this->windowContentVtx[phi_t2 + 2].v.ob[0] = phi_t0;
-    this->windowContentVtx[phi_t2 + 1].v.ob[0] = this->windowContentVtx[phi_t2 + 3].v.ob[0] =
-        this->windowContentVtx[phi_t2].v.ob[0] + 0x40;
-    this->windowContentVtx[phi_t2].v.ob[1] = this->windowContentVtx[phi_t2 + 1].v.ob[1] =
+    this->windowContentVtx[phi_t2].v.vector[0] = this->windowContentVtx[phi_t2 + 2].v.vector[0] = phi_t0;
+    this->windowContentVtx[phi_t2 + 1].v.vector[0] = this->windowContentVtx[phi_t2 + 3].v.vector[0] =
+        this->windowContentVtx[phi_t2].v.vector[0] + 0x40;
+    this->windowContentVtx[phi_t2].v.vector[1] = this->windowContentVtx[phi_t2 + 1].v.vector[1] =
         this->buttonYOffsets[5] - 0x34;
-    this->windowContentVtx[phi_t2 + 2].v.ob[1] = this->windowContentVtx[phi_t2 + 3].v.ob[1] =
-        this->windowContentVtx[phi_t2].v.ob[1] - 0x10;
+    this->windowContentVtx[phi_t2 + 2].v.vector[1] = this->windowContentVtx[phi_t2 + 3].v.vector[1] =
+        this->windowContentVtx[phi_t2].v.vector[1] - 0x10;
     this->windowContentVtx[phi_t2 + 1].v.tc[0] = this->windowContentVtx[phi_t2 + 3].v.tc[0] = 0x800;
 
     phi_t2 += 4;
@@ -763,24 +763,24 @@ void FileSelect_SetWindowContentVtx(GameState* thisx) {
             phi_t5 = D_80812848[this->confirmButtonIndex];
         }
 
-        this->windowContentVtx[phi_t2].v.ob[0] = this->windowContentVtx[phi_t2 + 2].v.ob[0] = this->windowPosX - 0xA;
-        this->windowContentVtx[phi_t2 + 1].v.ob[0] = this->windowContentVtx[phi_t2 + 3].v.ob[0] =
-            this->windowContentVtx[phi_t2].v.ob[0] + 0x48;
-        this->windowContentVtx[phi_t2].v.ob[1] = this->windowContentVtx[phi_t2 + 1].v.ob[1] =
-            this->windowContentVtx[phi_t5].v.ob[1] + 4;
-        this->windowContentVtx[phi_t2 + 2].v.ob[1] = this->windowContentVtx[phi_t2 + 3].v.ob[1] =
-            this->windowContentVtx[phi_t2].v.ob[1] - 0x18;
+        this->windowContentVtx[phi_t2].v.vector[0] = this->windowContentVtx[phi_t2 + 2].v.vector[0] = this->windowPosX - 0xA;
+        this->windowContentVtx[phi_t2 + 1].v.vector[0] = this->windowContentVtx[phi_t2 + 3].v.vector[0] =
+            this->windowContentVtx[phi_t2].v.vector[0] + 0x48;
+        this->windowContentVtx[phi_t2].v.vector[1] = this->windowContentVtx[phi_t2 + 1].v.vector[1] =
+            this->windowContentVtx[phi_t5].v.vector[1] + 4;
+        this->windowContentVtx[phi_t2 + 2].v.vector[1] = this->windowContentVtx[phi_t2 + 3].v.vector[1] =
+            this->windowContentVtx[phi_t2].v.vector[1] - 0x18;
         this->windowContentVtx[phi_t2 + 1].v.tc[0] = this->windowContentVtx[phi_t2 + 3].v.tc[0] = 0x900;
         this->windowContentVtx[phi_t2 + 2].v.tc[1] = this->windowContentVtx[phi_t2 + 3].v.tc[1] = 0x300;
     }
 
-    this->windowContentVtx[phi_t2 + 4].v.ob[0] = this->windowContentVtx[phi_t2 + 6].v.ob[0] = this->windowPosX + 0x3A;
-    this->windowContentVtx[phi_t2 + 5].v.ob[0] = this->windowContentVtx[phi_t2 + 7].v.ob[0] =
-        this->windowContentVtx[phi_t2 + 4].v.ob[0] + 0x80;
-    this->windowContentVtx[phi_t2 + 4].v.ob[1] = this->windowContentVtx[phi_t2 + 5].v.ob[1] =
-        this->windowContentVtx[D_80812830[this->warningButtonIndex]].v.ob[1];
-    this->windowContentVtx[phi_t2 + 6].v.ob[1] = this->windowContentVtx[phi_t2 + 7].v.ob[1] =
-        this->windowContentVtx[phi_t2 + 4].v.ob[1] - 0x10;
+    this->windowContentVtx[phi_t2 + 4].v.vector[0] = this->windowContentVtx[phi_t2 + 6].v.vector[0] = this->windowPosX + 0x3A;
+    this->windowContentVtx[phi_t2 + 5].v.vector[0] = this->windowContentVtx[phi_t2 + 7].v.vector[0] =
+        this->windowContentVtx[phi_t2 + 4].v.vector[0] + 0x80;
+    this->windowContentVtx[phi_t2 + 4].v.vector[1] = this->windowContentVtx[phi_t2 + 5].v.vector[1] =
+        this->windowContentVtx[D_80812830[this->warningButtonIndex]].v.vector[1];
+    this->windowContentVtx[phi_t2 + 6].v.vector[1] = this->windowContentVtx[phi_t2 + 7].v.vector[1] =
+        this->windowContentVtx[phi_t2 + 4].v.vector[1] - 0x10;
     this->windowContentVtx[phi_t2 + 5].v.tc[0] = this->windowContentVtx[phi_t2 + 7].v.tc[0] = 0x1000;
 }
 

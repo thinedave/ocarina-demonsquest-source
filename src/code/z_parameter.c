@@ -3413,23 +3413,23 @@ void Interface_InitVertices(PlayState* play) {
 
     interfaceCtx->actionVtx = Graph_Alloc(play->state.gfxCtx, 8 * sizeof(Vtx));
 
-    interfaceCtx->actionVtx[0].v.ob[0] = interfaceCtx->actionVtx[2].v.ob[0] = -14;
-    interfaceCtx->actionVtx[1].v.ob[0] = interfaceCtx->actionVtx[3].v.ob[0] = interfaceCtx->actionVtx[0].v.ob[0] + 28;
+    interfaceCtx->actionVtx[0].v.vector[0] = interfaceCtx->actionVtx[2].v.vector[0] = -14;
+    interfaceCtx->actionVtx[1].v.vector[0] = interfaceCtx->actionVtx[3].v.vector[0] = interfaceCtx->actionVtx[0].v.vector[0] + 28;
 
-    interfaceCtx->actionVtx[0].v.ob[1] = interfaceCtx->actionVtx[1].v.ob[1] = 14;
-    interfaceCtx->actionVtx[2].v.ob[1] = interfaceCtx->actionVtx[3].v.ob[1] = interfaceCtx->actionVtx[0].v.ob[1] - 28;
+    interfaceCtx->actionVtx[0].v.vector[1] = interfaceCtx->actionVtx[1].v.vector[1] = 14;
+    interfaceCtx->actionVtx[2].v.vector[1] = interfaceCtx->actionVtx[3].v.vector[1] = interfaceCtx->actionVtx[0].v.vector[1] - 28;
 
-    interfaceCtx->actionVtx[4].v.ob[0] = interfaceCtx->actionVtx[6].v.ob[0] = -(XREG(21) / 2);
-    interfaceCtx->actionVtx[5].v.ob[0] = interfaceCtx->actionVtx[7].v.ob[0] =
-        interfaceCtx->actionVtx[4].v.ob[0] + XREG(21);
+    interfaceCtx->actionVtx[4].v.vector[0] = interfaceCtx->actionVtx[6].v.vector[0] = -(XREG(21) / 2);
+    interfaceCtx->actionVtx[5].v.vector[0] = interfaceCtx->actionVtx[7].v.vector[0] =
+        interfaceCtx->actionVtx[4].v.vector[0] + XREG(21);
 
-    interfaceCtx->actionVtx[4].v.ob[1] = interfaceCtx->actionVtx[5].v.ob[1] = XREG(28) / 2;
-    interfaceCtx->actionVtx[6].v.ob[1] = interfaceCtx->actionVtx[7].v.ob[1] =
-        interfaceCtx->actionVtx[4].v.ob[1] - XREG(28);
+    interfaceCtx->actionVtx[4].v.vector[1] = interfaceCtx->actionVtx[5].v.vector[1] = XREG(28) / 2;
+    interfaceCtx->actionVtx[6].v.vector[1] = interfaceCtx->actionVtx[7].v.vector[1] =
+        interfaceCtx->actionVtx[4].v.vector[1] - XREG(28);
 
     for (i = 0; i < 8; i += 4) {
-        interfaceCtx->actionVtx[i].v.ob[2] = interfaceCtx->actionVtx[i + 1].v.ob[2] =
-            interfaceCtx->actionVtx[i + 2].v.ob[2] = interfaceCtx->actionVtx[i + 3].v.ob[2] = 0;
+        interfaceCtx->actionVtx[i].v.vector[2] = interfaceCtx->actionVtx[i + 1].v.vector[2] =
+            interfaceCtx->actionVtx[i + 2].v.vector[2] = interfaceCtx->actionVtx[i + 3].v.vector[2] = 0;
 
         interfaceCtx->actionVtx[i].v.flag = interfaceCtx->actionVtx[i + 1].v.flag =
             interfaceCtx->actionVtx[i + 2].v.flag = interfaceCtx->actionVtx[i + 3].v.flag = 0;
@@ -3439,15 +3439,15 @@ void Interface_InitVertices(PlayState* play) {
         interfaceCtx->actionVtx[i + 1].v.tc[0] = interfaceCtx->actionVtx[i + 2].v.tc[1] =
             interfaceCtx->actionVtx[i + 3].v.tc[0] = interfaceCtx->actionVtx[i + 3].v.tc[1] = 1024;
 
-        interfaceCtx->actionVtx[i].v.cn[0] = interfaceCtx->actionVtx[i + 1].v.cn[0] =
-            interfaceCtx->actionVtx[i + 2].v.cn[0] = interfaceCtx->actionVtx[i + 3].v.cn[0] =
-                interfaceCtx->actionVtx[i].v.cn[1] = interfaceCtx->actionVtx[i + 1].v.cn[1] =
-                    interfaceCtx->actionVtx[i + 2].v.cn[1] = interfaceCtx->actionVtx[i + 3].v.cn[1] =
-                        interfaceCtx->actionVtx[i].v.cn[2] = interfaceCtx->actionVtx[i + 1].v.cn[2] =
-                            interfaceCtx->actionVtx[i + 2].v.cn[2] = interfaceCtx->actionVtx[i + 3].v.cn[2] = 255;
+        interfaceCtx->actionVtx[i].v.color[0] = interfaceCtx->actionVtx[i + 1].v.color[0] =
+            interfaceCtx->actionVtx[i + 2].v.color[0] = interfaceCtx->actionVtx[i + 3].v.color[0] =
+                interfaceCtx->actionVtx[i].v.color[1] = interfaceCtx->actionVtx[i + 1].v.color[1] =
+                    interfaceCtx->actionVtx[i + 2].v.color[1] = interfaceCtx->actionVtx[i + 3].v.color[1] =
+                        interfaceCtx->actionVtx[i].v.color[2] = interfaceCtx->actionVtx[i + 1].v.color[2] =
+                            interfaceCtx->actionVtx[i + 2].v.color[2] = interfaceCtx->actionVtx[i + 3].v.color[2] = 255;
 
-        interfaceCtx->actionVtx[i].v.cn[3] = interfaceCtx->actionVtx[i + 1].v.cn[3] =
-            interfaceCtx->actionVtx[i + 2].v.cn[3] = interfaceCtx->actionVtx[i + 3].v.cn[3] = 255;
+        interfaceCtx->actionVtx[i].v.color[3] = interfaceCtx->actionVtx[i + 1].v.color[3] =
+            interfaceCtx->actionVtx[i + 2].v.color[3] = interfaceCtx->actionVtx[i + 3].v.color[3] = 255;
     }
 
     interfaceCtx->actionVtx[5].v.tc[0] = interfaceCtx->actionVtx[7].v.tc[0] = 1536;
@@ -3455,13 +3455,13 @@ void Interface_InitVertices(PlayState* play) {
 
     interfaceCtx->beatingHeartVtx = Graph_Alloc(play->state.gfxCtx, 4 * sizeof(Vtx));
 
-    interfaceCtx->beatingHeartVtx[0].v.ob[0] = interfaceCtx->beatingHeartVtx[2].v.ob[0] = -8;
-    interfaceCtx->beatingHeartVtx[1].v.ob[0] = interfaceCtx->beatingHeartVtx[3].v.ob[0] = 8;
-    interfaceCtx->beatingHeartVtx[0].v.ob[1] = interfaceCtx->beatingHeartVtx[1].v.ob[1] = 8;
-    interfaceCtx->beatingHeartVtx[2].v.ob[1] = interfaceCtx->beatingHeartVtx[3].v.ob[1] = -8;
+    interfaceCtx->beatingHeartVtx[0].v.vector[0] = interfaceCtx->beatingHeartVtx[2].v.vector[0] = -8;
+    interfaceCtx->beatingHeartVtx[1].v.vector[0] = interfaceCtx->beatingHeartVtx[3].v.vector[0] = 8;
+    interfaceCtx->beatingHeartVtx[0].v.vector[1] = interfaceCtx->beatingHeartVtx[1].v.vector[1] = 8;
+    interfaceCtx->beatingHeartVtx[2].v.vector[1] = interfaceCtx->beatingHeartVtx[3].v.vector[1] = -8;
 
-    interfaceCtx->beatingHeartVtx[0].v.ob[2] = interfaceCtx->beatingHeartVtx[1].v.ob[2] =
-        interfaceCtx->beatingHeartVtx[2].v.ob[2] = interfaceCtx->beatingHeartVtx[3].v.ob[2] = 0;
+    interfaceCtx->beatingHeartVtx[0].v.vector[2] = interfaceCtx->beatingHeartVtx[1].v.vector[2] =
+        interfaceCtx->beatingHeartVtx[2].v.vector[2] = interfaceCtx->beatingHeartVtx[3].v.vector[2] = 0;
 
     interfaceCtx->beatingHeartVtx[0].v.flag = interfaceCtx->beatingHeartVtx[1].v.flag =
         interfaceCtx->beatingHeartVtx[2].v.flag = interfaceCtx->beatingHeartVtx[3].v.flag = 0;
@@ -3471,14 +3471,14 @@ void Interface_InitVertices(PlayState* play) {
     interfaceCtx->beatingHeartVtx[1].v.tc[0] = interfaceCtx->beatingHeartVtx[2].v.tc[1] =
         interfaceCtx->beatingHeartVtx[3].v.tc[0] = interfaceCtx->beatingHeartVtx[3].v.tc[1] = 512;
 
-    interfaceCtx->beatingHeartVtx[0].v.cn[0] = interfaceCtx->beatingHeartVtx[1].v.cn[0] =
-        interfaceCtx->beatingHeartVtx[2].v.cn[0] = interfaceCtx->beatingHeartVtx[3].v.cn[0] =
-            interfaceCtx->beatingHeartVtx[0].v.cn[1] = interfaceCtx->beatingHeartVtx[1].v.cn[1] =
-                interfaceCtx->beatingHeartVtx[2].v.cn[1] = interfaceCtx->beatingHeartVtx[3].v.cn[1] =
-                    interfaceCtx->beatingHeartVtx[0].v.cn[2] = interfaceCtx->beatingHeartVtx[1].v.cn[2] =
-                        interfaceCtx->beatingHeartVtx[2].v.cn[2] = interfaceCtx->beatingHeartVtx[3].v.cn[2] =
-                            interfaceCtx->beatingHeartVtx[0].v.cn[3] = interfaceCtx->beatingHeartVtx[1].v.cn[3] =
-                                interfaceCtx->beatingHeartVtx[2].v.cn[3] = interfaceCtx->beatingHeartVtx[3].v.cn[3] =
+    interfaceCtx->beatingHeartVtx[0].v.color[0] = interfaceCtx->beatingHeartVtx[1].v.color[0] =
+        interfaceCtx->beatingHeartVtx[2].v.color[0] = interfaceCtx->beatingHeartVtx[3].v.color[0] =
+            interfaceCtx->beatingHeartVtx[0].v.color[1] = interfaceCtx->beatingHeartVtx[1].v.color[1] =
+                interfaceCtx->beatingHeartVtx[2].v.color[1] = interfaceCtx->beatingHeartVtx[3].v.color[1] =
+                    interfaceCtx->beatingHeartVtx[0].v.color[2] = interfaceCtx->beatingHeartVtx[1].v.color[2] =
+                        interfaceCtx->beatingHeartVtx[2].v.color[2] = interfaceCtx->beatingHeartVtx[3].v.color[2] =
+                            interfaceCtx->beatingHeartVtx[0].v.color[3] = interfaceCtx->beatingHeartVtx[1].v.color[3] =
+                                interfaceCtx->beatingHeartVtx[2].v.color[3] = interfaceCtx->beatingHeartVtx[3].v.color[3] =
                                     255;
 }
 
@@ -3787,12 +3787,12 @@ void Interface_Draw(PlayState* play) {
             gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
             gSPMatrix(OVERLAY_DISP++, &gMtxClear, G_MTX_MODELVIEW | G_MTX_LOAD);
 
-            pauseCtx->cursorVtx[16].v.ob[0] = pauseCtx->cursorVtx[18].v.ob[0] = pauseCtx->equipAnimX / 10;
-            pauseCtx->cursorVtx[17].v.ob[0] = pauseCtx->cursorVtx[19].v.ob[0] =
-                pauseCtx->cursorVtx[16].v.ob[0] + WREG(90) / 10;
-            pauseCtx->cursorVtx[16].v.ob[1] = pauseCtx->cursorVtx[17].v.ob[1] = pauseCtx->equipAnimY / 10;
-            pauseCtx->cursorVtx[18].v.ob[1] = pauseCtx->cursorVtx[19].v.ob[1] =
-                pauseCtx->cursorVtx[16].v.ob[1] - WREG(90) / 10;
+            pauseCtx->cursorVtx[16].v.vector[0] = pauseCtx->cursorVtx[18].v.vector[0] = pauseCtx->equipAnimX / 10;
+            pauseCtx->cursorVtx[17].v.vector[0] = pauseCtx->cursorVtx[19].v.vector[0] =
+                pauseCtx->cursorVtx[16].v.vector[0] + WREG(90) / 10;
+            pauseCtx->cursorVtx[16].v.vector[1] = pauseCtx->cursorVtx[17].v.vector[1] = pauseCtx->equipAnimY / 10;
+            pauseCtx->cursorVtx[18].v.vector[1] = pauseCtx->cursorVtx[19].v.vector[1] =
+                pauseCtx->cursorVtx[16].v.vector[1] - WREG(90) / 10;
 
             if (pauseCtx->equipTargetItem < 0xBF) {
                 // Normal Equip (icon goes from the inventory slot to the C button when equipping it)
@@ -3810,14 +3810,14 @@ void Interface_Draw(PlayState* play) {
 
                 if ((pauseCtx->equipAnimAlpha > 0) && (pauseCtx->equipAnimAlpha < 255)) {
                     svar1 = (pauseCtx->equipAnimAlpha / 8) / 2;
-                    pauseCtx->cursorVtx[16].v.ob[0] = pauseCtx->cursorVtx[18].v.ob[0] =
-                        pauseCtx->cursorVtx[16].v.ob[0] - svar1;
-                    pauseCtx->cursorVtx[17].v.ob[0] = pauseCtx->cursorVtx[19].v.ob[0] =
-                        pauseCtx->cursorVtx[16].v.ob[0] + svar1 * 2 + 32;
-                    pauseCtx->cursorVtx[16].v.ob[1] = pauseCtx->cursorVtx[17].v.ob[1] =
-                        pauseCtx->cursorVtx[16].v.ob[1] + svar1;
-                    pauseCtx->cursorVtx[18].v.ob[1] = pauseCtx->cursorVtx[19].v.ob[1] =
-                        pauseCtx->cursorVtx[16].v.ob[1] - svar1 * 2 - 32;
+                    pauseCtx->cursorVtx[16].v.vector[0] = pauseCtx->cursorVtx[18].v.vector[0] =
+                        pauseCtx->cursorVtx[16].v.vector[0] - svar1;
+                    pauseCtx->cursorVtx[17].v.vector[0] = pauseCtx->cursorVtx[19].v.vector[0] =
+                        pauseCtx->cursorVtx[16].v.vector[0] + svar1 * 2 + 32;
+                    pauseCtx->cursorVtx[16].v.vector[1] = pauseCtx->cursorVtx[17].v.vector[1] =
+                        pauseCtx->cursorVtx[16].v.vector[1] + svar1;
+                    pauseCtx->cursorVtx[18].v.vector[1] = pauseCtx->cursorVtx[19].v.vector[1] =
+                        pauseCtx->cursorVtx[16].v.vector[1] - svar1 * 2 - 32;
                 }
 
                 gSPVertex(OVERLAY_DISP++, &pauseCtx->cursorVtx[16], 4, 0);

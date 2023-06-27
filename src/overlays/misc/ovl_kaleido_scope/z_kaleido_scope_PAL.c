@@ -1009,16 +1009,16 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
 
     temp = pauseCtx->infoPanelOffsetY - 76;
     for (j = 0, i = 0; i < 7; i++, j += 4) {
-        pauseCtx->infoPanelVtx[j + 0].v.ob[0] = pauseCtx->infoPanelVtx[j + 2].v.ob[0] = -72;
+        pauseCtx->infoPanelVtx[j + 0].v.vector[0] = pauseCtx->infoPanelVtx[j + 2].v.vector[0] = -72;
 
-        pauseCtx->infoPanelVtx[j + 1].v.ob[0] = pauseCtx->infoPanelVtx[j + 3].v.ob[0] = 0;
+        pauseCtx->infoPanelVtx[j + 1].v.vector[0] = pauseCtx->infoPanelVtx[j + 3].v.vector[0] = 0;
 
-        pauseCtx->infoPanelVtx[j + 0].v.ob[1] = pauseCtx->infoPanelVtx[j + 1].v.ob[1] = temp;
+        pauseCtx->infoPanelVtx[j + 0].v.vector[1] = pauseCtx->infoPanelVtx[j + 1].v.vector[1] = temp;
 
-        pauseCtx->infoPanelVtx[j + 2].v.ob[1] = pauseCtx->infoPanelVtx[j + 3].v.ob[1] = temp - 24;
+        pauseCtx->infoPanelVtx[j + 2].v.vector[1] = pauseCtx->infoPanelVtx[j + 3].v.vector[1] = temp - 24;
 
-        pauseCtx->infoPanelVtx[j + 0].v.ob[2] = pauseCtx->infoPanelVtx[j + 1].v.ob[2] =
-            pauseCtx->infoPanelVtx[j + 2].v.ob[2] = pauseCtx->infoPanelVtx[j + 3].v.ob[2] = 0;
+        pauseCtx->infoPanelVtx[j + 0].v.vector[2] = pauseCtx->infoPanelVtx[j + 1].v.vector[2] =
+            pauseCtx->infoPanelVtx[j + 2].v.vector[2] = pauseCtx->infoPanelVtx[j + 3].v.vector[2] = 0;
 
         pauseCtx->infoPanelVtx[j + 0].v.flag = pauseCtx->infoPanelVtx[j + 1].v.flag =
             pauseCtx->infoPanelVtx[j + 2].v.flag = pauseCtx->infoPanelVtx[j + 3].v.flag = 0;
@@ -1030,61 +1030,61 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
 
         pauseCtx->infoPanelVtx[j + 2].v.tc[1] = pauseCtx->infoPanelVtx[j + 3].v.tc[1] = 0x300;
 
-        pauseCtx->infoPanelVtx[j + 0].v.cn[0] = pauseCtx->infoPanelVtx[j + 2].v.cn[0] =
-            pauseCtx->infoPanelVtx[j + 0].v.cn[1] = pauseCtx->infoPanelVtx[j + 2].v.cn[1] =
-                pauseCtx->infoPanelVtx[j + 0].v.cn[2] = pauseCtx->infoPanelVtx[j + 2].v.cn[2] =
-                    pauseCtx->infoPanelVtx[j + 1].v.cn[0] = pauseCtx->infoPanelVtx[j + 3].v.cn[0] =
-                        pauseCtx->infoPanelVtx[j + 1].v.cn[1] = pauseCtx->infoPanelVtx[j + 3].v.cn[1] =
-                            pauseCtx->infoPanelVtx[j + 1].v.cn[2] = pauseCtx->infoPanelVtx[j + 3].v.cn[2] = 200;
+        pauseCtx->infoPanelVtx[j + 0].v.color[0] = pauseCtx->infoPanelVtx[j + 2].v.color[0] =
+            pauseCtx->infoPanelVtx[j + 0].v.color[1] = pauseCtx->infoPanelVtx[j + 2].v.color[1] =
+                pauseCtx->infoPanelVtx[j + 0].v.color[2] = pauseCtx->infoPanelVtx[j + 2].v.color[2] =
+                    pauseCtx->infoPanelVtx[j + 1].v.color[0] = pauseCtx->infoPanelVtx[j + 3].v.color[0] =
+                        pauseCtx->infoPanelVtx[j + 1].v.color[1] = pauseCtx->infoPanelVtx[j + 3].v.color[1] =
+                            pauseCtx->infoPanelVtx[j + 1].v.color[2] = pauseCtx->infoPanelVtx[j + 3].v.color[2] = 200;
 
-        pauseCtx->infoPanelVtx[j + 0].v.cn[3] = pauseCtx->infoPanelVtx[j + 2].v.cn[3] =
-            pauseCtx->infoPanelVtx[j + 1].v.cn[3] = pauseCtx->infoPanelVtx[j + 3].v.cn[3] = pauseCtx->alpha;
+        pauseCtx->infoPanelVtx[j + 0].v.color[3] = pauseCtx->infoPanelVtx[j + 2].v.color[3] =
+            pauseCtx->infoPanelVtx[j + 1].v.color[3] = pauseCtx->infoPanelVtx[j + 3].v.color[3] = pauseCtx->alpha;
     }
 
-    pauseCtx->infoPanelVtx[4].v.ob[0] = pauseCtx->infoPanelVtx[6].v.ob[0] = pauseCtx->infoPanelVtx[0].v.ob[0] + 72;
+    pauseCtx->infoPanelVtx[4].v.vector[0] = pauseCtx->infoPanelVtx[6].v.vector[0] = pauseCtx->infoPanelVtx[0].v.vector[0] + 72;
 
-    pauseCtx->infoPanelVtx[5].v.ob[0] = pauseCtx->infoPanelVtx[7].v.ob[0] = pauseCtx->infoPanelVtx[4].v.ob[0] + 72;
+    pauseCtx->infoPanelVtx[5].v.vector[0] = pauseCtx->infoPanelVtx[7].v.vector[0] = pauseCtx->infoPanelVtx[4].v.vector[0] + 72;
 
     if ((pauseCtx->cursorSpecialPos == PAUSE_CURSOR_PAGE_LEFT) && (pauseCtx->unk_1E4 == 0)) {
-        pauseCtx->infoPanelVtx[8].v.ob[0] = pauseCtx->infoPanelVtx[10].v.ob[0] = WREG(16);
+        pauseCtx->infoPanelVtx[8].v.vector[0] = pauseCtx->infoPanelVtx[10].v.vector[0] = WREG(16);
 
-        pauseCtx->infoPanelVtx[9].v.ob[0] = pauseCtx->infoPanelVtx[11].v.ob[0] = pauseCtx->infoPanelVtx[8].v.ob[0] + 24;
+        pauseCtx->infoPanelVtx[9].v.vector[0] = pauseCtx->infoPanelVtx[11].v.vector[0] = pauseCtx->infoPanelVtx[8].v.vector[0] + 24;
 
-        pauseCtx->infoPanelVtx[8].v.ob[1] = pauseCtx->infoPanelVtx[9].v.ob[1] = WREG(18);
+        pauseCtx->infoPanelVtx[8].v.vector[1] = pauseCtx->infoPanelVtx[9].v.vector[1] = WREG(18);
 
-        pauseCtx->infoPanelVtx[10].v.ob[1] = pauseCtx->infoPanelVtx[11].v.ob[1] =
-            pauseCtx->infoPanelVtx[8].v.ob[1] - 32;
+        pauseCtx->infoPanelVtx[10].v.vector[1] = pauseCtx->infoPanelVtx[11].v.vector[1] =
+            pauseCtx->infoPanelVtx[8].v.vector[1] - 32;
     } else {
-        pauseCtx->infoPanelVtx[8].v.ob[0] = pauseCtx->infoPanelVtx[10].v.ob[0] = WREG(16) + 3;
+        pauseCtx->infoPanelVtx[8].v.vector[0] = pauseCtx->infoPanelVtx[10].v.vector[0] = WREG(16) + 3;
 
-        pauseCtx->infoPanelVtx[9].v.ob[0] = pauseCtx->infoPanelVtx[11].v.ob[0] = pauseCtx->infoPanelVtx[8].v.ob[0] + 18;
+        pauseCtx->infoPanelVtx[9].v.vector[0] = pauseCtx->infoPanelVtx[11].v.vector[0] = pauseCtx->infoPanelVtx[8].v.vector[0] + 18;
 
-        pauseCtx->infoPanelVtx[8].v.ob[1] = pauseCtx->infoPanelVtx[9].v.ob[1] = WREG(18) - 3;
+        pauseCtx->infoPanelVtx[8].v.vector[1] = pauseCtx->infoPanelVtx[9].v.vector[1] = WREG(18) - 3;
 
-        pauseCtx->infoPanelVtx[10].v.ob[1] = pauseCtx->infoPanelVtx[11].v.ob[1] =
-            pauseCtx->infoPanelVtx[8].v.ob[1] - 26;
+        pauseCtx->infoPanelVtx[10].v.vector[1] = pauseCtx->infoPanelVtx[11].v.vector[1] =
+            pauseCtx->infoPanelVtx[8].v.vector[1] - 26;
     }
 
     if ((pauseCtx->cursorSpecialPos == PAUSE_CURSOR_PAGE_RIGHT) && (pauseCtx->unk_1E4 == 0)) {
-        pauseCtx->infoPanelVtx[12].v.ob[0] = pauseCtx->infoPanelVtx[14].v.ob[0] = WREG(17);
+        pauseCtx->infoPanelVtx[12].v.vector[0] = pauseCtx->infoPanelVtx[14].v.vector[0] = WREG(17);
 
-        pauseCtx->infoPanelVtx[13].v.ob[0] = pauseCtx->infoPanelVtx[15].v.ob[0] =
-            pauseCtx->infoPanelVtx[12].v.ob[0] + 24;
+        pauseCtx->infoPanelVtx[13].v.vector[0] = pauseCtx->infoPanelVtx[15].v.vector[0] =
+            pauseCtx->infoPanelVtx[12].v.vector[0] + 24;
 
-        pauseCtx->infoPanelVtx[12].v.ob[1] = pauseCtx->infoPanelVtx[13].v.ob[1] = WREG(18);
+        pauseCtx->infoPanelVtx[12].v.vector[1] = pauseCtx->infoPanelVtx[13].v.vector[1] = WREG(18);
 
-        pauseCtx->infoPanelVtx[14].v.ob[1] = pauseCtx->infoPanelVtx[15].v.ob[1] =
-            pauseCtx->infoPanelVtx[12].v.ob[1] - 32;
+        pauseCtx->infoPanelVtx[14].v.vector[1] = pauseCtx->infoPanelVtx[15].v.vector[1] =
+            pauseCtx->infoPanelVtx[12].v.vector[1] - 32;
     } else {
-        pauseCtx->infoPanelVtx[12].v.ob[0] = pauseCtx->infoPanelVtx[14].v.ob[0] = WREG(17) + 3;
+        pauseCtx->infoPanelVtx[12].v.vector[0] = pauseCtx->infoPanelVtx[14].v.vector[0] = WREG(17) + 3;
 
-        pauseCtx->infoPanelVtx[13].v.ob[0] = pauseCtx->infoPanelVtx[15].v.ob[0] =
-            pauseCtx->infoPanelVtx[12].v.ob[0] + 18;
+        pauseCtx->infoPanelVtx[13].v.vector[0] = pauseCtx->infoPanelVtx[15].v.vector[0] =
+            pauseCtx->infoPanelVtx[12].v.vector[0] + 18;
 
-        pauseCtx->infoPanelVtx[12].v.ob[1] = pauseCtx->infoPanelVtx[13].v.ob[1] = WREG(18) - 3;
+        pauseCtx->infoPanelVtx[12].v.vector[1] = pauseCtx->infoPanelVtx[13].v.vector[1] = WREG(18) - 3;
 
-        pauseCtx->infoPanelVtx[14].v.ob[1] = pauseCtx->infoPanelVtx[15].v.ob[1] =
-            pauseCtx->infoPanelVtx[12].v.ob[1] - 26;
+        pauseCtx->infoPanelVtx[14].v.vector[1] = pauseCtx->infoPanelVtx[15].v.vector[1] =
+            pauseCtx->infoPanelVtx[12].v.vector[1] - 26;
     }
 
     pauseCtx->infoPanelVtx[9].v.tc[0] = pauseCtx->infoPanelVtx[11].v.tc[0] = pauseCtx->infoPanelVtx[13].v.tc[0] =
@@ -1122,15 +1122,15 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
 
     if (pauseCtx->cursorSpecialPos != 0) {
         j = (pauseCtx->cursorSpecialPos * 4) - 32;
-        pauseCtx->cursorVtx[0].v.ob[0] = pauseCtx->infoPanelVtx[j].v.ob[0];
-        pauseCtx->cursorVtx[0].v.ob[1] = pauseCtx->infoPanelVtx[j].v.ob[1];
+        pauseCtx->cursorVtx[0].v.vector[0] = pauseCtx->infoPanelVtx[j].v.vector[0];
+        pauseCtx->cursorVtx[0].v.vector[1] = pauseCtx->infoPanelVtx[j].v.vector[1];
         KaleidoScope_DrawCursor(play, pauseCtx->pageIndex);
     }
 
     temp = pauseCtx->infoPanelOffsetY - 80;
-    pauseCtx->infoPanelVtx[16].v.ob[1] = pauseCtx->infoPanelVtx[17].v.ob[1] = temp;
+    pauseCtx->infoPanelVtx[16].v.vector[1] = pauseCtx->infoPanelVtx[17].v.vector[1] = temp;
 
-    pauseCtx->infoPanelVtx[18].v.ob[1] = pauseCtx->infoPanelVtx[19].v.ob[1] = pauseCtx->infoPanelVtx[16].v.ob[1] - 16;
+    pauseCtx->infoPanelVtx[18].v.vector[1] = pauseCtx->infoPanelVtx[19].v.vector[1] = pauseCtx->infoPanelVtx[16].v.vector[1] - 16;
 
     pauseCtx->infoPanelVtx[18].v.tc[1] = pauseCtx->infoPanelVtx[19].v.tc[1] = 0x200;
 
@@ -1145,10 +1145,10 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
         (pauseCtx->cursorSpecialPos == 0)) {
         if (((u32)pauseCtx->unk_1E4 == 0) || (pauseCtx->unk_1E4 == 2) ||
             ((pauseCtx->unk_1E4 >= 4) && (pauseCtx->unk_1E4 <= 7)) || (pauseCtx->unk_1E4 == 8)) {
-            pauseCtx->infoPanelVtx[16].v.ob[0] = pauseCtx->infoPanelVtx[18].v.ob[0] = -63;
+            pauseCtx->infoPanelVtx[16].v.vector[0] = pauseCtx->infoPanelVtx[18].v.vector[0] = -63;
 
-            pauseCtx->infoPanelVtx[17].v.ob[0] = pauseCtx->infoPanelVtx[19].v.ob[0] =
-                pauseCtx->infoPanelVtx[16].v.ob[0] + 128;
+            pauseCtx->infoPanelVtx[17].v.vector[0] = pauseCtx->infoPanelVtx[19].v.vector[0] =
+                pauseCtx->infoPanelVtx[16].v.vector[0] + 128;
 
             pauseCtx->infoPanelVtx[17].v.tc[0] = pauseCtx->infoPanelVtx[19].v.tc[0] = 0x1000;
 
@@ -1183,16 +1183,16 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
             if (GET_GS_FLAGS(D_8082AE30[pauseCtx->cursorPoint[PAUSE_WORLD_MAP]]) ==
                 gAreaGsFlags[D_8082AE30[pauseCtx->cursorPoint[PAUSE_WORLD_MAP]]]) {
 
-                pauseCtx->infoPanelVtx[24].v.ob[0] = pauseCtx->infoPanelVtx[26].v.ob[0] = -74;
+                pauseCtx->infoPanelVtx[24].v.vector[0] = pauseCtx->infoPanelVtx[26].v.vector[0] = -74;
 
-                pauseCtx->infoPanelVtx[25].v.ob[0] = pauseCtx->infoPanelVtx[27].v.ob[0] =
-                    pauseCtx->infoPanelVtx[24].v.ob[0] + 19;
+                pauseCtx->infoPanelVtx[25].v.vector[0] = pauseCtx->infoPanelVtx[27].v.vector[0] =
+                    pauseCtx->infoPanelVtx[24].v.vector[0] + 19;
 
-                pauseCtx->infoPanelVtx[24].v.ob[1] = pauseCtx->infoPanelVtx[25].v.ob[1] =
-                    pauseCtx->infoPanelVtx[24].v.ob[1] - 2;
+                pauseCtx->infoPanelVtx[24].v.vector[1] = pauseCtx->infoPanelVtx[25].v.vector[1] =
+                    pauseCtx->infoPanelVtx[24].v.vector[1] - 2;
 
-                pauseCtx->infoPanelVtx[26].v.ob[1] = pauseCtx->infoPanelVtx[27].v.ob[1] =
-                    pauseCtx->infoPanelVtx[24].v.ob[1] - 19;
+                pauseCtx->infoPanelVtx[26].v.vector[1] = pauseCtx->infoPanelVtx[27].v.vector[1] =
+                    pauseCtx->infoPanelVtx[24].v.vector[1] - 19;
 
                 pauseCtx->infoPanelVtx[25].v.tc[0] = pauseCtx->infoPanelVtx[27].v.tc[0] = 0x300;
 
@@ -1209,26 +1209,26 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
             }
         }
     } else if ((pauseCtx->unk_1E4 < 3) || (pauseCtx->unk_1E4 == 7) || (pauseCtx->unk_1E4 == 8)) {
-        pauseCtx->infoPanelVtx[20].v.ob[1] = pauseCtx->infoPanelVtx[21].v.ob[1] = temp;
+        pauseCtx->infoPanelVtx[20].v.vector[1] = pauseCtx->infoPanelVtx[21].v.vector[1] = temp;
 
-        pauseCtx->infoPanelVtx[22].v.ob[1] = pauseCtx->infoPanelVtx[23].v.ob[1] =
-            pauseCtx->infoPanelVtx[20].v.ob[1] - 16;
+        pauseCtx->infoPanelVtx[22].v.vector[1] = pauseCtx->infoPanelVtx[23].v.vector[1] =
+            pauseCtx->infoPanelVtx[20].v.vector[1] - 16;
 
         pauseCtx->infoPanelVtx[22].v.tc[1] = pauseCtx->infoPanelVtx[23].v.tc[1] = 0x200;
 
         gSPVertex(POLY_OPA_DISP++, &pauseCtx->infoPanelVtx[16], 8, 0);
 
         if (pauseCtx->state == 7) {
-            pauseCtx->infoPanelVtx[16].v.ob[0] = pauseCtx->infoPanelVtx[18].v.ob[0] = WREG(61 + gSaveContext.language);
+            pauseCtx->infoPanelVtx[16].v.vector[0] = pauseCtx->infoPanelVtx[18].v.vector[0] = WREG(61 + gSaveContext.language);
 
-            pauseCtx->infoPanelVtx[17].v.ob[0] = pauseCtx->infoPanelVtx[19].v.ob[0] =
-                pauseCtx->infoPanelVtx[16].v.ob[0] + 24;
+            pauseCtx->infoPanelVtx[17].v.vector[0] = pauseCtx->infoPanelVtx[19].v.vector[0] =
+                pauseCtx->infoPanelVtx[16].v.vector[0] + 24;
 
-            pauseCtx->infoPanelVtx[20].v.ob[0] = pauseCtx->infoPanelVtx[22].v.ob[0] =
-                pauseCtx->infoPanelVtx[16].v.ob[0] + WREG(52 + gSaveContext.language);
+            pauseCtx->infoPanelVtx[20].v.vector[0] = pauseCtx->infoPanelVtx[22].v.vector[0] =
+                pauseCtx->infoPanelVtx[16].v.vector[0] + WREG(52 + gSaveContext.language);
 
-            pauseCtx->infoPanelVtx[21].v.ob[0] = pauseCtx->infoPanelVtx[23].v.ob[0] =
-                pauseCtx->infoPanelVtx[20].v.ob[0] + D_8082ADE0[gSaveContext.language];
+            pauseCtx->infoPanelVtx[21].v.vector[0] = pauseCtx->infoPanelVtx[23].v.vector[0] =
+                pauseCtx->infoPanelVtx[20].v.vector[0] + D_8082ADE0[gSaveContext.language];
 
             pauseCtx->infoPanelVtx[17].v.tc[0] = pauseCtx->infoPanelVtx[19].v.tc[0] = 0x300;
 
@@ -1244,10 +1244,10 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
                                                         D_8082ADE0[gSaveContext.language], 16, 4);
         } else if (pauseCtx->cursorSpecialPos != 0) {
             if ((pauseCtx->state == 6) && (pauseCtx->unk_1E4 == 0)) {
-                pauseCtx->infoPanelVtx[16].v.ob[0] = pauseCtx->infoPanelVtx[18].v.ob[0] = -63;
+                pauseCtx->infoPanelVtx[16].v.vector[0] = pauseCtx->infoPanelVtx[18].v.vector[0] = -63;
 
-                pauseCtx->infoPanelVtx[17].v.ob[0] = pauseCtx->infoPanelVtx[19].v.ob[0] =
-                    pauseCtx->infoPanelVtx[16].v.ob[0] + 128;
+                pauseCtx->infoPanelVtx[17].v.vector[0] = pauseCtx->infoPanelVtx[19].v.vector[0] =
+                    pauseCtx->infoPanelVtx[16].v.vector[0] + 128;
 
                 pauseCtx->infoPanelVtx[17].v.tc[0] = pauseCtx->infoPanelVtx[19].v.tc[0] = 0x1000;
 
@@ -1264,17 +1264,17 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
             }
         } else {
             if ((u32)pauseCtx->pageIndex == PAUSE_ITEM) {
-                pauseCtx->infoPanelVtx[16].v.ob[0] = pauseCtx->infoPanelVtx[18].v.ob[0] =
+                pauseCtx->infoPanelVtx[16].v.vector[0] = pauseCtx->infoPanelVtx[18].v.vector[0] =
                     WREG(49 + gSaveContext.language);
 
-                pauseCtx->infoPanelVtx[17].v.ob[0] = pauseCtx->infoPanelVtx[19].v.ob[0] =
-                    pauseCtx->infoPanelVtx[16].v.ob[0] + 48;
+                pauseCtx->infoPanelVtx[17].v.vector[0] = pauseCtx->infoPanelVtx[19].v.vector[0] =
+                    pauseCtx->infoPanelVtx[16].v.vector[0] + 48;
 
-                pauseCtx->infoPanelVtx[20].v.ob[0] = pauseCtx->infoPanelVtx[22].v.ob[0] =
-                    pauseCtx->infoPanelVtx[16].v.ob[0] + WREG(58 + gSaveContext.language);
+                pauseCtx->infoPanelVtx[20].v.vector[0] = pauseCtx->infoPanelVtx[22].v.vector[0] =
+                    pauseCtx->infoPanelVtx[16].v.vector[0] + WREG(58 + gSaveContext.language);
 
-                pauseCtx->infoPanelVtx[21].v.ob[0] = pauseCtx->infoPanelVtx[23].v.ob[0] =
-                    pauseCtx->infoPanelVtx[20].v.ob[0] + D_8082ADD8[gSaveContext.language];
+                pauseCtx->infoPanelVtx[21].v.vector[0] = pauseCtx->infoPanelVtx[23].v.vector[0] =
+                    pauseCtx->infoPanelVtx[20].v.vector[0] + D_8082ADD8[gSaveContext.language];
 
                 pauseCtx->infoPanelVtx[17].v.tc[0] = pauseCtx->infoPanelVtx[19].v.tc[0] = 0x600;
 
@@ -1293,22 +1293,22 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
             } else if ((pauseCtx->pageIndex == PAUSE_QUEST) && (pauseCtx->cursorSlot[PAUSE_QUEST] >= 6) &&
                        (pauseCtx->cursorSlot[PAUSE_QUEST] <= 0x11)) {
                 if (pauseCtx->namedItem != PAUSE_ITEM_NONE) {
-                    pauseCtx->infoPanelVtx[16].v.ob[0] = pauseCtx->infoPanelVtx[18].v.ob[0] =
+                    pauseCtx->infoPanelVtx[16].v.vector[0] = pauseCtx->infoPanelVtx[18].v.vector[0] =
                         WREG(55 + gSaveContext.language);
 
-                    pauseCtx->infoPanelVtx[17].v.ob[0] = pauseCtx->infoPanelVtx[19].v.ob[0] =
-                        pauseCtx->infoPanelVtx[16].v.ob[0] + 24;
+                    pauseCtx->infoPanelVtx[17].v.vector[0] = pauseCtx->infoPanelVtx[19].v.vector[0] =
+                        pauseCtx->infoPanelVtx[16].v.vector[0] + 24;
 
-                    pauseCtx->infoPanelVtx[20].v.ob[0] = pauseCtx->infoPanelVtx[22].v.ob[0] =
-                        pauseCtx->infoPanelVtx[16].v.ob[0] + WREG(52 + gSaveContext.language);
+                    pauseCtx->infoPanelVtx[20].v.vector[0] = pauseCtx->infoPanelVtx[22].v.vector[0] =
+                        pauseCtx->infoPanelVtx[16].v.vector[0] + WREG(52 + gSaveContext.language);
 
                     if (gSaveContext.language == LANGUAGE_GER) {
-                        pauseCtx->infoPanelVtx[20].v.ob[0] = pauseCtx->infoPanelVtx[22].v.ob[0] =
-                            pauseCtx->infoPanelVtx[16].v.ob[0] - 99;
+                        pauseCtx->infoPanelVtx[20].v.vector[0] = pauseCtx->infoPanelVtx[22].v.vector[0] =
+                            pauseCtx->infoPanelVtx[16].v.vector[0] - 99;
                     }
 
-                    pauseCtx->infoPanelVtx[21].v.ob[0] = pauseCtx->infoPanelVtx[23].v.ob[0] =
-                        pauseCtx->infoPanelVtx[20].v.ob[0] + D_8082ADE8[gSaveContext.language];
+                    pauseCtx->infoPanelVtx[21].v.vector[0] = pauseCtx->infoPanelVtx[23].v.vector[0] =
+                        pauseCtx->infoPanelVtx[20].v.vector[0] + D_8082ADE8[gSaveContext.language];
 
                     pauseCtx->infoPanelVtx[17].v.tc[0] = pauseCtx->infoPanelVtx[19].v.tc[0] = 0x300;
 
@@ -1324,17 +1324,17 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
                                                                 D_8082ADE8[gSaveContext.language], 16, 4);
                 }
             } else if (pauseCtx->pageIndex == PAUSE_EQUIP) {
-                pauseCtx->infoPanelVtx[16].v.ob[0] = pauseCtx->infoPanelVtx[18].v.ob[0] =
+                pauseCtx->infoPanelVtx[16].v.vector[0] = pauseCtx->infoPanelVtx[18].v.vector[0] =
                     WREG(64 + gSaveContext.language);
 
-                pauseCtx->infoPanelVtx[17].v.ob[0] = pauseCtx->infoPanelVtx[19].v.ob[0] =
-                    pauseCtx->infoPanelVtx[16].v.ob[0] + 24;
+                pauseCtx->infoPanelVtx[17].v.vector[0] = pauseCtx->infoPanelVtx[19].v.vector[0] =
+                    pauseCtx->infoPanelVtx[16].v.vector[0] + 24;
 
-                pauseCtx->infoPanelVtx[20].v.ob[0] = pauseCtx->infoPanelVtx[22].v.ob[0] =
-                    pauseCtx->infoPanelVtx[16].v.ob[0] + WREG(52 + gSaveContext.language);
+                pauseCtx->infoPanelVtx[20].v.vector[0] = pauseCtx->infoPanelVtx[22].v.vector[0] =
+                    pauseCtx->infoPanelVtx[16].v.vector[0] + WREG(52 + gSaveContext.language);
 
-                pauseCtx->infoPanelVtx[21].v.ob[0] = pauseCtx->infoPanelVtx[23].v.ob[0] =
-                    pauseCtx->infoPanelVtx[20].v.ob[0] + D_8082ADD8[gSaveContext.language];
+                pauseCtx->infoPanelVtx[21].v.vector[0] = pauseCtx->infoPanelVtx[23].v.vector[0] =
+                    pauseCtx->infoPanelVtx[20].v.vector[0] + D_8082ADD8[gSaveContext.language];
 
                 pauseCtx->infoPanelVtx[17].v.tc[0] = pauseCtx->infoPanelVtx[19].v.tc[0] = 0x300;
 
@@ -1624,15 +1624,15 @@ s16 func_80823A0C(PlayState* play, Vtx* vtx, s16 arg2, s16 arg3) {
         phi_t0 += 80;
 
         for (phi_a1 = 80, phi_a2 = 0; phi_a2 < 5; phi_a2++, phi_t1 += 4, phi_a1 -= 32) {
-            vtx[phi_t1 + 0].v.ob[0] = vtx[phi_t1 + 2].v.ob[0] = phi_t0;
+            vtx[phi_t1 + 0].v.vector[0] = vtx[phi_t1 + 2].v.vector[0] = phi_t0;
 
-            vtx[phi_t1 + 1].v.ob[0] = vtx[phi_t1 + 3].v.ob[0] = vtx[phi_t1 + 0].v.ob[0] + 80;
+            vtx[phi_t1 + 1].v.vector[0] = vtx[phi_t1 + 3].v.vector[0] = vtx[phi_t1 + 0].v.vector[0] + 80;
 
-            vtx[phi_t1 + 0].v.ob[1] = vtx[phi_t1 + 1].v.ob[1] = phi_a1 + pauseCtx->offsetY;
+            vtx[phi_t1 + 0].v.vector[1] = vtx[phi_t1 + 1].v.vector[1] = phi_a1 + pauseCtx->offsetY;
 
-            vtx[phi_t1 + 2].v.ob[1] = vtx[phi_t1 + 3].v.ob[1] = vtx[phi_t1 + 0].v.ob[1] - 32;
+            vtx[phi_t1 + 2].v.vector[1] = vtx[phi_t1 + 3].v.vector[1] = vtx[phi_t1 + 0].v.vector[1] - 32;
 
-            vtx[phi_t1 + 0].v.ob[2] = vtx[phi_t1 + 1].v.ob[2] = vtx[phi_t1 + 2].v.ob[2] = vtx[phi_t1 + 3].v.ob[2] = 0;
+            vtx[phi_t1 + 0].v.vector[2] = vtx[phi_t1 + 1].v.vector[2] = vtx[phi_t1 + 2].v.vector[2] = vtx[phi_t1 + 3].v.vector[2] = 0;
 
             vtx[phi_t1 + 0].v.flag = 0;
             vtx[phi_t1 + 1].v.flag = 0;
@@ -1645,19 +1645,19 @@ s16 func_80823A0C(PlayState* play, Vtx* vtx, s16 arg2, s16 arg3) {
 
             vtx[phi_t1 + 2].v.tc[1] = vtx[phi_t1 + 3].v.tc[1] = 0x400;
 
-            vtx[phi_t1 + 0].v.cn[0] = vtx[phi_t1 + 2].v.cn[0] = D_8082AE48[arg2][phi_t3 + 0];
+            vtx[phi_t1 + 0].v.color[0] = vtx[phi_t1 + 2].v.color[0] = D_8082AE48[arg2][phi_t3 + 0];
 
-            vtx[phi_t1 + 0].v.cn[1] = vtx[phi_t1 + 2].v.cn[1] = D_8082AE60[arg2][phi_t3 + 0];
+            vtx[phi_t1 + 0].v.color[1] = vtx[phi_t1 + 2].v.color[1] = D_8082AE60[arg2][phi_t3 + 0];
 
-            vtx[phi_t1 + 0].v.cn[2] = vtx[phi_t1 + 2].v.cn[2] = D_8082AE78[arg2][phi_t3 + 0];
+            vtx[phi_t1 + 0].v.color[2] = vtx[phi_t1 + 2].v.color[2] = D_8082AE78[arg2][phi_t3 + 0];
 
-            vtx[phi_t1 + 1].v.cn[0] = vtx[phi_t1 + 3].v.cn[0] = D_8082AE48[arg2][phi_t3 + 1];
+            vtx[phi_t1 + 1].v.color[0] = vtx[phi_t1 + 3].v.color[0] = D_8082AE48[arg2][phi_t3 + 1];
 
-            vtx[phi_t1 + 1].v.cn[1] = vtx[phi_t1 + 3].v.cn[1] = D_8082AE60[arg2][phi_t3 + 1];
+            vtx[phi_t1 + 1].v.color[1] = vtx[phi_t1 + 3].v.color[1] = D_8082AE60[arg2][phi_t3 + 1];
 
-            vtx[phi_t1 + 1].v.cn[2] = vtx[phi_t1 + 3].v.cn[2] = D_8082AE78[arg2][phi_t3 + 1];
+            vtx[phi_t1 + 1].v.color[2] = vtx[phi_t1 + 3].v.color[2] = D_8082AE78[arg2][phi_t3 + 1];
 
-            vtx[phi_t1 + 0].v.cn[3] = vtx[phi_t1 + 2].v.cn[3] = vtx[phi_t1 + 1].v.cn[3] = vtx[phi_t1 + 3].v.cn[3] =
+            vtx[phi_t1 + 0].v.color[3] = vtx[phi_t1 + 2].v.color[3] = vtx[phi_t1 + 1].v.color[3] = vtx[phi_t1 + 3].v.color[3] =
                 pauseCtx->alpha;
         }
     }
@@ -1671,19 +1671,19 @@ s16 func_80823A0C(PlayState* play, Vtx* vtx, s16 arg2, s16 arg3) {
         ptr4 = D_8082B048[arg2];
 
         for (phi_t3 = 0; phi_t3 < arg3; phi_t3++, phi_t1 += 4) {
-            vtx[phi_t1 + 2].v.ob[0] = vtx[phi_t1 + 0].v.ob[0] = ptr1[phi_t3];
+            vtx[phi_t1 + 2].v.vector[0] = vtx[phi_t1 + 0].v.vector[0] = ptr1[phi_t3];
 
-            vtx[phi_t1 + 1].v.ob[0] = vtx[phi_t1 + 3].v.ob[0] = vtx[phi_t1 + 0].v.ob[0] + ptr2[phi_t3];
+            vtx[phi_t1 + 1].v.vector[0] = vtx[phi_t1 + 3].v.vector[0] = vtx[phi_t1 + 0].v.vector[0] + ptr2[phi_t3];
 
             if (!((pauseCtx->state >= 8) && (pauseCtx->state <= 0x11))) {
-                vtx[phi_t1 + 0].v.ob[1] = vtx[phi_t1 + 1].v.ob[1] = ptr3[phi_t3] + pauseCtx->offsetY;
+                vtx[phi_t1 + 0].v.vector[1] = vtx[phi_t1 + 1].v.vector[1] = ptr3[phi_t3] + pauseCtx->offsetY;
             } else {
-                vtx[phi_t1 + 0].v.ob[1] = vtx[phi_t1 + 1].v.ob[1] = YREG(60 + phi_t3) + pauseCtx->offsetY;
+                vtx[phi_t1 + 0].v.vector[1] = vtx[phi_t1 + 1].v.vector[1] = YREG(60 + phi_t3) + pauseCtx->offsetY;
             }
 
-            vtx[phi_t1 + 2].v.ob[1] = vtx[phi_t1 + 3].v.ob[1] = vtx[phi_t1 + 0].v.ob[1] - ptr4[phi_t3];
+            vtx[phi_t1 + 2].v.vector[1] = vtx[phi_t1 + 3].v.vector[1] = vtx[phi_t1 + 0].v.vector[1] - ptr4[phi_t3];
 
-            vtx[phi_t1 + 0].v.ob[2] = vtx[phi_t1 + 1].v.ob[2] = vtx[phi_t1 + 2].v.ob[2] = vtx[phi_t1 + 3].v.ob[2] = 0;
+            vtx[phi_t1 + 0].v.vector[2] = vtx[phi_t1 + 1].v.vector[2] = vtx[phi_t1 + 2].v.vector[2] = vtx[phi_t1 + 3].v.vector[2] = 0;
 
             vtx[phi_t1 + 0].v.flag = vtx[phi_t1 + 1].v.flag = vtx[phi_t1 + 2].v.flag = vtx[phi_t1 + 3].v.flag = 0;
 
@@ -1693,12 +1693,12 @@ s16 func_80823A0C(PlayState* play, Vtx* vtx, s16 arg2, s16 arg3) {
 
             vtx[phi_t1 + 2].v.tc[1] = vtx[phi_t1 + 3].v.tc[1] = ptr4[phi_t3] << 5;
 
-            vtx[phi_t1 + 0].v.cn[0] = vtx[phi_t1 + 2].v.cn[0] = vtx[phi_t1 + 0].v.cn[1] = vtx[phi_t1 + 2].v.cn[1] =
-                vtx[phi_t1 + 0].v.cn[2] = vtx[phi_t1 + 2].v.cn[2] = vtx[phi_t1 + 1].v.cn[0] = vtx[phi_t1 + 3].v.cn[0] =
-                    vtx[phi_t1 + 1].v.cn[1] = vtx[phi_t1 + 3].v.cn[1] = vtx[phi_t1 + 1].v.cn[2] =
-                        vtx[phi_t1 + 3].v.cn[2] = 255;
+            vtx[phi_t1 + 0].v.color[0] = vtx[phi_t1 + 2].v.color[0] = vtx[phi_t1 + 0].v.color[1] = vtx[phi_t1 + 2].v.color[1] =
+                vtx[phi_t1 + 0].v.color[2] = vtx[phi_t1 + 2].v.color[2] = vtx[phi_t1 + 1].v.color[0] = vtx[phi_t1 + 3].v.color[0] =
+                    vtx[phi_t1 + 1].v.color[1] = vtx[phi_t1 + 3].v.color[1] = vtx[phi_t1 + 1].v.color[2] =
+                        vtx[phi_t1 + 3].v.color[2] = 255;
 
-            vtx[phi_t1 + 0].v.cn[3] = vtx[phi_t1 + 2].v.cn[3] = vtx[phi_t1 + 1].v.cn[3] = vtx[phi_t1 + 3].v.cn[3] =
+            vtx[phi_t1 + 0].v.color[3] = vtx[phi_t1 + 2].v.color[3] = vtx[phi_t1 + 1].v.color[3] = vtx[phi_t1 + 3].v.color[3] =
                 pauseCtx->alpha;
         }
 
@@ -1707,15 +1707,15 @@ s16 func_80823A0C(PlayState* play, Vtx* vtx, s16 arg2, s16 arg3) {
 
             phi_t3 = gSaveContext.worldMapArea;
 
-            vtx[phi_t1 + 0].v.ob[0] = vtx[phi_t1 + 2].v.ob[0] = D_8082B060[phi_t3];
+            vtx[phi_t1 + 0].v.vector[0] = vtx[phi_t1 + 2].v.vector[0] = D_8082B060[phi_t3];
 
             if (phi_t3) {}
 
-            vtx[phi_t1 + 1].v.ob[0] = vtx[phi_t1 + 3].v.ob[0] = vtx[phi_t1 + 0].v.ob[0] + D_8082B08C[phi_t3];
+            vtx[phi_t1 + 1].v.vector[0] = vtx[phi_t1 + 3].v.vector[0] = vtx[phi_t1 + 0].v.vector[0] + D_8082B08C[phi_t3];
 
-            vtx[phi_t1 + 0].v.ob[1] = vtx[phi_t1 + 1].v.ob[1] = D_8082B0B8[phi_t3] + pauseCtx->offsetY;
+            vtx[phi_t1 + 0].v.vector[1] = vtx[phi_t1 + 1].v.vector[1] = D_8082B0B8[phi_t3] + pauseCtx->offsetY;
 
-            vtx[phi_t1 + 2].v.ob[1] = vtx[phi_t1 + 3].v.ob[1] = vtx[phi_t1 + 0].v.ob[1] - D_8082B0E4[phi_t3];
+            vtx[phi_t1 + 2].v.vector[1] = vtx[phi_t1 + 3].v.vector[1] = vtx[phi_t1 + 0].v.vector[1] - D_8082B0E4[phi_t3];
 
             phi_t1 += 12;
 
@@ -1740,16 +1740,16 @@ s16 func_80823A0C(PlayState* play, Vtx* vtx, s16 arg2, s16 arg3) {
                 phi_t3 = phi_s2 + (pauseCtx->tradeQuestLocation * 4) + 64;
                 phi_a2 = phi_s2 + 116;
 
-                vtx[phi_a2 + 0].v.ob[0] = vtx[phi_a2 + 2].v.ob[0] = vtx[phi_t3 + 0].v.ob[0];
+                vtx[phi_a2 + 0].v.vector[0] = vtx[phi_a2 + 2].v.vector[0] = vtx[phi_t3 + 0].v.vector[0];
 
-                vtx[phi_a2 + 1].v.ob[0] = vtx[phi_a2 + 3].v.ob[0] = vtx[phi_a2 + 0].v.ob[0] + 8;
+                vtx[phi_a2 + 1].v.vector[0] = vtx[phi_a2 + 3].v.vector[0] = vtx[phi_a2 + 0].v.vector[0] + 8;
 
-                vtx[phi_a2 + 0].v.ob[1] = vtx[phi_a2 + 1].v.ob[1] = vtx[phi_t3 + 0].v.ob[1] - D_8082B110 + 10;
+                vtx[phi_a2 + 0].v.vector[1] = vtx[phi_a2 + 1].v.vector[1] = vtx[phi_t3 + 0].v.vector[1] - D_8082B110 + 10;
 
-                vtx[phi_a2 + 0].v.ob[2] = vtx[phi_a2 + 1].v.ob[2] = vtx[phi_a2 + 2].v.ob[2] = vtx[phi_a2 + 3].v.ob[2] =
+                vtx[phi_a2 + 0].v.vector[2] = vtx[phi_a2 + 1].v.vector[2] = vtx[phi_a2 + 2].v.vector[2] = vtx[phi_a2 + 3].v.vector[2] =
                     0;
 
-                vtx[phi_a2 + 2].v.ob[1] = vtx[phi_a2 + 3].v.ob[1] = vtx[phi_a2 + 0].v.ob[1] - 8;
+                vtx[phi_a2 + 2].v.vector[1] = vtx[phi_a2 + 3].v.vector[1] = vtx[phi_a2 + 0].v.vector[1] - 8;
 
                 vtx[phi_a2 + 0].v.flag = vtx[phi_a2 + 1].v.flag = vtx[phi_a2 + 2].v.flag = vtx[phi_a2 + 3].v.flag = 0;
 
@@ -1759,12 +1759,12 @@ s16 func_80823A0C(PlayState* play, Vtx* vtx, s16 arg2, s16 arg3) {
 
                 vtx[phi_a2 + 2].v.tc[1] = vtx[phi_a2 + 3].v.tc[1] = 0x100;
 
-                vtx[phi_a2 + 0].v.cn[0] = vtx[phi_a2 + 2].v.cn[0] = vtx[phi_a2 + 0].v.cn[1] = vtx[phi_a2 + 2].v.cn[1] =
-                    vtx[phi_a2 + 0].v.cn[2] = vtx[phi_a2 + 2].v.cn[2] = vtx[phi_a2 + 1].v.cn[0] =
-                        vtx[phi_a2 + 3].v.cn[0] = vtx[phi_a2 + 1].v.cn[1] = vtx[phi_a2 + 3].v.cn[1] =
-                            vtx[phi_a2 + 1].v.cn[2] = vtx[phi_a2 + 3].v.cn[2] = 255;
+                vtx[phi_a2 + 0].v.color[0] = vtx[phi_a2 + 2].v.color[0] = vtx[phi_a2 + 0].v.color[1] = vtx[phi_a2 + 2].v.color[1] =
+                    vtx[phi_a2 + 0].v.color[2] = vtx[phi_a2 + 2].v.color[2] = vtx[phi_a2 + 1].v.color[0] =
+                        vtx[phi_a2 + 3].v.color[0] = vtx[phi_a2 + 1].v.color[1] = vtx[phi_a2 + 3].v.color[1] =
+                            vtx[phi_a2 + 1].v.color[2] = vtx[phi_a2 + 3].v.color[2] = 255;
 
-                vtx[phi_a2 + 0].v.cn[3] = vtx[phi_a2 + 2].v.cn[3] = vtx[phi_a2 + 1].v.cn[3] = vtx[phi_a2 + 3].v.cn[3] =
+                vtx[phi_a2 + 0].v.color[3] = vtx[phi_a2 + 2].v.color[3] = vtx[phi_a2 + 1].v.color[3] = vtx[phi_a2 + 3].v.color[3] =
                     pauseCtx->alpha;
             }
         }
@@ -1823,20 +1823,20 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
         phi_t3 = func_80823A0C(play, pauseCtx->mapPageVtx, 4, 32);
 
         for (phi_t2 = 0, phi_t5 = 58; phi_t2 < 15; phi_t2++, phi_t3 += 4, phi_t5 -= 9) {
-            pauseCtx->mapPageVtx[phi_t3 + 2].v.ob[0] = -108;
-            pauseCtx->mapPageVtx[phi_t3 + 0].v.ob[0] = pauseCtx->mapPageVtx[phi_t3 + 2].v.ob[0];
+            pauseCtx->mapPageVtx[phi_t3 + 2].v.vector[0] = -108;
+            pauseCtx->mapPageVtx[phi_t3 + 0].v.vector[0] = pauseCtx->mapPageVtx[phi_t3 + 2].v.vector[0];
 
-            pauseCtx->mapPageVtx[phi_t3 + 1].v.ob[0] = pauseCtx->mapPageVtx[phi_t3 + 3].v.ob[0] =
-                pauseCtx->mapPageVtx[phi_t3 + 0].v.ob[0] + 216;
+            pauseCtx->mapPageVtx[phi_t3 + 1].v.vector[0] = pauseCtx->mapPageVtx[phi_t3 + 3].v.vector[0] =
+                pauseCtx->mapPageVtx[phi_t3 + 0].v.vector[0] + 216;
 
-            pauseCtx->mapPageVtx[phi_t3 + 0].v.ob[1] = pauseCtx->mapPageVtx[phi_t3 + 1].v.ob[1] =
+            pauseCtx->mapPageVtx[phi_t3 + 0].v.vector[1] = pauseCtx->mapPageVtx[phi_t3 + 1].v.vector[1] =
                 phi_t5 + pauseCtx->offsetY;
 
-            pauseCtx->mapPageVtx[phi_t3 + 2].v.ob[1] = pauseCtx->mapPageVtx[phi_t3 + 3].v.ob[1] =
-                pauseCtx->mapPageVtx[phi_t3 + 0].v.ob[1] - 9;
+            pauseCtx->mapPageVtx[phi_t3 + 2].v.vector[1] = pauseCtx->mapPageVtx[phi_t3 + 3].v.vector[1] =
+                pauseCtx->mapPageVtx[phi_t3 + 0].v.vector[1] - 9;
 
-            pauseCtx->mapPageVtx[phi_t3 + 0].v.ob[2] = pauseCtx->mapPageVtx[phi_t3 + 1].v.ob[2] =
-                pauseCtx->mapPageVtx[phi_t3 + 2].v.ob[2] = pauseCtx->mapPageVtx[phi_t3 + 3].v.ob[2] = 0;
+            pauseCtx->mapPageVtx[phi_t3 + 0].v.vector[2] = pauseCtx->mapPageVtx[phi_t3 + 1].v.vector[2] =
+                pauseCtx->mapPageVtx[phi_t3 + 2].v.vector[2] = pauseCtx->mapPageVtx[phi_t3 + 3].v.vector[2] = 0;
 
             pauseCtx->mapPageVtx[phi_t3 + 0].v.flag = pauseCtx->mapPageVtx[phi_t3 + 1].v.flag =
                 pauseCtx->mapPageVtx[phi_t3 + 2].v.flag = pauseCtx->mapPageVtx[phi_t3 + 3].v.flag = 0;
@@ -1848,20 +1848,20 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
 
             pauseCtx->mapPageVtx[phi_t3 + 2].v.tc[1] = pauseCtx->mapPageVtx[phi_t3 + 3].v.tc[1] = 0x120;
 
-            pauseCtx->mapPageVtx[phi_t3 + 0].v.cn[0] = pauseCtx->mapPageVtx[phi_t3 + 2].v.cn[0] =
-                pauseCtx->mapPageVtx[phi_t3 + 0].v.cn[1] = pauseCtx->mapPageVtx[phi_t3 + 2].v.cn[1] =
-                    pauseCtx->mapPageVtx[phi_t3 + 0].v.cn[2] = pauseCtx->mapPageVtx[phi_t3 + 2].v.cn[2] =
-                        pauseCtx->mapPageVtx[phi_t3 + 1].v.cn[0] = pauseCtx->mapPageVtx[phi_t3 + 3].v.cn[0] =
-                            pauseCtx->mapPageVtx[phi_t3 + 1].v.cn[1] = pauseCtx->mapPageVtx[phi_t3 + 3].v.cn[1] =
-                                pauseCtx->mapPageVtx[phi_t3 + 1].v.cn[2] = pauseCtx->mapPageVtx[phi_t3 + 3].v.cn[2] =
-                                    pauseCtx->mapPageVtx[phi_t3 + 0].v.cn[3] =
-                                        pauseCtx->mapPageVtx[phi_t3 + 2].v.cn[3] =
-                                            pauseCtx->mapPageVtx[phi_t3 + 1].v.cn[3] =
-                                                pauseCtx->mapPageVtx[phi_t3 + 3].v.cn[3] = pauseCtx->alpha;
+            pauseCtx->mapPageVtx[phi_t3 + 0].v.color[0] = pauseCtx->mapPageVtx[phi_t3 + 2].v.color[0] =
+                pauseCtx->mapPageVtx[phi_t3 + 0].v.color[1] = pauseCtx->mapPageVtx[phi_t3 + 2].v.color[1] =
+                    pauseCtx->mapPageVtx[phi_t3 + 0].v.color[2] = pauseCtx->mapPageVtx[phi_t3 + 2].v.color[2] =
+                        pauseCtx->mapPageVtx[phi_t3 + 1].v.color[0] = pauseCtx->mapPageVtx[phi_t3 + 3].v.color[0] =
+                            pauseCtx->mapPageVtx[phi_t3 + 1].v.color[1] = pauseCtx->mapPageVtx[phi_t3 + 3].v.color[1] =
+                                pauseCtx->mapPageVtx[phi_t3 + 1].v.color[2] = pauseCtx->mapPageVtx[phi_t3 + 3].v.color[2] =
+                                    pauseCtx->mapPageVtx[phi_t3 + 0].v.color[3] =
+                                        pauseCtx->mapPageVtx[phi_t3 + 2].v.color[3] =
+                                            pauseCtx->mapPageVtx[phi_t3 + 1].v.color[3] =
+                                                pauseCtx->mapPageVtx[phi_t3 + 3].v.color[3] = pauseCtx->alpha;
         }
 
-        pauseCtx->mapPageVtx[phi_t3 - 2].v.ob[1] = pauseCtx->mapPageVtx[phi_t3 - 1].v.ob[1] =
-            pauseCtx->mapPageVtx[phi_t3 - 4].v.ob[1] - 2;
+        pauseCtx->mapPageVtx[phi_t3 - 2].v.vector[1] = pauseCtx->mapPageVtx[phi_t3 - 1].v.vector[1] =
+            pauseCtx->mapPageVtx[phi_t3 - 4].v.vector[1] - 2;
 
         pauseCtx->mapPageVtx[phi_t3 - 2].v.tc[1] = pauseCtx->mapPageVtx[phi_t3 - 1].v.tc[1] = 0x40;
     } else {
@@ -1875,15 +1875,15 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
     pauseCtx->cursorVtx = Graph_Alloc(gfxCtx, 20 * sizeof(Vtx));
 
     for (phi_t2 = 0; phi_t2 < 20; phi_t2++) {
-        pauseCtx->cursorVtx[phi_t2].v.ob[0] = pauseCtx->cursorVtx[phi_t2].v.ob[1] =
-            pauseCtx->cursorVtx[phi_t2].v.ob[2] = 0;
+        pauseCtx->cursorVtx[phi_t2].v.vector[0] = pauseCtx->cursorVtx[phi_t2].v.vector[1] =
+            pauseCtx->cursorVtx[phi_t2].v.vector[2] = 0;
 
         pauseCtx->cursorVtx[phi_t2].v.flag = 0;
 
         pauseCtx->cursorVtx[phi_t2].v.tc[0] = pauseCtx->cursorVtx[phi_t2].v.tc[1] = 0;
 
-        pauseCtx->cursorVtx[phi_t2].v.cn[0] = pauseCtx->cursorVtx[phi_t2].v.cn[1] =
-            pauseCtx->cursorVtx[phi_t2].v.cn[2] = pauseCtx->cursorVtx[phi_t2].v.cn[3] = 255;
+        pauseCtx->cursorVtx[phi_t2].v.color[0] = pauseCtx->cursorVtx[phi_t2].v.color[1] =
+            pauseCtx->cursorVtx[phi_t2].v.color[2] = pauseCtx->cursorVtx[phi_t2].v.color[3] = 255;
     }
 
     pauseCtx->cursorVtx[1].v.tc[0] = pauseCtx->cursorVtx[2].v.tc[1] = pauseCtx->cursorVtx[3].v.tc[0] =
@@ -1900,19 +1900,19 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
 
     for (phi_t4 = 0, phi_t2 = 0, phi_t5 = 58; phi_t4 < 4; phi_t4++, phi_t5 -= 32) {
         for (phi_t1 = -96, phi_t3 = 0; phi_t3 < 6; phi_t3++, phi_t2 += 4, phi_t1 += 32) {
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 2].v.ob[0] = phi_t1 + 2;
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[0] = pauseCtx->itemVtx[phi_t2 + 2].v.vector[0] = phi_t1 + 2;
 
-            pauseCtx->itemVtx[phi_t2 + 1].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[0] =
-                pauseCtx->itemVtx[phi_t2 + 0].v.ob[0] + 0x1C;
+            pauseCtx->itemVtx[phi_t2 + 1].v.vector[0] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[0] =
+                pauseCtx->itemVtx[phi_t2 + 0].v.vector[0] + 0x1C;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[1] = pauseCtx->itemVtx[phi_t2 + 1].v.ob[1] =
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[1] = pauseCtx->itemVtx[phi_t2 + 1].v.vector[1] =
                 phi_t5 + pauseCtx->offsetY - 2;
 
-            pauseCtx->itemVtx[phi_t2 + 2].v.ob[1] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[1] =
-                pauseCtx->itemVtx[phi_t2 + 0].v.ob[1] - 0x1C;
+            pauseCtx->itemVtx[phi_t2 + 2].v.vector[1] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[1] =
+                pauseCtx->itemVtx[phi_t2 + 0].v.vector[1] - 0x1C;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[2] = pauseCtx->itemVtx[phi_t2 + 1].v.ob[2] =
-                pauseCtx->itemVtx[phi_t2 + 2].v.ob[2] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[2] = 0;
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[2] = pauseCtx->itemVtx[phi_t2 + 1].v.vector[2] =
+                pauseCtx->itemVtx[phi_t2 + 2].v.vector[2] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[2] = 0;
 
             pauseCtx->itemVtx[phi_t2 + 0].v.flag = pauseCtx->itemVtx[phi_t2 + 1].v.flag =
                 pauseCtx->itemVtx[phi_t2 + 2].v.flag = pauseCtx->itemVtx[phi_t2 + 3].v.flag = 0;
@@ -1923,15 +1923,15 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
             pauseCtx->itemVtx[phi_t2 + 1].v.tc[0] = pauseCtx->itemVtx[phi_t2 + 2].v.tc[1] =
                 pauseCtx->itemVtx[phi_t2 + 3].v.tc[0] = pauseCtx->itemVtx[phi_t2 + 3].v.tc[1] = 0x400;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.cn[0] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[0] =
-                pauseCtx->itemVtx[phi_t2 + 2].v.cn[0] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[0] =
-                    pauseCtx->itemVtx[phi_t2 + 0].v.cn[1] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[1] =
-                        pauseCtx->itemVtx[phi_t2 + 2].v.cn[1] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[1] =
-                            pauseCtx->itemVtx[phi_t2 + 0].v.cn[2] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[2] =
-                                pauseCtx->itemVtx[phi_t2 + 2].v.cn[2] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[2] = 255;
+            pauseCtx->itemVtx[phi_t2 + 0].v.color[0] = pauseCtx->itemVtx[phi_t2 + 1].v.color[0] =
+                pauseCtx->itemVtx[phi_t2 + 2].v.color[0] = pauseCtx->itemVtx[phi_t2 + 3].v.color[0] =
+                    pauseCtx->itemVtx[phi_t2 + 0].v.color[1] = pauseCtx->itemVtx[phi_t2 + 1].v.color[1] =
+                        pauseCtx->itemVtx[phi_t2 + 2].v.color[1] = pauseCtx->itemVtx[phi_t2 + 3].v.color[1] =
+                            pauseCtx->itemVtx[phi_t2 + 0].v.color[2] = pauseCtx->itemVtx[phi_t2 + 1].v.color[2] =
+                                pauseCtx->itemVtx[phi_t2 + 2].v.color[2] = pauseCtx->itemVtx[phi_t2 + 3].v.color[2] = 255;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.cn[3] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[3] =
-                pauseCtx->itemVtx[phi_t2 + 2].v.cn[3] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[3] = 255;
+            pauseCtx->itemVtx[phi_t2 + 0].v.color[3] = pauseCtx->itemVtx[phi_t2 + 1].v.color[3] =
+                pauseCtx->itemVtx[phi_t2 + 2].v.color[3] = pauseCtx->itemVtx[phi_t2 + 3].v.color[3] = 255;
         }
     }
 
@@ -1939,20 +1939,20 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
         if (gSaveContext.equips.cButtonSlots[phi_t3 - 1] != ITEM_NONE) {
             phi_t4 = gSaveContext.equips.cButtonSlots[phi_t3 - 1] * 4;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 2].v.ob[0] =
-                pauseCtx->itemVtx[phi_t4].v.ob[0] - 2;
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[0] = pauseCtx->itemVtx[phi_t2 + 2].v.vector[0] =
+                pauseCtx->itemVtx[phi_t4].v.vector[0] - 2;
 
-            pauseCtx->itemVtx[phi_t2 + 1].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[0] =
-                pauseCtx->itemVtx[phi_t2 + 0].v.ob[0] + 32;
+            pauseCtx->itemVtx[phi_t2 + 1].v.vector[0] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[0] =
+                pauseCtx->itemVtx[phi_t2 + 0].v.vector[0] + 32;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[1] = pauseCtx->itemVtx[phi_t2 + 1].v.ob[1] =
-                pauseCtx->itemVtx[phi_t4].v.ob[1] + 2;
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[1] = pauseCtx->itemVtx[phi_t2 + 1].v.vector[1] =
+                pauseCtx->itemVtx[phi_t4].v.vector[1] + 2;
 
-            pauseCtx->itemVtx[phi_t2 + 2].v.ob[1] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[1] =
-                pauseCtx->itemVtx[phi_t2 + 0].v.ob[1] - 32;
+            pauseCtx->itemVtx[phi_t2 + 2].v.vector[1] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[1] =
+                pauseCtx->itemVtx[phi_t2 + 0].v.vector[1] - 32;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[2] = pauseCtx->itemVtx[phi_t2 + 1].v.ob[2] =
-                pauseCtx->itemVtx[phi_t2 + 2].v.ob[2] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[2] = 0;
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[2] = pauseCtx->itemVtx[phi_t2 + 1].v.vector[2] =
+                pauseCtx->itemVtx[phi_t2 + 2].v.vector[2] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[2] = 0;
 
             pauseCtx->itemVtx[phi_t2 + 0].v.flag = pauseCtx->itemVtx[phi_t2 + 1].v.flag =
                 pauseCtx->itemVtx[phi_t2 + 2].v.flag = pauseCtx->itemVtx[phi_t2 + 3].v.flag = 0;
@@ -1963,58 +1963,58 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
             pauseCtx->itemVtx[phi_t2 + 1].v.tc[0] = pauseCtx->itemVtx[phi_t2 + 2].v.tc[1] =
                 pauseCtx->itemVtx[phi_t2 + 3].v.tc[0] = pauseCtx->itemVtx[phi_t2 + 3].v.tc[1] = 0x400;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.cn[0] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[0] =
-                pauseCtx->itemVtx[phi_t2 + 2].v.cn[0] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[0] =
-                    pauseCtx->itemVtx[phi_t2 + 0].v.cn[1] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[1] =
-                        pauseCtx->itemVtx[phi_t2 + 2].v.cn[1] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[1] =
-                            pauseCtx->itemVtx[phi_t2 + 0].v.cn[2] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[2] =
-                                pauseCtx->itemVtx[phi_t2 + 2].v.cn[2] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[2] = 255;
+            pauseCtx->itemVtx[phi_t2 + 0].v.color[0] = pauseCtx->itemVtx[phi_t2 + 1].v.color[0] =
+                pauseCtx->itemVtx[phi_t2 + 2].v.color[0] = pauseCtx->itemVtx[phi_t2 + 3].v.color[0] =
+                    pauseCtx->itemVtx[phi_t2 + 0].v.color[1] = pauseCtx->itemVtx[phi_t2 + 1].v.color[1] =
+                        pauseCtx->itemVtx[phi_t2 + 2].v.color[1] = pauseCtx->itemVtx[phi_t2 + 3].v.color[1] =
+                            pauseCtx->itemVtx[phi_t2 + 0].v.color[2] = pauseCtx->itemVtx[phi_t2 + 1].v.color[2] =
+                                pauseCtx->itemVtx[phi_t2 + 2].v.color[2] = pauseCtx->itemVtx[phi_t2 + 3].v.color[2] = 255;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.cn[3] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[3] =
-                pauseCtx->itemVtx[phi_t2 + 2].v.cn[3] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[3] = pauseCtx->alpha;
+            pauseCtx->itemVtx[phi_t2 + 0].v.color[3] = pauseCtx->itemVtx[phi_t2 + 1].v.color[3] =
+                pauseCtx->itemVtx[phi_t2 + 2].v.color[3] = pauseCtx->itemVtx[phi_t2 + 3].v.color[3] = pauseCtx->alpha;
         } else {
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 2].v.ob[0] = -300;
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[0] = pauseCtx->itemVtx[phi_t2 + 2].v.vector[0] = -300;
 
-            pauseCtx->itemVtx[phi_t2 + 1].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[0] =
-                pauseCtx->itemVtx[phi_t2 + 0].v.ob[0] + 32;
+            pauseCtx->itemVtx[phi_t2 + 1].v.vector[0] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[0] =
+                pauseCtx->itemVtx[phi_t2 + 0].v.vector[0] + 32;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[1] = pauseCtx->itemVtx[phi_t2 + 1].v.ob[1] = 300;
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[1] = pauseCtx->itemVtx[phi_t2 + 1].v.vector[1] = 300;
 
-            pauseCtx->itemVtx[phi_t2 + 2].v.ob[1] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[1] =
-                pauseCtx->itemVtx[phi_t2 + 0].v.ob[1] - 32;
+            pauseCtx->itemVtx[phi_t2 + 2].v.vector[1] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[1] =
+                pauseCtx->itemVtx[phi_t2 + 0].v.vector[1] - 32;
         }
     }
 
     for (phi_t2 = 108, phi_t3 = 0; phi_t3 < 7; phi_t3++) {
         phi_t4 = D_8082B11C[phi_t3];
 
-        pauseCtx->itemVtx[phi_t2 + 0].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 2].v.ob[0] =
-            pauseCtx->itemVtx[phi_t4].v.ob[0];
+        pauseCtx->itemVtx[phi_t2 + 0].v.vector[0] = pauseCtx->itemVtx[phi_t2 + 2].v.vector[0] =
+            pauseCtx->itemVtx[phi_t4].v.vector[0];
 
-        pauseCtx->itemVtx[phi_t2 + 1].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[0] =
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[0] + 8;
+        pauseCtx->itemVtx[phi_t2 + 1].v.vector[0] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[0] =
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[0] + 8;
 
-        pauseCtx->itemVtx[phi_t2 + 0].v.ob[1] = pauseCtx->itemVtx[phi_t2 + 1].v.ob[1] =
-            pauseCtx->itemVtx[phi_t4].v.ob[1] - 22;
+        pauseCtx->itemVtx[phi_t2 + 0].v.vector[1] = pauseCtx->itemVtx[phi_t2 + 1].v.vector[1] =
+            pauseCtx->itemVtx[phi_t4].v.vector[1] - 22;
 
-        pauseCtx->itemVtx[phi_t2 + 2].v.ob[1] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[1] =
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[1] - 8;
+        pauseCtx->itemVtx[phi_t2 + 2].v.vector[1] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[1] =
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[1] - 8;
 
-        pauseCtx->itemVtx[phi_t2 + 4].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 6].v.ob[0] =
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[0] + 6;
+        pauseCtx->itemVtx[phi_t2 + 4].v.vector[0] = pauseCtx->itemVtx[phi_t2 + 6].v.vector[0] =
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[0] + 6;
 
-        pauseCtx->itemVtx[phi_t2 + 5].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 7].v.ob[0] =
-            pauseCtx->itemVtx[phi_t2 + 4].v.ob[0] + 8;
+        pauseCtx->itemVtx[phi_t2 + 5].v.vector[0] = pauseCtx->itemVtx[phi_t2 + 7].v.vector[0] =
+            pauseCtx->itemVtx[phi_t2 + 4].v.vector[0] + 8;
 
-        pauseCtx->itemVtx[phi_t2 + 4].v.ob[1] = pauseCtx->itemVtx[phi_t2 + 5].v.ob[1] =
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[1];
+        pauseCtx->itemVtx[phi_t2 + 4].v.vector[1] = pauseCtx->itemVtx[phi_t2 + 5].v.vector[1] =
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[1];
 
-        pauseCtx->itemVtx[phi_t2 + 6].v.ob[1] = pauseCtx->itemVtx[phi_t2 + 7].v.ob[1] =
-            pauseCtx->itemVtx[phi_t2 + 4].v.ob[1] - 8;
+        pauseCtx->itemVtx[phi_t2 + 6].v.vector[1] = pauseCtx->itemVtx[phi_t2 + 7].v.vector[1] =
+            pauseCtx->itemVtx[phi_t2 + 4].v.vector[1] - 8;
 
         for (phi_t4 = 0; phi_t4 < 2; phi_t4++, phi_t2 += 4) {
-            pauseCtx->itemVtx[phi_t2 + 0].v.ob[2] = pauseCtx->itemVtx[phi_t2 + 1].v.ob[2] =
-                pauseCtx->itemVtx[phi_t2 + 2].v.ob[2] = pauseCtx->itemVtx[phi_t2 + 3].v.ob[2] = 0;
+            pauseCtx->itemVtx[phi_t2 + 0].v.vector[2] = pauseCtx->itemVtx[phi_t2 + 1].v.vector[2] =
+                pauseCtx->itemVtx[phi_t2 + 2].v.vector[2] = pauseCtx->itemVtx[phi_t2 + 3].v.vector[2] = 0;
 
             pauseCtx->itemVtx[phi_t2 + 0].v.flag = pauseCtx->itemVtx[phi_t2 + 1].v.flag =
                 pauseCtx->itemVtx[phi_t2 + 2].v.flag = pauseCtx->itemVtx[phi_t2 + 3].v.flag = 0;
@@ -2025,15 +2025,15 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
             pauseCtx->itemVtx[phi_t2 + 1].v.tc[0] = pauseCtx->itemVtx[phi_t2 + 2].v.tc[1] =
                 pauseCtx->itemVtx[phi_t2 + 3].v.tc[0] = pauseCtx->itemVtx[phi_t2 + 3].v.tc[1] = 0x100;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.cn[0] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[0] =
-                pauseCtx->itemVtx[phi_t2 + 2].v.cn[0] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[0] =
-                    pauseCtx->itemVtx[phi_t2 + 0].v.cn[1] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[1] =
-                        pauseCtx->itemVtx[phi_t2 + 2].v.cn[1] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[1] =
-                            pauseCtx->itemVtx[phi_t2 + 0].v.cn[2] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[2] =
-                                pauseCtx->itemVtx[phi_t2 + 2].v.cn[2] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[2] = 255;
+            pauseCtx->itemVtx[phi_t2 + 0].v.color[0] = pauseCtx->itemVtx[phi_t2 + 1].v.color[0] =
+                pauseCtx->itemVtx[phi_t2 + 2].v.color[0] = pauseCtx->itemVtx[phi_t2 + 3].v.color[0] =
+                    pauseCtx->itemVtx[phi_t2 + 0].v.color[1] = pauseCtx->itemVtx[phi_t2 + 1].v.color[1] =
+                        pauseCtx->itemVtx[phi_t2 + 2].v.color[1] = pauseCtx->itemVtx[phi_t2 + 3].v.color[1] =
+                            pauseCtx->itemVtx[phi_t2 + 0].v.color[2] = pauseCtx->itemVtx[phi_t2 + 1].v.color[2] =
+                                pauseCtx->itemVtx[phi_t2 + 2].v.color[2] = pauseCtx->itemVtx[phi_t2 + 3].v.color[2] = 255;
 
-            pauseCtx->itemVtx[phi_t2 + 0].v.cn[3] = pauseCtx->itemVtx[phi_t2 + 1].v.cn[3] =
-                pauseCtx->itemVtx[phi_t2 + 2].v.cn[3] = pauseCtx->itemVtx[phi_t2 + 3].v.cn[3] = pauseCtx->alpha;
+            pauseCtx->itemVtx[phi_t2 + 0].v.color[3] = pauseCtx->itemVtx[phi_t2 + 1].v.color[3] =
+                pauseCtx->itemVtx[phi_t2 + 2].v.color[3] = pauseCtx->itemVtx[phi_t2 + 3].v.color[3] = pauseCtx->alpha;
         }
     }
 
@@ -2041,19 +2041,19 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
 
     for (phi_t4 = 0, phi_t2 = 0, phi_t5 = 58; phi_t2 < 4; phi_t2++, phi_t5 -= 32) {
         for (phi_t3 = 0; phi_t3 < 4; phi_t3++, phi_t4 += 4) {
-            pauseCtx->equipVtx[phi_t4 + 0].v.ob[0] = pauseCtx->equipVtx[phi_t4 + 2].v.ob[0] = D_8082B12C[phi_t3] + 2;
+            pauseCtx->equipVtx[phi_t4 + 0].v.vector[0] = pauseCtx->equipVtx[phi_t4 + 2].v.vector[0] = D_8082B12C[phi_t3] + 2;
 
-            pauseCtx->equipVtx[phi_t4 + 1].v.ob[0] = pauseCtx->equipVtx[phi_t4 + 3].v.ob[0] =
-                pauseCtx->equipVtx[phi_t4 + 0].v.ob[0] + 28;
+            pauseCtx->equipVtx[phi_t4 + 1].v.vector[0] = pauseCtx->equipVtx[phi_t4 + 3].v.vector[0] =
+                pauseCtx->equipVtx[phi_t4 + 0].v.vector[0] + 28;
 
-            pauseCtx->equipVtx[phi_t4 + 0].v.ob[1] = pauseCtx->equipVtx[phi_t4 + 1].v.ob[1] =
+            pauseCtx->equipVtx[phi_t4 + 0].v.vector[1] = pauseCtx->equipVtx[phi_t4 + 1].v.vector[1] =
                 phi_t5 + pauseCtx->offsetY - 2;
 
-            pauseCtx->equipVtx[phi_t4 + 2].v.ob[1] = pauseCtx->equipVtx[phi_t4 + 3].v.ob[1] =
-                pauseCtx->equipVtx[phi_t4 + 0].v.ob[1] - 28;
+            pauseCtx->equipVtx[phi_t4 + 2].v.vector[1] = pauseCtx->equipVtx[phi_t4 + 3].v.vector[1] =
+                pauseCtx->equipVtx[phi_t4 + 0].v.vector[1] - 28;
 
-            pauseCtx->equipVtx[phi_t4 + 0].v.ob[2] = pauseCtx->equipVtx[phi_t4 + 1].v.ob[2] =
-                pauseCtx->equipVtx[phi_t4 + 2].v.ob[2] = pauseCtx->equipVtx[phi_t4 + 3].v.ob[2] = 0;
+            pauseCtx->equipVtx[phi_t4 + 0].v.vector[2] = pauseCtx->equipVtx[phi_t4 + 1].v.vector[2] =
+                pauseCtx->equipVtx[phi_t4 + 2].v.vector[2] = pauseCtx->equipVtx[phi_t4 + 3].v.vector[2] = 0;
 
             pauseCtx->equipVtx[phi_t4 + 0].v.flag = pauseCtx->equipVtx[phi_t4 + 1].v.flag =
                 pauseCtx->equipVtx[phi_t4 + 2].v.flag = pauseCtx->equipVtx[phi_t4 + 3].v.flag = 0;
@@ -2064,15 +2064,15 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
             pauseCtx->equipVtx[phi_t4 + 1].v.tc[0] = pauseCtx->equipVtx[phi_t4 + 2].v.tc[1] =
                 pauseCtx->equipVtx[phi_t4 + 3].v.tc[0] = pauseCtx->equipVtx[phi_t4 + 3].v.tc[1] = 0x400;
 
-            pauseCtx->equipVtx[phi_t4 + 0].v.cn[0] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[0] =
-                pauseCtx->equipVtx[phi_t4 + 2].v.cn[0] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[0] =
-                    pauseCtx->equipVtx[phi_t4 + 0].v.cn[1] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[1] =
-                        pauseCtx->equipVtx[phi_t4 + 2].v.cn[1] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[1] =
-                            pauseCtx->equipVtx[phi_t4 + 0].v.cn[2] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[2] =
-                                pauseCtx->equipVtx[phi_t4 + 2].v.cn[2] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[2] = 255;
+            pauseCtx->equipVtx[phi_t4 + 0].v.color[0] = pauseCtx->equipVtx[phi_t4 + 1].v.color[0] =
+                pauseCtx->equipVtx[phi_t4 + 2].v.color[0] = pauseCtx->equipVtx[phi_t4 + 3].v.color[0] =
+                    pauseCtx->equipVtx[phi_t4 + 0].v.color[1] = pauseCtx->equipVtx[phi_t4 + 1].v.color[1] =
+                        pauseCtx->equipVtx[phi_t4 + 2].v.color[1] = pauseCtx->equipVtx[phi_t4 + 3].v.color[1] =
+                            pauseCtx->equipVtx[phi_t4 + 0].v.color[2] = pauseCtx->equipVtx[phi_t4 + 1].v.color[2] =
+                                pauseCtx->equipVtx[phi_t4 + 2].v.color[2] = pauseCtx->equipVtx[phi_t4 + 3].v.color[2] = 255;
 
-            pauseCtx->equipVtx[phi_t4 + 0].v.cn[3] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[3] =
-                pauseCtx->equipVtx[phi_t4 + 2].v.cn[3] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[3] = pauseCtx->alpha;
+            pauseCtx->equipVtx[phi_t4 + 0].v.color[3] = pauseCtx->equipVtx[phi_t4 + 1].v.color[3] =
+                pauseCtx->equipVtx[phi_t4 + 2].v.color[3] = pauseCtx->equipVtx[phi_t4 + 3].v.color[3] = pauseCtx->alpha;
         }
     }
 
@@ -2080,20 +2080,20 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
         if (CUR_EQUIP_VALUE(phi_t3) != 0) {
             phi_t2 = (CUR_EQUIP_VALUE(phi_t3) + D_8082B134[phi_t3] - 1) * 4;
 
-            pauseCtx->equipVtx[phi_t4 + 0].v.ob[0] = pauseCtx->equipVtx[phi_t4 + 2].v.ob[0] =
-                pauseCtx->equipVtx[phi_t2].v.ob[0] - 2;
+            pauseCtx->equipVtx[phi_t4 + 0].v.vector[0] = pauseCtx->equipVtx[phi_t4 + 2].v.vector[0] =
+                pauseCtx->equipVtx[phi_t2].v.vector[0] - 2;
 
-            pauseCtx->equipVtx[phi_t4 + 1].v.ob[0] = pauseCtx->equipVtx[phi_t4 + 3].v.ob[0] =
-                pauseCtx->equipVtx[phi_t4 + 0].v.ob[0] + 32;
+            pauseCtx->equipVtx[phi_t4 + 1].v.vector[0] = pauseCtx->equipVtx[phi_t4 + 3].v.vector[0] =
+                pauseCtx->equipVtx[phi_t4 + 0].v.vector[0] + 32;
 
-            pauseCtx->equipVtx[phi_t4 + 0].v.ob[1] = pauseCtx->equipVtx[phi_t4 + 1].v.ob[1] =
-                pauseCtx->equipVtx[phi_t2].v.ob[1] + 2;
+            pauseCtx->equipVtx[phi_t4 + 0].v.vector[1] = pauseCtx->equipVtx[phi_t4 + 1].v.vector[1] =
+                pauseCtx->equipVtx[phi_t2].v.vector[1] + 2;
 
-            pauseCtx->equipVtx[phi_t4 + 2].v.ob[1] = pauseCtx->equipVtx[phi_t4 + 3].v.ob[1] =
-                pauseCtx->equipVtx[phi_t4 + 0].v.ob[1] - 32;
+            pauseCtx->equipVtx[phi_t4 + 2].v.vector[1] = pauseCtx->equipVtx[phi_t4 + 3].v.vector[1] =
+                pauseCtx->equipVtx[phi_t4 + 0].v.vector[1] - 32;
 
-            pauseCtx->equipVtx[phi_t4 + 0].v.ob[2] = pauseCtx->equipVtx[phi_t4 + 1].v.ob[2] =
-                pauseCtx->equipVtx[phi_t4 + 2].v.ob[2] = pauseCtx->equipVtx[phi_t4 + 3].v.ob[2] = 0;
+            pauseCtx->equipVtx[phi_t4 + 0].v.vector[2] = pauseCtx->equipVtx[phi_t4 + 1].v.vector[2] =
+                pauseCtx->equipVtx[phi_t4 + 2].v.vector[2] = pauseCtx->equipVtx[phi_t4 + 3].v.vector[2] = 0;
 
             pauseCtx->equipVtx[phi_t4 + 0].v.flag = pauseCtx->equipVtx[phi_t4 + 1].v.flag =
                 pauseCtx->equipVtx[phi_t4 + 2].v.flag = pauseCtx->equipVtx[phi_t4 + 3].v.flag = 0;
@@ -2104,33 +2104,33 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
             pauseCtx->equipVtx[phi_t4 + 1].v.tc[0] = pauseCtx->equipVtx[phi_t4 + 2].v.tc[1] =
                 pauseCtx->equipVtx[phi_t4 + 3].v.tc[0] = pauseCtx->equipVtx[phi_t4 + 3].v.tc[1] = 0x400;
 
-            pauseCtx->equipVtx[phi_t4 + 0].v.cn[0] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[0] =
-                pauseCtx->equipVtx[phi_t4 + 2].v.cn[0] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[0] =
-                    pauseCtx->equipVtx[phi_t4 + 0].v.cn[1] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[1] =
-                        pauseCtx->equipVtx[phi_t4 + 2].v.cn[1] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[1] =
-                            pauseCtx->equipVtx[phi_t4 + 0].v.cn[2] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[2] =
-                                pauseCtx->equipVtx[phi_t4 + 2].v.cn[2] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[2] = 255;
+            pauseCtx->equipVtx[phi_t4 + 0].v.color[0] = pauseCtx->equipVtx[phi_t4 + 1].v.color[0] =
+                pauseCtx->equipVtx[phi_t4 + 2].v.color[0] = pauseCtx->equipVtx[phi_t4 + 3].v.color[0] =
+                    pauseCtx->equipVtx[phi_t4 + 0].v.color[1] = pauseCtx->equipVtx[phi_t4 + 1].v.color[1] =
+                        pauseCtx->equipVtx[phi_t4 + 2].v.color[1] = pauseCtx->equipVtx[phi_t4 + 3].v.color[1] =
+                            pauseCtx->equipVtx[phi_t4 + 0].v.color[2] = pauseCtx->equipVtx[phi_t4 + 1].v.color[2] =
+                                pauseCtx->equipVtx[phi_t4 + 2].v.color[2] = pauseCtx->equipVtx[phi_t4 + 3].v.color[2] = 255;
 
-            pauseCtx->equipVtx[phi_t4 + 0].v.cn[3] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[3] =
-                pauseCtx->equipVtx[phi_t4 + 2].v.cn[3] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[3] = pauseCtx->alpha;
+            pauseCtx->equipVtx[phi_t4 + 0].v.color[3] = pauseCtx->equipVtx[phi_t4 + 1].v.color[3] =
+                pauseCtx->equipVtx[phi_t4 + 2].v.color[3] = pauseCtx->equipVtx[phi_t4 + 3].v.color[3] = pauseCtx->alpha;
         }
     }
 
     phi_t1 = 112;
     phi_t5 = 50;
     while (true) {
-        pauseCtx->equipVtx[phi_t4 + 0].v.ob[0] = pauseCtx->equipVtx[phi_t4 + 2].v.ob[0] = -64;
+        pauseCtx->equipVtx[phi_t4 + 0].v.vector[0] = pauseCtx->equipVtx[phi_t4 + 2].v.vector[0] = -64;
 
-        pauseCtx->equipVtx[phi_t4 + 1].v.ob[0] = pauseCtx->equipVtx[phi_t4 + 3].v.ob[0] =
-            pauseCtx->equipVtx[phi_t4 + 0].v.ob[0] + 64;
+        pauseCtx->equipVtx[phi_t4 + 1].v.vector[0] = pauseCtx->equipVtx[phi_t4 + 3].v.vector[0] =
+            pauseCtx->equipVtx[phi_t4 + 0].v.vector[0] + 64;
 
-        pauseCtx->equipVtx[phi_t4 + 0].v.ob[1] = pauseCtx->equipVtx[phi_t4 + 1].v.ob[1] = phi_t5 + pauseCtx->offsetY;
+        pauseCtx->equipVtx[phi_t4 + 0].v.vector[1] = pauseCtx->equipVtx[phi_t4 + 1].v.vector[1] = phi_t5 + pauseCtx->offsetY;
 
-        pauseCtx->equipVtx[phi_t4 + 2].v.ob[1] = pauseCtx->equipVtx[phi_t4 + 3].v.ob[1] =
-            pauseCtx->equipVtx[phi_t4 + 0].v.ob[1] - 32;
+        pauseCtx->equipVtx[phi_t4 + 2].v.vector[1] = pauseCtx->equipVtx[phi_t4 + 3].v.vector[1] =
+            pauseCtx->equipVtx[phi_t4 + 0].v.vector[1] - 32;
 
-        pauseCtx->equipVtx[phi_t4 + 0].v.ob[2] = pauseCtx->equipVtx[phi_t4 + 1].v.ob[2] =
-            pauseCtx->equipVtx[phi_t4 + 2].v.ob[2] = pauseCtx->equipVtx[phi_t4 + 3].v.ob[2] = 0;
+        pauseCtx->equipVtx[phi_t4 + 0].v.vector[2] = pauseCtx->equipVtx[phi_t4 + 1].v.vector[2] =
+            pauseCtx->equipVtx[phi_t4 + 2].v.vector[2] = pauseCtx->equipVtx[phi_t4 + 3].v.vector[2] = 0;
 
         pauseCtx->equipVtx[phi_t4 + 0].v.flag = pauseCtx->equipVtx[phi_t4 + 1].v.flag =
             pauseCtx->equipVtx[phi_t4 + 2].v.flag = pauseCtx->equipVtx[phi_t4 + 3].v.flag = 0;
@@ -2142,21 +2142,21 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
 
         pauseCtx->equipVtx[phi_t4 + 2].v.tc[1] = pauseCtx->equipVtx[phi_t4 + 3].v.tc[1] = 0x400;
 
-        pauseCtx->equipVtx[phi_t4 + 0].v.cn[0] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[0] =
-            pauseCtx->equipVtx[phi_t4 + 2].v.cn[0] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[0] =
-                pauseCtx->equipVtx[phi_t4 + 0].v.cn[1] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[1] =
-                    pauseCtx->equipVtx[phi_t4 + 2].v.cn[1] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[1] =
-                        pauseCtx->equipVtx[phi_t4 + 0].v.cn[2] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[2] =
-                            pauseCtx->equipVtx[phi_t4 + 2].v.cn[2] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[2] = 255;
+        pauseCtx->equipVtx[phi_t4 + 0].v.color[0] = pauseCtx->equipVtx[phi_t4 + 1].v.color[0] =
+            pauseCtx->equipVtx[phi_t4 + 2].v.color[0] = pauseCtx->equipVtx[phi_t4 + 3].v.color[0] =
+                pauseCtx->equipVtx[phi_t4 + 0].v.color[1] = pauseCtx->equipVtx[phi_t4 + 1].v.color[1] =
+                    pauseCtx->equipVtx[phi_t4 + 2].v.color[1] = pauseCtx->equipVtx[phi_t4 + 3].v.color[1] =
+                        pauseCtx->equipVtx[phi_t4 + 0].v.color[2] = pauseCtx->equipVtx[phi_t4 + 1].v.color[2] =
+                            pauseCtx->equipVtx[phi_t4 + 2].v.color[2] = pauseCtx->equipVtx[phi_t4 + 3].v.color[2] = 255;
 
-        pauseCtx->equipVtx[phi_t4 + 0].v.cn[3] = pauseCtx->equipVtx[phi_t4 + 1].v.cn[3] =
-            pauseCtx->equipVtx[phi_t4 + 2].v.cn[3] = pauseCtx->equipVtx[phi_t4 + 3].v.cn[3] = pauseCtx->alpha;
+        pauseCtx->equipVtx[phi_t4 + 0].v.color[3] = pauseCtx->equipVtx[phi_t4 + 1].v.color[3] =
+            pauseCtx->equipVtx[phi_t4 + 2].v.color[3] = pauseCtx->equipVtx[phi_t4 + 3].v.color[3] = pauseCtx->alpha;
 
         phi_t1 -= 32;
         phi_t5 -= 32;
         if (phi_t1 < 0) {
-            pauseCtx->equipVtx[phi_t4 + 2].v.ob[1] = pauseCtx->equipVtx[phi_t4 + 3].v.ob[1] =
-                pauseCtx->equipVtx[phi_t4 + 0].v.ob[1] - 0x10;
+            pauseCtx->equipVtx[phi_t4 + 2].v.vector[1] = pauseCtx->equipVtx[phi_t4 + 3].v.vector[1] =
+                pauseCtx->equipVtx[phi_t4 + 0].v.vector[1] - 0x10;
 
             pauseCtx->equipVtx[phi_t4 + 2].v.tc[1] = pauseCtx->equipVtx[phi_t4 + 3].v.tc[1] = 0x200;
             break;
@@ -2171,26 +2171,26 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
         phi_t2_2 = D_8082B1F8[phi_t3];
 
         if ((phi_t3 < 6) || (phi_t3 >= 41)) {
-            pauseCtx->questVtx[phi_t4 + 0].v.ob[0] = pauseCtx->questVtx[phi_t4 + 2].v.ob[0] = D_8082B138[phi_t3];
+            pauseCtx->questVtx[phi_t4 + 0].v.vector[0] = pauseCtx->questVtx[phi_t4 + 2].v.vector[0] = D_8082B138[phi_t3];
 
-            pauseCtx->questVtx[phi_t4 + 1].v.ob[0] = pauseCtx->questVtx[phi_t4 + 3].v.ob[0] =
-                pauseCtx->questVtx[phi_t4 + 0].v.ob[0] + D_8082B1F8[phi_t3];
+            pauseCtx->questVtx[phi_t4 + 1].v.vector[0] = pauseCtx->questVtx[phi_t4 + 3].v.vector[0] =
+                pauseCtx->questVtx[phi_t4 + 0].v.vector[0] + D_8082B1F8[phi_t3];
 
-            pauseCtx->questVtx[phi_t4 + 0].v.ob[1] = pauseCtx->questVtx[phi_t4 + 1].v.ob[1] =
+            pauseCtx->questVtx[phi_t4 + 0].v.vector[1] = pauseCtx->questVtx[phi_t4 + 1].v.vector[1] =
                 D_8082B198[phi_t3] + pauseCtx->offsetY;
 
-            pauseCtx->questVtx[phi_t4 + 2].v.ob[1] = pauseCtx->questVtx[phi_t4 + 3].v.ob[1] =
-                pauseCtx->questVtx[phi_t4 + 0].v.ob[1] - D_8082B1F8[phi_t3];
+            pauseCtx->questVtx[phi_t4 + 2].v.vector[1] = pauseCtx->questVtx[phi_t4 + 3].v.vector[1] =
+                pauseCtx->questVtx[phi_t4 + 0].v.vector[1] - D_8082B1F8[phi_t3];
 
             if (phi_t3 >= 41) {
-                pauseCtx->questVtx[phi_t4 + 1].v.ob[0] = pauseCtx->questVtx[phi_t4 + 3].v.ob[0] =
-                    pauseCtx->questVtx[phi_t4 + 0].v.ob[0] + 8;
+                pauseCtx->questVtx[phi_t4 + 1].v.vector[0] = pauseCtx->questVtx[phi_t4 + 3].v.vector[0] =
+                    pauseCtx->questVtx[phi_t4 + 0].v.vector[0] + 8;
 
-                pauseCtx->questVtx[phi_t4 + 0].v.ob[1] = pauseCtx->questVtx[phi_t4 + 1].v.ob[1] =
+                pauseCtx->questVtx[phi_t4 + 0].v.vector[1] = pauseCtx->questVtx[phi_t4 + 1].v.vector[1] =
                     D_8082B198[phi_t3] + pauseCtx->offsetY - 6;
 
-                pauseCtx->questVtx[phi_t4 + 2].v.ob[1] = pauseCtx->questVtx[phi_t4 + 3].v.ob[1] =
-                    pauseCtx->questVtx[phi_t4 + 0].v.ob[1] - 16;
+                pauseCtx->questVtx[phi_t4 + 2].v.vector[1] = pauseCtx->questVtx[phi_t4 + 3].v.vector[1] =
+                    pauseCtx->questVtx[phi_t4 + 0].v.vector[1] - 16;
 
                 phi_t2_2 = 8;
             }
@@ -2199,20 +2199,20 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
                 phi_t2_2 = 16;
             }
 
-            pauseCtx->questVtx[phi_t4 + 0].v.ob[0] = pauseCtx->questVtx[phi_t4 + 2].v.ob[0] = D_8082B138[phi_t3] + 2;
+            pauseCtx->questVtx[phi_t4 + 0].v.vector[0] = pauseCtx->questVtx[phi_t4 + 2].v.vector[0] = D_8082B138[phi_t3] + 2;
 
-            pauseCtx->questVtx[phi_t4 + 1].v.ob[0] = pauseCtx->questVtx[phi_t4 + 3].v.ob[0] =
-                pauseCtx->questVtx[phi_t4 + 0].v.ob[0] + phi_t2_2 - 4;
+            pauseCtx->questVtx[phi_t4 + 1].v.vector[0] = pauseCtx->questVtx[phi_t4 + 3].v.vector[0] =
+                pauseCtx->questVtx[phi_t4 + 0].v.vector[0] + phi_t2_2 - 4;
 
-            pauseCtx->questVtx[phi_t4 + 0].v.ob[1] = pauseCtx->questVtx[phi_t4 + 1].v.ob[1] =
+            pauseCtx->questVtx[phi_t4 + 0].v.vector[1] = pauseCtx->questVtx[phi_t4 + 1].v.vector[1] =
                 D_8082B198[phi_t3] + pauseCtx->offsetY - 2;
 
-            pauseCtx->questVtx[phi_t4 + 2].v.ob[1] = pauseCtx->questVtx[phi_t4 + 3].v.ob[1] =
-                pauseCtx->questVtx[phi_t4 + 0].v.ob[1] - D_8082B1F8[phi_t3] + 4;
+            pauseCtx->questVtx[phi_t4 + 2].v.vector[1] = pauseCtx->questVtx[phi_t4 + 3].v.vector[1] =
+                pauseCtx->questVtx[phi_t4 + 0].v.vector[1] - D_8082B1F8[phi_t3] + 4;
         }
 
-        pauseCtx->questVtx[phi_t4 + 0].v.ob[2] = pauseCtx->questVtx[phi_t4 + 1].v.ob[2] =
-            pauseCtx->questVtx[phi_t4 + 2].v.ob[2] = pauseCtx->questVtx[phi_t4 + 3].v.ob[2] = 0;
+        pauseCtx->questVtx[phi_t4 + 0].v.vector[2] = pauseCtx->questVtx[phi_t4 + 1].v.vector[2] =
+            pauseCtx->questVtx[phi_t4 + 2].v.vector[2] = pauseCtx->questVtx[phi_t4 + 3].v.vector[2] = 0;
 
         pauseCtx->questVtx[phi_t4 + 0].v.flag = pauseCtx->questVtx[phi_t4 + 1].v.flag =
             pauseCtx->questVtx[phi_t4 + 2].v.flag = pauseCtx->questVtx[phi_t4 + 3].v.flag = 0;
@@ -2223,15 +2223,15 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
         pauseCtx->questVtx[phi_t4 + 1].v.tc[0] = pauseCtx->questVtx[phi_t4 + 3].v.tc[0] = phi_t2_2 << 5;
         pauseCtx->questVtx[phi_t4 + 2].v.tc[1] = pauseCtx->questVtx[phi_t4 + 3].v.tc[1] = D_8082B1F8[phi_t3] << 5;
 
-        pauseCtx->questVtx[phi_t4 + 0].v.cn[0] = pauseCtx->questVtx[phi_t4 + 1].v.cn[0] =
-            pauseCtx->questVtx[phi_t4 + 2].v.cn[0] = pauseCtx->questVtx[phi_t4 + 3].v.cn[0] =
-                pauseCtx->questVtx[phi_t4 + 0].v.cn[1] = pauseCtx->questVtx[phi_t4 + 1].v.cn[1] =
-                    pauseCtx->questVtx[phi_t4 + 2].v.cn[1] = pauseCtx->questVtx[phi_t4 + 3].v.cn[1] =
-                        pauseCtx->questVtx[phi_t4 + 0].v.cn[2] = pauseCtx->questVtx[phi_t4 + 1].v.cn[2] =
-                            pauseCtx->questVtx[phi_t4 + 2].v.cn[2] = pauseCtx->questVtx[phi_t4 + 3].v.cn[2] = 255;
+        pauseCtx->questVtx[phi_t4 + 0].v.color[0] = pauseCtx->questVtx[phi_t4 + 1].v.color[0] =
+            pauseCtx->questVtx[phi_t4 + 2].v.color[0] = pauseCtx->questVtx[phi_t4 + 3].v.color[0] =
+                pauseCtx->questVtx[phi_t4 + 0].v.color[1] = pauseCtx->questVtx[phi_t4 + 1].v.color[1] =
+                    pauseCtx->questVtx[phi_t4 + 2].v.color[1] = pauseCtx->questVtx[phi_t4 + 3].v.color[1] =
+                        pauseCtx->questVtx[phi_t4 + 0].v.color[2] = pauseCtx->questVtx[phi_t4 + 1].v.color[2] =
+                            pauseCtx->questVtx[phi_t4 + 2].v.color[2] = pauseCtx->questVtx[phi_t4 + 3].v.color[2] = 255;
 
-        pauseCtx->questVtx[phi_t4 + 0].v.cn[3] = pauseCtx->questVtx[phi_t4 + 1].v.cn[3] =
-            pauseCtx->questVtx[phi_t4 + 2].v.cn[3] = pauseCtx->questVtx[phi_t4 + 3].v.cn[3] = pauseCtx->alpha;
+        pauseCtx->questVtx[phi_t4 + 0].v.color[3] = pauseCtx->questVtx[phi_t4 + 1].v.color[3] =
+            pauseCtx->questVtx[phi_t4 + 2].v.color[3] = pauseCtx->questVtx[phi_t4 + 3].v.color[3] = pauseCtx->alpha;
     }
 
     pauseCtx->infoPanelVtx = Graph_Alloc(gfxCtx, 28 * sizeof(Vtx));
@@ -2442,25 +2442,25 @@ void KaleidoScope_UpdateCursorSize(PlayState* play) {
         temp4 = 16;
     }
 
-    pauseCtx->cursorVtx[0].v.ob[0] = pauseCtx->cursorVtx[2].v.ob[0] = pauseCtx->cursorVtx[0].v.ob[0] + temp1;
-    pauseCtx->cursorVtx[1].v.ob[0] = pauseCtx->cursorVtx[3].v.ob[0] = pauseCtx->cursorVtx[0].v.ob[0] + 16;
-    pauseCtx->cursorVtx[0].v.ob[1] = pauseCtx->cursorVtx[1].v.ob[1] = pauseCtx->cursorVtx[0].v.ob[1] + temp2;
-    pauseCtx->cursorVtx[2].v.ob[1] = pauseCtx->cursorVtx[3].v.ob[1] = pauseCtx->cursorVtx[0].v.ob[1] - 16;
+    pauseCtx->cursorVtx[0].v.vector[0] = pauseCtx->cursorVtx[2].v.vector[0] = pauseCtx->cursorVtx[0].v.vector[0] + temp1;
+    pauseCtx->cursorVtx[1].v.vector[0] = pauseCtx->cursorVtx[3].v.vector[0] = pauseCtx->cursorVtx[0].v.vector[0] + 16;
+    pauseCtx->cursorVtx[0].v.vector[1] = pauseCtx->cursorVtx[1].v.vector[1] = pauseCtx->cursorVtx[0].v.vector[1] + temp2;
+    pauseCtx->cursorVtx[2].v.vector[1] = pauseCtx->cursorVtx[3].v.vector[1] = pauseCtx->cursorVtx[0].v.vector[1] - 16;
 
-    pauseCtx->cursorVtx[4].v.ob[0] = pauseCtx->cursorVtx[6].v.ob[0] = pauseCtx->cursorVtx[0].v.ob[0] + temp3;
-    pauseCtx->cursorVtx[5].v.ob[0] = pauseCtx->cursorVtx[7].v.ob[0] = pauseCtx->cursorVtx[4].v.ob[0] + 16;
-    pauseCtx->cursorVtx[4].v.ob[1] = pauseCtx->cursorVtx[5].v.ob[1] = pauseCtx->cursorVtx[0].v.ob[1];
-    pauseCtx->cursorVtx[6].v.ob[1] = pauseCtx->cursorVtx[7].v.ob[1] = pauseCtx->cursorVtx[4].v.ob[1] - 16;
+    pauseCtx->cursorVtx[4].v.vector[0] = pauseCtx->cursorVtx[6].v.vector[0] = pauseCtx->cursorVtx[0].v.vector[0] + temp3;
+    pauseCtx->cursorVtx[5].v.vector[0] = pauseCtx->cursorVtx[7].v.vector[0] = pauseCtx->cursorVtx[4].v.vector[0] + 16;
+    pauseCtx->cursorVtx[4].v.vector[1] = pauseCtx->cursorVtx[5].v.vector[1] = pauseCtx->cursorVtx[0].v.vector[1];
+    pauseCtx->cursorVtx[6].v.vector[1] = pauseCtx->cursorVtx[7].v.vector[1] = pauseCtx->cursorVtx[4].v.vector[1] - 16;
 
-    pauseCtx->cursorVtx[8].v.ob[0] = pauseCtx->cursorVtx[10].v.ob[0] = pauseCtx->cursorVtx[0].v.ob[0];
-    pauseCtx->cursorVtx[9].v.ob[0] = pauseCtx->cursorVtx[11].v.ob[0] = pauseCtx->cursorVtx[8].v.ob[0] + 16;
-    pauseCtx->cursorVtx[8].v.ob[1] = pauseCtx->cursorVtx[9].v.ob[1] = pauseCtx->cursorVtx[0].v.ob[1] - temp4;
-    pauseCtx->cursorVtx[10].v.ob[1] = pauseCtx->cursorVtx[11].v.ob[1] = pauseCtx->cursorVtx[8].v.ob[1] - 16;
+    pauseCtx->cursorVtx[8].v.vector[0] = pauseCtx->cursorVtx[10].v.vector[0] = pauseCtx->cursorVtx[0].v.vector[0];
+    pauseCtx->cursorVtx[9].v.vector[0] = pauseCtx->cursorVtx[11].v.vector[0] = pauseCtx->cursorVtx[8].v.vector[0] + 16;
+    pauseCtx->cursorVtx[8].v.vector[1] = pauseCtx->cursorVtx[9].v.vector[1] = pauseCtx->cursorVtx[0].v.vector[1] - temp4;
+    pauseCtx->cursorVtx[10].v.vector[1] = pauseCtx->cursorVtx[11].v.vector[1] = pauseCtx->cursorVtx[8].v.vector[1] - 16;
 
-    pauseCtx->cursorVtx[12].v.ob[0] = pauseCtx->cursorVtx[14].v.ob[0] = pauseCtx->cursorVtx[0].v.ob[0] + temp3;
-    pauseCtx->cursorVtx[13].v.ob[0] = pauseCtx->cursorVtx[15].v.ob[0] = pauseCtx->cursorVtx[12].v.ob[0] + 16;
-    pauseCtx->cursorVtx[12].v.ob[1] = pauseCtx->cursorVtx[13].v.ob[1] = pauseCtx->cursorVtx[0].v.ob[1] - temp4;
-    pauseCtx->cursorVtx[14].v.ob[1] = pauseCtx->cursorVtx[15].v.ob[1] = pauseCtx->cursorVtx[12].v.ob[1] - 16;
+    pauseCtx->cursorVtx[12].v.vector[0] = pauseCtx->cursorVtx[14].v.vector[0] = pauseCtx->cursorVtx[0].v.vector[0] + temp3;
+    pauseCtx->cursorVtx[13].v.vector[0] = pauseCtx->cursorVtx[15].v.vector[0] = pauseCtx->cursorVtx[12].v.vector[0] + 16;
+    pauseCtx->cursorVtx[12].v.vector[1] = pauseCtx->cursorVtx[13].v.vector[1] = pauseCtx->cursorVtx[0].v.vector[1] - temp4;
+    pauseCtx->cursorVtx[14].v.vector[1] = pauseCtx->cursorVtx[15].v.vector[1] = pauseCtx->cursorVtx[12].v.vector[1] - 16;
 }
 
 void KaleidoScope_LoadDungeonMap(PlayState* play) {
