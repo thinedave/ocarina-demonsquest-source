@@ -200,14 +200,14 @@ void KaleidoScope_DrawDungeonMap(PlayState* play, GraphicsContext* gfxCtx) {
         KaleidoScope_SetCursorVtx(pauseCtx, j, pauseCtx->mapPageVtx);
 
         if (pauseCtx->cursorX[PAUSE_MAP] == 0) {
-            pauseCtx->mapPageVtx[j + 0].v.ob[0] = pauseCtx->mapPageVtx[j + 2].v.ob[0] =
-                pauseCtx->mapPageVtx[j + 0].v.ob[0] - 2;
-            pauseCtx->mapPageVtx[j + 1].v.ob[0] = pauseCtx->mapPageVtx[j + 3].v.ob[0] =
-                pauseCtx->mapPageVtx[j + 1].v.ob[0] + 4;
-            pauseCtx->mapPageVtx[j + 0].v.ob[1] = pauseCtx->mapPageVtx[j + 1].v.ob[1] =
-                pauseCtx->mapPageVtx[j + 0].v.ob[1] + 2;
-            pauseCtx->mapPageVtx[j + 2].v.ob[1] = pauseCtx->mapPageVtx[j + 3].v.ob[1] =
-                pauseCtx->mapPageVtx[j + 2].v.ob[1] - 4;
+            pauseCtx->mapPageVtx[j + 0].v.vector[0] = pauseCtx->mapPageVtx[j + 2].v.vector[0] =
+                pauseCtx->mapPageVtx[j + 0].v.vector[0] - 2;
+            pauseCtx->mapPageVtx[j + 1].v.vector[0] = pauseCtx->mapPageVtx[j + 3].v.vector[0] =
+                pauseCtx->mapPageVtx[j + 1].v.vector[0] + 4;
+            pauseCtx->mapPageVtx[j + 0].v.vector[1] = pauseCtx->mapPageVtx[j + 1].v.vector[1] =
+                pauseCtx->mapPageVtx[j + 0].v.vector[1] + 2;
+            pauseCtx->mapPageVtx[j + 2].v.vector[1] = pauseCtx->mapPageVtx[j + 3].v.vector[1] =
+                pauseCtx->mapPageVtx[j + 2].v.vector[1] - 4;
         }
     }
 
@@ -267,18 +267,18 @@ void KaleidoScope_DrawDungeonMap(PlayState* play, GraphicsContext* gfxCtx) {
 
     gSP1Quadrangle(POLY_OPA_DISP++, j, j + 2, j + 3, j + 1, 0);
 
-    pauseCtx->mapPageVtx[124].v.ob[0] = pauseCtx->mapPageVtx[126].v.ob[0] = pauseCtx->mapPageVtx[124].v.ob[0] + 2;
-    pauseCtx->mapPageVtx[125].v.ob[0] = pauseCtx->mapPageVtx[127].v.ob[0] = pauseCtx->mapPageVtx[124].v.ob[0] + 19;
-    pauseCtx->mapPageVtx[124].v.ob[1] = pauseCtx->mapPageVtx[125].v.ob[1] = pauseCtx->mapPageVtx[124].v.ob[1] - 2;
-    pauseCtx->mapPageVtx[126].v.ob[1] = pauseCtx->mapPageVtx[127].v.ob[1] = pauseCtx->mapPageVtx[124].v.ob[1] - 19;
+    pauseCtx->mapPageVtx[124].v.vector[0] = pauseCtx->mapPageVtx[126].v.vector[0] = pauseCtx->mapPageVtx[124].v.vector[0] + 2;
+    pauseCtx->mapPageVtx[125].v.vector[0] = pauseCtx->mapPageVtx[127].v.vector[0] = pauseCtx->mapPageVtx[124].v.vector[0] + 19;
+    pauseCtx->mapPageVtx[124].v.vector[1] = pauseCtx->mapPageVtx[125].v.vector[1] = pauseCtx->mapPageVtx[124].v.vector[1] - 2;
+    pauseCtx->mapPageVtx[126].v.vector[1] = pauseCtx->mapPageVtx[127].v.vector[1] = pauseCtx->mapPageVtx[124].v.vector[1] - 19;
 
     gSPVertex(POLY_OPA_DISP++, &pauseCtx->mapPageVtx[116], 12, 0);
 
     gDPPipeSync(POLY_OPA_DISP++);
     gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 255, 255, 255, pauseCtx->alpha);
 
-    pauseCtx->mapPageVtx[116].v.ob[1] = pauseCtx->mapPageVtx[117].v.ob[1] = pauseCtx->offsetY - (VREG(30) * 14) + 49;
-    pauseCtx->mapPageVtx[118].v.ob[1] = pauseCtx->mapPageVtx[119].v.ob[1] = pauseCtx->mapPageVtx[116].v.ob[1] - 16;
+    pauseCtx->mapPageVtx[116].v.vector[1] = pauseCtx->mapPageVtx[117].v.vector[1] = pauseCtx->offsetY - (VREG(30) * 14) + 49;
+    pauseCtx->mapPageVtx[118].v.vector[1] = pauseCtx->mapPageVtx[119].v.vector[1] = pauseCtx->mapPageVtx[116].v.vector[1] - 16;
 
     gDPLoadTextureBlock(POLY_OPA_DISP++, gDungeonMapLinkHeadTex, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
                         G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
@@ -288,9 +288,9 @@ void KaleidoScope_DrawDungeonMap(PlayState* play, GraphicsContext* gfxCtx) {
 
     if (CHECK_DUNGEON_ITEM(DUNGEON_COMPASS, gSaveContext.mapIndex) &&
         (gMapData->skullFloorIconY[gSaveContext.mapIndex] != -99)) {
-        pauseCtx->mapPageVtx[120].v.ob[1] = pauseCtx->mapPageVtx[121].v.ob[1] =
+        pauseCtx->mapPageVtx[120].v.vector[1] = pauseCtx->mapPageVtx[121].v.vector[1] =
             gMapData->skullFloorIconY[gSaveContext.mapIndex] + pauseCtx->offsetY;
-        pauseCtx->mapPageVtx[122].v.ob[1] = pauseCtx->mapPageVtx[123].v.ob[1] = pauseCtx->mapPageVtx[120].v.ob[1] - 16;
+        pauseCtx->mapPageVtx[122].v.vector[1] = pauseCtx->mapPageVtx[123].v.vector[1] = pauseCtx->mapPageVtx[120].v.vector[1] - 16;
 
         gDPLoadTextureBlock(POLY_OPA_DISP++, gDungeonMapSkullTex, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
                             G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
@@ -573,17 +573,17 @@ void KaleidoScope_DrawWorldMap(PlayState* play, GraphicsContext* gfxCtx) {
         gDPPipeSync(POLY_OPA_DISP++);
         gDPSetTextureFilter(POLY_OPA_DISP++, G_TF_POINT);
 
-        pauseCtx->mapPageVtx[172].v.ob[0] = pauseCtx->mapPageVtx[174].v.ob[0] =
+        pauseCtx->mapPageVtx[172].v.vector[0] = pauseCtx->mapPageVtx[174].v.vector[0] =
             areaBoxPosX[((void)0, gSaveContext.worldMapArea)];
 
-        pauseCtx->mapPageVtx[173].v.ob[0] = pauseCtx->mapPageVtx[175].v.ob[0] =
-            pauseCtx->mapPageVtx[172].v.ob[0] + areaBoxWidths[((void)0, gSaveContext.worldMapArea)];
+        pauseCtx->mapPageVtx[173].v.vector[0] = pauseCtx->mapPageVtx[175].v.vector[0] =
+            pauseCtx->mapPageVtx[172].v.vector[0] + areaBoxWidths[((void)0, gSaveContext.worldMapArea)];
 
-        pauseCtx->mapPageVtx[172].v.ob[1] = pauseCtx->mapPageVtx[173].v.ob[1] =
+        pauseCtx->mapPageVtx[172].v.vector[1] = pauseCtx->mapPageVtx[173].v.vector[1] =
             areaBoxPosY[((void)0, gSaveContext.worldMapArea)] + pauseCtx->offsetY;
 
-        pauseCtx->mapPageVtx[174].v.ob[1] = pauseCtx->mapPageVtx[175].v.ob[1] =
-            pauseCtx->mapPageVtx[172].v.ob[1] - areaBoxHeights[((void)0, gSaveContext.worldMapArea)];
+        pauseCtx->mapPageVtx[174].v.vector[1] = pauseCtx->mapPageVtx[175].v.vector[1] =
+            pauseCtx->mapPageVtx[172].v.vector[1] - areaBoxHeights[((void)0, gSaveContext.worldMapArea)];
 
         pauseCtx->mapPageVtx[173].v.tc[0] = pauseCtx->mapPageVtx[175].v.tc[0] =
             areaBoxWidths[((void)0, gSaveContext.worldMapArea)] << 5;

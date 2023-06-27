@@ -1000,17 +1000,17 @@
  * Vertex (set up for use with colors)
  */
 typedef struct {
-    short          ob[3];   /* x, y, z */
+    short          vector[3];   /* x, y, z */
     unsigned short flag;
     short          tc[2];   /* texture coord */
-    unsigned char  cn[4];   /* color & alpha */
+    unsigned char  color[4];   /* color & alpha */
 } Vtx_t;
 
 /*
  * Vertex (set up for use with normals)
  */
 typedef struct {
-    short          ob[3];   /* x, y, z */
+    short          vector[3];   /* x, y, z */
     unsigned short flag;
     short          tc[2];   /* texture coord */
     signed char    n[3];    /* normal */

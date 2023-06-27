@@ -528,14 +528,14 @@ void KaleidoScope_DrawEquipment(PlayState* play) {
             if ((gBitFlags[bit] & gSaveContext.inventory.equipment) && (pauseCtx->cursorSpecialPos == 0)) {
                 if ((gEquipAgeReqs[i][k + 1] == 9) || (gEquipAgeReqs[i][k + 1] == ((void)0, gSaveContext.linkAge))) {
                     if (temp == cursorSlot) {
-                        pauseCtx->equipVtx[j].v.ob[0] = pauseCtx->equipVtx[j + 2].v.ob[0] =
-                            pauseCtx->equipVtx[j].v.ob[0] - 2;
-                        pauseCtx->equipVtx[j + 1].v.ob[0] = pauseCtx->equipVtx[j + 3].v.ob[0] =
-                            pauseCtx->equipVtx[j + 1].v.ob[0] + 4;
-                        pauseCtx->equipVtx[j].v.ob[1] = pauseCtx->equipVtx[j + 1].v.ob[1] =
-                            pauseCtx->equipVtx[j].v.ob[1] + 2;
-                        pauseCtx->equipVtx[j + 2].v.ob[1] = pauseCtx->equipVtx[j + 3].v.ob[1] =
-                            pauseCtx->equipVtx[j + 2].v.ob[1] - 4;
+                        pauseCtx->equipVtx[j].v.vector[0] = pauseCtx->equipVtx[j + 2].v.vector[0] =
+                            pauseCtx->equipVtx[j].v.vector[0] - 2;
+                        pauseCtx->equipVtx[j + 1].v.vector[0] = pauseCtx->equipVtx[j + 3].v.vector[0] =
+                            pauseCtx->equipVtx[j + 1].v.vector[0] + 4;
+                        pauseCtx->equipVtx[j].v.vector[1] = pauseCtx->equipVtx[j + 1].v.vector[1] =
+                            pauseCtx->equipVtx[j].v.vector[1] + 2;
+                        pauseCtx->equipVtx[j + 2].v.vector[1] = pauseCtx->equipVtx[j + 3].v.vector[1] =
+                            pauseCtx->equipVtx[j + 2].v.vector[1] - 4;
                     }
                 }
             }

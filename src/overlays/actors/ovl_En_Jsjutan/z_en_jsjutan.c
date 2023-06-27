@@ -65,15 +65,15 @@ void func_80A89860(EnJsjutan* this, PlayState* play) {
     evenVtx = SEGMENTED_TO_VIRTUAL(sShadowEvenVtx);
 
     for (i = 0; i < ARRAY_COUNT(D_80A8EE10); i++, oddVtx++, evenVtx++) {
-        D_80A8EE10[i].x = oddVtx->v.ob[0];
-        D_80A8EE10[i].z = oddVtx->v.ob[2];
+        D_80A8EE10[i].x = oddVtx->v.vector[0];
+        D_80A8EE10[i].z = oddVtx->v.vector[2];
         if (this->dyna.actor.params == ENJSJUTAN_TYPE_01) {
-            oddVtx->v.ob[1] = evenVtx->v.ob[1] = 0x585;
+            oddVtx->v.vector[1] = evenVtx->v.vector[1] = 0x585;
         } else {
-            this->dyna.actor.world.pos.x = oddVtx->v.ob[0] * 0.02f + actorPos.x;
-            this->dyna.actor.world.pos.z = oddVtx->v.ob[2] * 0.02f + actorPos.z;
+            this->dyna.actor.world.pos.x = oddVtx->v.vector[0] * 0.02f + actorPos.x;
+            this->dyna.actor.world.pos.z = oddVtx->v.vector[2] * 0.02f + actorPos.z;
             Actor_UpdateBgCheckInfo(play, &this->dyna.actor, 10.0f, 10.0f, 10.0f, UPDBGCHECKINFO_FLAG_2);
-            oddVtx->v.ob[1] = evenVtx->v.ob[1] = this->dyna.actor.floorHeight;
+            oddVtx->v.vector[1] = evenVtx->v.vector[1] = this->dyna.actor.floorHeight;
             this->dyna.actor.world.pos = actorPos;
         }
     }
@@ -201,8 +201,8 @@ void func_80A89A6C(EnJsjutan* this, PlayState* play) {
     for (i = 0; i < ARRAY_COUNT(D_80A8EE10); i++, carpetVtx++, shadowVtx++) {
         if (isPlayerOnTop) {
             // Linear distance from j-th wave to player, in XZ plane.
-            dxVtx = carpetVtx->n.ob[0] - spB8;
-            dzVtx = carpetVtx->n.ob[2] - spB0;
+            dxVtx = carpetVtx->n.vector[0] - spB8;
+            dzVtx = carpetVtx->n.vector[2] - spB0;
             distVtx = sqrtf(SQ(dxVtx) + SQ(dzVtx));
 
             // Distance percentage. 0.0f to 1.0f. 2500.0f is the max distance to an actor that this wave will consider.
@@ -227,8 +227,8 @@ void func_80A89A6C(EnJsjutan* this, PlayState* play) {
 
         for (j = 0; j < 3; j++) {
             if (spE0[j] != 0) {
-                dxVtx = carpetVtx->n.ob[0] - spD4[j];
-                dzVtx = carpetVtx->n.ob[2] - spBC[j];
+                dxVtx = carpetVtx->n.vector[0] - spD4[j];
+                dzVtx = carpetVtx->n.vector[2] - spBC[j];
                 // Linear distance from j-th wave to whatever actor is there, in XZ plane.
                 distVtx = sqrtf(SQ(dxVtx) + SQ(dzVtx));
 
@@ -273,21 +273,21 @@ void func_80A89A6C(EnJsjutan* this, PlayState* play) {
 
         if (this->unk_174) {
             s16 phi_v1_4 = offset + waveform;
-            s16 temp_a0_3 = (shadowVtx->n.ob[1] - this->unk_168) * 50.0f;
+            s16 temp_a0_3 = (shadowVtx->n.vector[1] - this->unk_168) * 50.0f;
 
             if (phi_v1_4 < temp_a0_3) {
                 phi_v1_4 = temp_a0_3;
             }
 
-            carpetVtx->n.ob[1] = phi_v1_4;
+            carpetVtx->n.vector[1] = phi_v1_4;
         } else {
-            carpetVtx->n.ob[1] = offset + waveform;
+            carpetVtx->n.vector[1] = offset + waveform;
 
-            carpetVtx->n.ob[0] = D_80A8EE10[i].x + (s16)(waveform * 0.5f);
-            carpetVtx->n.ob[2] = D_80A8EE10[i].z + (s16)(waveform * 0.5f);
+            carpetVtx->n.vector[0] = D_80A8EE10[i].x + (s16)(waveform * 0.5f);
+            carpetVtx->n.vector[2] = D_80A8EE10[i].z + (s16)(waveform * 0.5f);
 
-            shadowVtx->n.ob[0] = D_80A8EE10[i].x + (s16)waveform;
-            shadowVtx->n.ob[2] = D_80A8EE10[i].z + (s16)waveform;
+            shadowVtx->n.vector[0] = D_80A8EE10[i].x + (s16)waveform;
+            shadowVtx->n.vector[2] = D_80A8EE10[i].z + (s16)waveform;
         }
     }
 
@@ -327,22 +327,22 @@ void func_80A89A6C(EnJsjutan* this, PlayState* play) {
         // Carpet size is 12x12.
         if ((i % 12) == 11) { // Last column.
             j = i - 1;
-            dzVtx = carpetVtx->n.ob[2] - phi_s0_2[j].n.ob[2];
+            dzVtx = carpetVtx->n.vector[2] - phi_s0_2[j].n.vector[2];
         } else {
             j = i + 1;
-            dzVtx = phi_s0_2[j].n.ob[2] - carpetVtx->n.ob[2];
+            dzVtx = phi_s0_2[j].n.vector[2] - carpetVtx->n.vector[2];
         }
 
-        dyVtx = phi_s0_2[j].n.ob[1] - carpetVtx->n.ob[1];
+        dyVtx = phi_s0_2[j].n.vector[1] - carpetVtx->n.vector[1];
 
         rotX = Math_Atan2F(dzVtx, dyVtx);
 
         if (i >= 132) { // Last row.
             j = i - 12;
-            dxVtx = carpetVtx->n.ob[0] - phi_s0_2[j].n.ob[0];
+            dxVtx = carpetVtx->n.vector[0] - phi_s0_2[j].n.vector[0];
         } else {
             j = i + 12;
-            dxVtx = phi_s0_2[j].n.ob[0] - carpetVtx->n.ob[0];
+            dxVtx = phi_s0_2[j].n.vector[0] - carpetVtx->n.vector[0];
         }
 
         rotZ = Math_Atan2F(dxVtx, dyVtx);

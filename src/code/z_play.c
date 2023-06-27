@@ -213,7 +213,7 @@ void Play_Destroy(GameState* thisx) {
     KaleidoScopeCall_Destroy(this);
     KaleidoManager_Destroy();
     ZeldaArena_Cleanup();
-    Fault_RemoveAddrConvClient(&sActorFaultAddrConvClient)
+    Fault_RemoveAddrConvClient(&sActorFaultAddrConvClient);
     Fault_RemoveClient(&D_801614B8);
 }
 

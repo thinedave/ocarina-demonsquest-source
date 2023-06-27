@@ -315,9 +315,9 @@ void EnGanonMant_UpdateVertices(EnGanonMant* this) {
     for (i = 0; i < GANON_MANT_NUM_STRANDS; i++, strand++) {
         for (j = 0, k = 0; j < GANON_MANT_NUM_JOINTS; j++, k += GANON_MANT_NUM_JOINTS) {
             vtx = &vertices[sVerticesMap[i + k]];
-            vtx->n.ob[0] = strand->joints[j].x;
-            vtx->n.ob[1] = strand->joints[j].y;
-            vtx->n.ob[2] = strand->joints[j].z;
+            vtx->n.vector[0] = strand->joints[j].x;
+            vtx->n.vector[1] = strand->joints[j].y;
+            vtx->n.vector[2] = strand->joints[j].z;
             Matrix_RotateY(strand->rotations[j].y, MTXMODE_NEW);
             Matrix_RotateX(strand->rotations[j].x, MTXMODE_APPLY);
             Matrix_MultVec3f(&up, &normal);

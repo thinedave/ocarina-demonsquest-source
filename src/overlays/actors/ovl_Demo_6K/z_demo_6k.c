@@ -623,7 +623,7 @@ void func_80968298(Actor* thisx, PlayState* play) {
         if (i == skipIndices[i2]) {
             i2++;
         } else {
-            vertices[i].v.cn[3] = alpha;
+            vertices[i].v.color[3] = alpha;
         }
     }
 

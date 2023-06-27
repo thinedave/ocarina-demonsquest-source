@@ -69,8 +69,8 @@ void KaleidoScope_DrawAmmoCount(PauseContext* pauseCtx, GraphicsContext* gfxCtx,
 }
 
 void KaleidoScope_SetCursorVtx(PauseContext* pauseCtx, u16 index, Vtx* vtx) {
-    pauseCtx->cursorVtx[0].v.ob[0] = vtx[index].v.ob[0];
-    pauseCtx->cursorVtx[0].v.ob[1] = vtx[index].v.ob[1];
+    pauseCtx->cursorVtx[0].v.vector[0] = vtx[index].v.vector[0];
+    pauseCtx->cursorVtx[0].v.vector[1] = vtx[index].v.vector[1];
 }
 
 void KaleidoScope_SetItemCursorVtx(PauseContext* pauseCtx) {
@@ -360,8 +360,8 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                             pauseCtx->equipTargetItem = cursorItem;
                             pauseCtx->equipTargetSlot = cursorSlot;
                             pauseCtx->unk_1E4 = 3;
-                            pauseCtx->equipAnimX = pauseCtx->itemVtx[index].v.ob[0] * 10;
-                            pauseCtx->equipAnimY = pauseCtx->itemVtx[index].v.ob[1] * 10;
+                            pauseCtx->equipAnimX = pauseCtx->itemVtx[index].v.vector[0] * 10;
+                            pauseCtx->equipAnimY = pauseCtx->itemVtx[index].v.vector[1] * 10;
                             pauseCtx->equipAnimAlpha = 255;
                             sEquipAnimTimer = 0;
                             sEquipState = 3;
@@ -394,11 +394,11 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                     }
                 }
             } else {
-                pauseCtx->cursorVtx[0].v.ob[0] = pauseCtx->cursorVtx[2].v.ob[0] = pauseCtx->cursorVtx[1].v.ob[0] =
-                    pauseCtx->cursorVtx[3].v.ob[0] = 0;
+                pauseCtx->cursorVtx[0].v.vector[0] = pauseCtx->cursorVtx[2].v.vector[0] = pauseCtx->cursorVtx[1].v.vector[0] =
+                    pauseCtx->cursorVtx[3].v.vector[0] = 0;
 
-                pauseCtx->cursorVtx[0].v.ob[1] = pauseCtx->cursorVtx[1].v.ob[1] = pauseCtx->cursorVtx[2].v.ob[1] =
-                    pauseCtx->cursorVtx[3].v.ob[1] = -200;
+                pauseCtx->cursorVtx[0].v.vector[1] = pauseCtx->cursorVtx[1].v.vector[1] = pauseCtx->cursorVtx[2].v.vector[1] =
+                    pauseCtx->cursorVtx[3].v.vector[1] = -200;
             }
         } else {
             pauseCtx->cursorItem[PAUSE_ITEM] = PAUSE_ITEM_NONE;
@@ -439,29 +439,29 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                                         magicArrowEffectsG[pauseCtx->equipTargetItem - 0xBF],
                                         magicArrowEffectsB[pauseCtx->equipTargetItem - 0xBF], pauseCtx->alpha);
 
-                        pauseCtx->itemVtx[j + 0].v.ob[0] = pauseCtx->itemVtx[j + 2].v.ob[0] =
-                            pauseCtx->itemVtx[j + 0].v.ob[0] - 2;
+                        pauseCtx->itemVtx[j + 0].v.vector[0] = pauseCtx->itemVtx[j + 2].v.vector[0] =
+                            pauseCtx->itemVtx[j + 0].v.vector[0] - 2;
 
-                        pauseCtx->itemVtx[j + 1].v.ob[0] = pauseCtx->itemVtx[j + 3].v.ob[0] =
-                            pauseCtx->itemVtx[j + 0].v.ob[0] + 32;
+                        pauseCtx->itemVtx[j + 1].v.vector[0] = pauseCtx->itemVtx[j + 3].v.vector[0] =
+                            pauseCtx->itemVtx[j + 0].v.vector[0] + 32;
 
-                        pauseCtx->itemVtx[j + 0].v.ob[1] = pauseCtx->itemVtx[j + 1].v.ob[1] =
-                            pauseCtx->itemVtx[j + 0].v.ob[1] + 2;
+                        pauseCtx->itemVtx[j + 0].v.vector[1] = pauseCtx->itemVtx[j + 1].v.vector[1] =
+                            pauseCtx->itemVtx[j + 0].v.vector[1] + 2;
 
-                        pauseCtx->itemVtx[j + 2].v.ob[1] = pauseCtx->itemVtx[j + 3].v.ob[1] =
-                            pauseCtx->itemVtx[j + 0].v.ob[1] - 32;
+                        pauseCtx->itemVtx[j + 2].v.vector[1] = pauseCtx->itemVtx[j + 3].v.vector[1] =
+                            pauseCtx->itemVtx[j + 0].v.vector[1] - 32;
                     } else if (i == cursorSlot) {
-                        pauseCtx->itemVtx[j + 0].v.ob[0] = pauseCtx->itemVtx[j + 2].v.ob[0] =
-                            pauseCtx->itemVtx[j + 0].v.ob[0] - 2;
+                        pauseCtx->itemVtx[j + 0].v.vector[0] = pauseCtx->itemVtx[j + 2].v.vector[0] =
+                            pauseCtx->itemVtx[j + 0].v.vector[0] - 2;
 
-                        pauseCtx->itemVtx[j + 1].v.ob[0] = pauseCtx->itemVtx[j + 3].v.ob[0] =
-                            pauseCtx->itemVtx[j + 0].v.ob[0] + 32;
+                        pauseCtx->itemVtx[j + 1].v.vector[0] = pauseCtx->itemVtx[j + 3].v.vector[0] =
+                            pauseCtx->itemVtx[j + 0].v.vector[0] + 32;
 
-                        pauseCtx->itemVtx[j + 0].v.ob[1] = pauseCtx->itemVtx[j + 1].v.ob[1] =
-                            pauseCtx->itemVtx[j + 0].v.ob[1] + 2;
+                        pauseCtx->itemVtx[j + 0].v.vector[1] = pauseCtx->itemVtx[j + 1].v.vector[1] =
+                            pauseCtx->itemVtx[j + 0].v.vector[1] + 2;
 
-                        pauseCtx->itemVtx[j + 2].v.ob[1] = pauseCtx->itemVtx[j + 3].v.ob[1] =
-                            pauseCtx->itemVtx[j + 0].v.ob[1] - 32;
+                        pauseCtx->itemVtx[j + 2].v.vector[1] = pauseCtx->itemVtx[j + 3].v.vector[1] =
+                            pauseCtx->itemVtx[j + 0].v.vector[1] - 32;
                     }
                 }
             }
@@ -527,8 +527,8 @@ void KaleidoScope_UpdateItemEquip(PlayState* play) {
 
     if (sEquipState == 1) {
         bowItemVtx = &pauseCtx->itemVtx[12];
-        offsetX = ABS(pauseCtx->equipAnimX - bowItemVtx->v.ob[0] * 10) / sEquipMoveTimer;
-        offsetY = ABS(pauseCtx->equipAnimY - bowItemVtx->v.ob[1] * 10) / sEquipMoveTimer;
+        offsetX = ABS(pauseCtx->equipAnimX - bowItemVtx->v.vector[0] * 10) / sEquipMoveTimer;
+        offsetY = ABS(pauseCtx->equipAnimY - bowItemVtx->v.vector[1] * 10) / sEquipMoveTimer;
     } else {
         offsetX = ABS(pauseCtx->equipAnimX - sCButtonPosX[pauseCtx->equipTargetCBtn]) / sEquipMoveTimer;
         offsetY = ABS(pauseCtx->equipAnimY - sCButtonPosY[pauseCtx->equipTargetCBtn]) / sEquipMoveTimer;
@@ -548,13 +548,13 @@ void KaleidoScope_UpdateItemEquip(PlayState* play) {
         WREG(87) -= WREG(87) / sEquipMoveTimer;
 
         if (sEquipState == 1) {
-            if (pauseCtx->equipAnimX >= (pauseCtx->itemVtx[12].v.ob[0] * 10)) {
+            if (pauseCtx->equipAnimX >= (pauseCtx->itemVtx[12].v.vector[0] * 10)) {
                 pauseCtx->equipAnimX -= offsetX;
             } else {
                 pauseCtx->equipAnimX += offsetX;
             }
 
-            if (pauseCtx->equipAnimY >= (pauseCtx->itemVtx[12].v.ob[1] * 10)) {
+            if (pauseCtx->equipAnimY >= (pauseCtx->itemVtx[12].v.vector[1] * 10)) {
                 pauseCtx->equipAnimY -= offsetY;
             } else {
                 pauseCtx->equipAnimY += offsetY;

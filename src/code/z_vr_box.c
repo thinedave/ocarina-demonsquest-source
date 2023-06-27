@@ -162,15 +162,15 @@ s32 func_800ADBB0(SkyboxContext* skyboxCtx, Vtx* roomVtx, s32 arg2, s32 arg3, s3
         for (i = 0; i < 0x20; i++) {
             index = D_8012ACA0[sp424][i];
 
-            roomVtx[arg2 + i].v.ob[0] = sp358[index];
-            roomVtx[arg2 + i].v.ob[1] = sp2A4[index];
-            roomVtx[arg2 + i].v.ob[2] = sp1F0[index];
+            roomVtx[arg2 + i].v.vector[0] = sp358[index];
+            roomVtx[arg2 + i].v.vector[1] = sp2A4[index];
+            roomVtx[arg2 + i].v.vector[2] = sp1F0[index];
             roomVtx[arg2 + i].v.flag = 0;
             roomVtx[arg2 + i].v.tc[0] = sp13C[index];
             roomVtx[arg2 + i].v.tc[1] = sp88[index];
-            roomVtx[arg2 + i].v.cn[1] = 0;
-            roomVtx[arg2 + i].v.cn[2] = 0;
-            roomVtx[arg2 + i].v.cn[0] = 255;
+            roomVtx[arg2 + i].v.color[1] = 0;
+            roomVtx[arg2 + i].v.color[2] = 0;
+            roomVtx[arg2 + i].v.color[0] = 255;
         }
         gSPVertex(skyboxCtx->unk_138++, &roomVtx[arg2], 32, 0);
         arg2 += i;
@@ -271,15 +271,15 @@ s32 func_800AE2C0(SkyboxContext* skyboxCtx, Vtx* roomVtx, s32 arg2, s32 arg3, s3
     for (i = 0; i < 0x20; i++) {
         index = D_8012ADD8[i];
 
-        roomVtx[arg2 + i].v.ob[0] = sp2B4[index];
-        roomVtx[arg2 + i].v.ob[1] = sp250[index];
-        roomVtx[arg2 + i].v.ob[2] = sp1EC[index];
+        roomVtx[arg2 + i].v.vector[0] = sp2B4[index];
+        roomVtx[arg2 + i].v.vector[1] = sp250[index];
+        roomVtx[arg2 + i].v.vector[2] = sp1EC[index];
         roomVtx[arg2 + i].v.flag = 0;
         roomVtx[arg2 + i].v.tc[0] = sp188[index];
         roomVtx[arg2 + i].v.tc[1] = sp124[index];
-        roomVtx[arg2 + i].v.cn[1] = 0;
-        roomVtx[arg2 + i].v.cn[2] = 0;
-        roomVtx[arg2 + i].v.cn[0] = 255;
+        roomVtx[arg2 + i].v.color[1] = 0;
+        roomVtx[arg2 + i].v.color[2] = 0;
+        roomVtx[arg2 + i].v.color[0] = 255;
     }
     gSPVertex(skyboxCtx->unk_138++, &roomVtx[arg2], 32, 0);
     arg2 += i;

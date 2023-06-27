@@ -38,7 +38,7 @@ void BgSpot03Taki_ApplyOpeningAlpha(BgSpot03Taki* this, s32 bufferIndex) {
                                   : SEGMENTED_TO_VIRTUAL(object_spot03_object_Vtx_000990);
 
     for (i = 0; i < 5; i++) {
-        vtx[i + 10].v.cn[3] = this->openingAlpha;
+        vtx[i + 10].v.color[3] = this->openingAlpha;
     }
 }
 

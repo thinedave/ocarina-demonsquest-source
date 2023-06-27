@@ -283,7 +283,7 @@ void DemoKekkai_DrawTrialBarrier(Actor* thisx, PlayState* play2) {
         alphas[1] = (s32)(this->energyAlpha * 126.0f);
         alphas[0] = 0;
         for (i = 0; i < 102; i++) {
-            energyVtx[i].v.cn[3] = alphas[alphaIndex[i]];
+            energyVtx[i].v.color[3] = alphas[alphaIndex[i]];
         }
         colorIndex = (this->actor.params - 1) * 6;
         OPEN_DISPS(play->state.gfxCtx, "../z_demo_kekkai.c", 632);

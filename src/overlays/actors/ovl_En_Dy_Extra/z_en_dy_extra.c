@@ -105,7 +105,7 @@ void EnDyExtra_Draw(Actor* thisx, PlayState* play) {
 
     for (i = 0; i < 27; i++) {
         if (D_809FFC50[i]) {
-            vertices[i].v.cn[3] = unk[D_809FFC50[i]];
+            vertices[i].v.color[3] = unk[D_809FFC50[i]];
         }
     }
 

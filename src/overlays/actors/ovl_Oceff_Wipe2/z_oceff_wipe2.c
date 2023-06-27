@@ -83,9 +83,9 @@ void OceffWipe2_Draw(Actor* thisx, PlayState* play) {
         alpha = 255;
     }
 
-    vtxPtr[1].v.cn[3] = vtxPtr[3].v.cn[3] = vtxPtr[5].v.cn[3] = vtxPtr[7].v.cn[3] = vtxPtr[9].v.cn[3] =
-        vtxPtr[11].v.cn[3] = vtxPtr[13].v.cn[3] = vtxPtr[15].v.cn[3] = vtxPtr[16].v.cn[3] = vtxPtr[18].v.cn[3] =
-            vtxPtr[20].v.cn[3] = alpha;
+    vtxPtr[1].v.color[3] = vtxPtr[3].v.color[3] = vtxPtr[5].v.color[3] = vtxPtr[7].v.color[3] = vtxPtr[9].v.color[3] =
+        vtxPtr[11].v.color[3] = vtxPtr[13].v.color[3] = vtxPtr[15].v.color[3] = vtxPtr[16].v.color[3] = vtxPtr[18].v.color[3] =
+            vtxPtr[20].v.color[3] = alpha;
 
     OPEN_DISPS(play->state.gfxCtx, "../z_oceff_wipe2.c", 390);
 

@@ -49,17 +49,17 @@ void FileSelect_SetKeyboardVtx(GameState* thisx) {
         for (phi_t1 = 0; phi_t1 < 13; phi_t1++, phi_t3 += 4, phi_t2++) {
             //! @bug D_80812544 is accessed out of bounds when drawing the empty space character (value of 64). Under
             //! normal circumstances it reads a halfword from sNameLabelTextures.
-            this->keyboardVtx[phi_t3].v.ob[0] = this->keyboardVtx[phi_t3 + 2].v.ob[0] = D_80812544[phi_t2] + phi_t0;
+            this->keyboardVtx[phi_t3].v.vector[0] = this->keyboardVtx[phi_t3 + 2].v.vector[0] = D_80812544[phi_t2] + phi_t0;
 
-            this->keyboardVtx[phi_t3 + 1].v.ob[0] = this->keyboardVtx[phi_t3 + 3].v.ob[0] =
+            this->keyboardVtx[phi_t3 + 1].v.vector[0] = this->keyboardVtx[phi_t3 + 3].v.vector[0] =
                 D_80812544[phi_t2] + phi_t0 + 12;
 
-            this->keyboardVtx[phi_t3].v.ob[1] = this->keyboardVtx[phi_t3 + 1].v.ob[1] = phi_s1;
+            this->keyboardVtx[phi_t3].v.vector[1] = this->keyboardVtx[phi_t3 + 1].v.vector[1] = phi_s1;
 
-            this->keyboardVtx[phi_t3 + 2].v.ob[1] = this->keyboardVtx[phi_t3 + 3].v.ob[1] = phi_s1 - 12;
+            this->keyboardVtx[phi_t3 + 2].v.vector[1] = this->keyboardVtx[phi_t3 + 3].v.vector[1] = phi_s1 - 12;
 
-            this->keyboardVtx[phi_t3].v.ob[2] = this->keyboardVtx[phi_t3 + 1].v.ob[2] =
-                this->keyboardVtx[phi_t3 + 2].v.ob[2] = this->keyboardVtx[phi_t3 + 3].v.ob[2] = 0;
+            this->keyboardVtx[phi_t3].v.vector[2] = this->keyboardVtx[phi_t3 + 1].v.vector[2] =
+                this->keyboardVtx[phi_t3 + 2].v.vector[2] = this->keyboardVtx[phi_t3 + 3].v.vector[2] = 0;
 
             this->keyboardVtx[phi_t3].v.flag = this->keyboardVtx[phi_t3 + 1].v.flag =
                 this->keyboardVtx[phi_t3 + 2].v.flag = this->keyboardVtx[phi_t3 + 3].v.flag = 0;
@@ -70,14 +70,14 @@ void FileSelect_SetKeyboardVtx(GameState* thisx) {
             this->keyboardVtx[phi_t3 + 1].v.tc[0] = this->keyboardVtx[phi_t3 + 2].v.tc[1] =
                 this->keyboardVtx[phi_t3 + 3].v.tc[0] = this->keyboardVtx[phi_t3 + 3].v.tc[1] = 0x200;
 
-            this->keyboardVtx[phi_t3].v.cn[0] = this->keyboardVtx[phi_t3 + 1].v.cn[0] =
-                this->keyboardVtx[phi_t3 + 2].v.cn[0] = this->keyboardVtx[phi_t3 + 3].v.cn[0] =
-                    this->keyboardVtx[phi_t3].v.cn[1] = this->keyboardVtx[phi_t3 + 1].v.cn[1] =
-                        this->keyboardVtx[phi_t3 + 2].v.cn[1] = this->keyboardVtx[phi_t3 + 3].v.cn[1] =
-                            this->keyboardVtx[phi_t3].v.cn[2] = this->keyboardVtx[phi_t3 + 1].v.cn[2] =
-                                this->keyboardVtx[phi_t3 + 2].v.cn[2] = this->keyboardVtx[phi_t3 + 3].v.cn[2] =
-                                    this->keyboardVtx[phi_t3].v.cn[3] = this->keyboardVtx[phi_t3 + 1].v.cn[3] =
-                                        this->keyboardVtx[phi_t3 + 2].v.cn[3] = this->keyboardVtx[phi_t3 + 3].v.cn[3] =
+            this->keyboardVtx[phi_t3].v.color[0] = this->keyboardVtx[phi_t3 + 1].v.color[0] =
+                this->keyboardVtx[phi_t3 + 2].v.color[0] = this->keyboardVtx[phi_t3 + 3].v.color[0] =
+                    this->keyboardVtx[phi_t3].v.color[1] = this->keyboardVtx[phi_t3 + 1].v.color[1] =
+                        this->keyboardVtx[phi_t3 + 2].v.color[1] = this->keyboardVtx[phi_t3 + 3].v.color[1] =
+                            this->keyboardVtx[phi_t3].v.color[2] = this->keyboardVtx[phi_t3 + 1].v.color[2] =
+                                this->keyboardVtx[phi_t3 + 2].v.color[2] = this->keyboardVtx[phi_t3 + 3].v.color[2] =
+                                    this->keyboardVtx[phi_t3].v.color[3] = this->keyboardVtx[phi_t3 + 1].v.color[3] =
+                                        this->keyboardVtx[phi_t3 + 2].v.color[3] = this->keyboardVtx[phi_t3 + 3].v.color[3] =
                                             255;
 
             phi_t0 += 0x10;
@@ -147,26 +147,26 @@ void FileSelect_SetNameEntryVtx(GameState* thisx) {
         if ((phi_s0 > 0) && (phi_s0 < 9)) {
             temp = this->fileNames[this->buttonIndex][phi_s0 - 1];
 
-            this->nameEntryVtx[phi_t1].v.ob[0] = this->nameEntryVtx[phi_t1 + 2].v.ob[0] =
+            this->nameEntryVtx[phi_t1].v.vector[0] = this->nameEntryVtx[phi_t1 + 2].v.vector[0] =
                 D_808125EC[phi_s0] + this->nameEntryBoxPosX + D_808124C0[temp];
 
-            this->nameEntryVtx[phi_t1 + 1].v.ob[0] = this->nameEntryVtx[phi_t1 + 3].v.ob[0] =
-                this->nameEntryVtx[phi_t1].v.ob[0] + 0xA;
+            this->nameEntryVtx[phi_t1 + 1].v.vector[0] = this->nameEntryVtx[phi_t1 + 3].v.vector[0] =
+                this->nameEntryVtx[phi_t1].v.vector[0] + 0xA;
         } else {
-            this->nameEntryVtx[phi_t1].v.ob[0] = this->nameEntryVtx[phi_t1 + 2].v.ob[0] =
+            this->nameEntryVtx[phi_t1].v.vector[0] = this->nameEntryVtx[phi_t1 + 2].v.vector[0] =
                 D_808125EC[phi_s0] + this->nameEntryBoxPosX;
 
-            this->nameEntryVtx[phi_t1 + 1].v.ob[0] = this->nameEntryVtx[phi_t1 + 3].v.ob[0] =
-                this->nameEntryVtx[phi_t1].v.ob[0] + 0xA;
+            this->nameEntryVtx[phi_t1 + 1].v.vector[0] = this->nameEntryVtx[phi_t1 + 3].v.vector[0] =
+                this->nameEntryVtx[phi_t1].v.vector[0] + 0xA;
         }
 
-        this->nameEntryVtx[phi_t1].v.ob[1] = this->nameEntryVtx[phi_t1 + 1].v.ob[1] = D_80812604[phi_s0];
+        this->nameEntryVtx[phi_t1].v.vector[1] = this->nameEntryVtx[phi_t1 + 1].v.vector[1] = D_80812604[phi_s0];
 
-        this->nameEntryVtx[phi_t1 + 2].v.ob[1] = this->nameEntryVtx[phi_t1 + 3].v.ob[1] =
-            this->nameEntryVtx[phi_t1].v.ob[1] - 0xA;
+        this->nameEntryVtx[phi_t1 + 2].v.vector[1] = this->nameEntryVtx[phi_t1 + 3].v.vector[1] =
+            this->nameEntryVtx[phi_t1].v.vector[1] - 0xA;
 
-        this->nameEntryVtx[phi_t1].v.ob[2] = this->nameEntryVtx[phi_t1 + 1].v.ob[2] =
-            this->nameEntryVtx[phi_t1 + 2].v.ob[2] = this->nameEntryVtx[phi_t1 + 3].v.ob[2] = 0;
+        this->nameEntryVtx[phi_t1].v.vector[2] = this->nameEntryVtx[phi_t1 + 1].v.vector[2] =
+            this->nameEntryVtx[phi_t1 + 2].v.vector[2] = this->nameEntryVtx[phi_t1 + 3].v.vector[2] = 0;
 
         this->nameEntryVtx[phi_t1].v.flag = this->nameEntryVtx[phi_t1 + 1].v.flag =
             this->nameEntryVtx[phi_t1 + 2].v.flag = this->nameEntryVtx[phi_t1 + 3].v.flag = 0;
@@ -177,19 +177,19 @@ void FileSelect_SetNameEntryVtx(GameState* thisx) {
         this->nameEntryVtx[phi_t1 + 1].v.tc[0] = this->nameEntryVtx[phi_t1 + 2].v.tc[1] =
             this->nameEntryVtx[phi_t1 + 3].v.tc[0] = this->nameEntryVtx[phi_t1 + 3].v.tc[1] = 0x200;
 
-        this->nameEntryVtx[phi_t1].v.cn[0] = this->nameEntryVtx[phi_t1 + 1].v.cn[0] =
-            this->nameEntryVtx[phi_t1 + 2].v.cn[0] = this->nameEntryVtx[phi_t1 + 3].v.cn[0] =
-                this->nameEntryVtx[phi_t1].v.cn[1] = this->nameEntryVtx[phi_t1 + 1].v.cn[1] =
-                    this->nameEntryVtx[phi_t1 + 2].v.cn[1] = this->nameEntryVtx[phi_t1 + 3].v.cn[1] =
-                        this->nameEntryVtx[phi_t1].v.cn[2] = this->nameEntryVtx[phi_t1 + 1].v.cn[2] =
-                            this->nameEntryVtx[phi_t1 + 2].v.cn[2] = this->nameEntryVtx[phi_t1 + 3].v.cn[2] =
-                                this->nameEntryVtx[phi_t1].v.cn[3] = this->nameEntryVtx[phi_t1 + 1].v.cn[3] =
-                                    this->nameEntryVtx[phi_t1 + 2].v.cn[3] = this->nameEntryVtx[phi_t1 + 3].v.cn[3] =
+        this->nameEntryVtx[phi_t1].v.color[0] = this->nameEntryVtx[phi_t1 + 1].v.color[0] =
+            this->nameEntryVtx[phi_t1 + 2].v.color[0] = this->nameEntryVtx[phi_t1 + 3].v.color[0] =
+                this->nameEntryVtx[phi_t1].v.color[1] = this->nameEntryVtx[phi_t1 + 1].v.color[1] =
+                    this->nameEntryVtx[phi_t1 + 2].v.color[1] = this->nameEntryVtx[phi_t1 + 3].v.color[1] =
+                        this->nameEntryVtx[phi_t1].v.color[2] = this->nameEntryVtx[phi_t1 + 1].v.color[2] =
+                            this->nameEntryVtx[phi_t1 + 2].v.color[2] = this->nameEntryVtx[phi_t1 + 3].v.color[2] =
+                                this->nameEntryVtx[phi_t1].v.color[3] = this->nameEntryVtx[phi_t1 + 1].v.color[3] =
+                                    this->nameEntryVtx[phi_t1 + 2].v.color[3] = this->nameEntryVtx[phi_t1 + 3].v.color[3] =
                                         0xFF;
     }
 
-    this->nameEntryVtx[1].v.ob[0] = this->nameEntryVtx[3].v.ob[0] = this->nameEntryVtx[0].v.ob[0] + 0x6C;
-    this->nameEntryVtx[2].v.ob[1] = this->nameEntryVtx[3].v.ob[1] = this->nameEntryVtx[0].v.ob[1] - 0x10;
+    this->nameEntryVtx[1].v.vector[0] = this->nameEntryVtx[3].v.vector[0] = this->nameEntryVtx[0].v.vector[0] + 0x6C;
+    this->nameEntryVtx[2].v.vector[1] = this->nameEntryVtx[3].v.vector[1] = this->nameEntryVtx[0].v.vector[1] - 0x10;
     this->nameEntryVtx[1].v.tc[0] = this->nameEntryVtx[3].v.tc[0] = 0xD80;
 
     gDPPipeSync(POLY_OPA_DISP++);
@@ -275,41 +275,41 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
     FileSelect_PulsateCursor(&this->state);
 
     tmp = (this->newFileNameCharCount * 4) + 4;
-    this->nameEntryVtx[36].v.ob[0] = this->nameEntryVtx[38].v.ob[0] = this->nameEntryVtx[tmp].v.ob[0] - 6;
-    this->nameEntryVtx[37].v.ob[0] = this->nameEntryVtx[39].v.ob[0] = this->nameEntryVtx[36].v.ob[0] + 24;
-    this->nameEntryVtx[36].v.ob[1] = this->nameEntryVtx[37].v.ob[1] = this->nameEntryVtx[tmp].v.ob[1] + 7;
-    this->nameEntryVtx[38].v.ob[1] = this->nameEntryVtx[39].v.ob[1] = this->nameEntryVtx[36].v.ob[1] - 24;
+    this->nameEntryVtx[36].v.vector[0] = this->nameEntryVtx[38].v.vector[0] = this->nameEntryVtx[tmp].v.vector[0] - 6;
+    this->nameEntryVtx[37].v.vector[0] = this->nameEntryVtx[39].v.vector[0] = this->nameEntryVtx[36].v.vector[0] + 24;
+    this->nameEntryVtx[36].v.vector[1] = this->nameEntryVtx[37].v.vector[1] = this->nameEntryVtx[tmp].v.vector[1] + 7;
+    this->nameEntryVtx[38].v.vector[1] = this->nameEntryVtx[39].v.vector[1] = this->nameEntryVtx[36].v.vector[1] - 24;
 
     if ((this->kbdButton == FS_KBD_BTN_HIRA) || (this->kbdButton == FS_KBD_BTN_KATA) ||
         (this->kbdButton == FS_KBD_BTN_END)) {
         if (this->kbdX != this->kbdButton) {
             osSyncPrintf("014 xpos=%d  contents=%d\n", this->kbdX, this->kbdButton);
         }
-        this->nameEntryVtx[40].v.ob[0] = this->nameEntryVtx[42].v.ob[0] = D_80811BB0[(this->kbdX + 1) * 4].v.ob[0] - 4;
-        this->nameEntryVtx[41].v.ob[0] = this->nameEntryVtx[43].v.ob[0] = this->nameEntryVtx[40].v.ob[0] + 52;
-        this->nameEntryVtx[40].v.ob[1] = this->nameEntryVtx[41].v.ob[1] = D_80811BB0[(this->kbdX + 1) * 4].v.ob[1] + 4;
+        this->nameEntryVtx[40].v.vector[0] = this->nameEntryVtx[42].v.vector[0] = D_80811BB0[(this->kbdX + 1) * 4].v.vector[0] - 4;
+        this->nameEntryVtx[41].v.vector[0] = this->nameEntryVtx[43].v.vector[0] = this->nameEntryVtx[40].v.vector[0] + 52;
+        this->nameEntryVtx[40].v.vector[1] = this->nameEntryVtx[41].v.vector[1] = D_80811BB0[(this->kbdX + 1) * 4].v.vector[1] + 4;
 
     } else if ((this->kbdButton == FS_KBD_BTN_ENG) || (this->kbdButton == FS_KBD_BTN_BACKSPACE)) {
         if (this->kbdX != this->kbdButton) {
             osSyncPrintf("23 xpos=%d  contents=%d\n", this->kbdX, this->kbdButton);
         }
-        this->nameEntryVtx[40].v.ob[0] = this->nameEntryVtx[42].v.ob[0] = D_80811BB0[(this->kbdX + 1) * 4].v.ob[0] - 4;
-        this->nameEntryVtx[41].v.ob[0] = this->nameEntryVtx[43].v.ob[0] = this->nameEntryVtx[40].v.ob[0] + 40;
-        this->nameEntryVtx[40].v.ob[1] = this->nameEntryVtx[41].v.ob[1] = D_80811BB0[(this->kbdX + 1) * 4].v.ob[1] + 4;
+        this->nameEntryVtx[40].v.vector[0] = this->nameEntryVtx[42].v.vector[0] = D_80811BB0[(this->kbdX + 1) * 4].v.vector[0] - 4;
+        this->nameEntryVtx[41].v.vector[0] = this->nameEntryVtx[43].v.vector[0] = this->nameEntryVtx[40].v.vector[0] + 40;
+        this->nameEntryVtx[40].v.vector[1] = this->nameEntryVtx[41].v.vector[1] = D_80811BB0[(this->kbdX + 1) * 4].v.vector[1] + 4;
     } else {
         if (this->charIndex >= 65) {
             osSyncPrintf("mjp=%d  xpos=%d  ypos=%d  name_contents=%d\n", this->charIndex, this->kbdX, this->kbdY,
                          this->kbdButton);
         }
 
-        this->nameEntryVtx[40].v.ob[0] = this->nameEntryVtx[42].v.ob[0] =
-            this->keyboardVtx[this->charIndex * 4].v.ob[0] - D_80812544[this->charIndex] - 6;
-        this->nameEntryVtx[41].v.ob[0] = this->nameEntryVtx[43].v.ob[0] = this->nameEntryVtx[40].v.ob[0] + 24;
-        this->nameEntryVtx[40].v.ob[1] = this->nameEntryVtx[41].v.ob[1] =
-            this->keyboardVtx[this->charIndex * 4].v.ob[1] + 6;
+        this->nameEntryVtx[40].v.vector[0] = this->nameEntryVtx[42].v.vector[0] =
+            this->keyboardVtx[this->charIndex * 4].v.vector[0] - D_80812544[this->charIndex] - 6;
+        this->nameEntryVtx[41].v.vector[0] = this->nameEntryVtx[43].v.vector[0] = this->nameEntryVtx[40].v.vector[0] + 24;
+        this->nameEntryVtx[40].v.vector[1] = this->nameEntryVtx[41].v.vector[1] =
+            this->keyboardVtx[this->charIndex * 4].v.vector[1] + 6;
     }
 
-    this->nameEntryVtx[42].v.ob[1] = this->nameEntryVtx[43].v.ob[1] = this->nameEntryVtx[40].v.ob[1] - 24;
+    this->nameEntryVtx[42].v.vector[1] = this->nameEntryVtx[43].v.vector[1] = this->nameEntryVtx[40].v.vector[1] - 24;
 
     gSPVertex(POLY_OPA_DISP++, &this->nameEntryVtx[36], 8, 0);
     gDPPipeSync(POLY_OPA_DISP++);

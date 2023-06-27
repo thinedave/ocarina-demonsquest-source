@@ -97,8 +97,8 @@ void OceffWipe_Draw(Actor* thisx, PlayState* play) {
 
     for (i = 0; i < 20; i++) {
         vtxPtr = sFrustumVtx;
-        vtxPtr[i * 2 + 0].v.cn[3] = alphaTable[(sAlphaIndices[i] & 0xF0) >> 4];
-        vtxPtr[i * 2 + 1].v.cn[3] = alphaTable[sAlphaIndices[i] & 0xF];
+        vtxPtr[i * 2 + 0].v.color[3] = alphaTable[(sAlphaIndices[i] & 0xF0) >> 4];
+        vtxPtr[i * 2 + 1].v.color[3] = alphaTable[sAlphaIndices[i] & 0xF];
     }
 
     Gfx_SetupDL_25Xlu(play->state.gfxCtx);

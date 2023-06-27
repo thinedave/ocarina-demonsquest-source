@@ -2377,14 +2377,14 @@ void func_809034E4(Vec3f* arg0, Vec3f* arg1) {
     vtx = SEGMENTED_TO_VIRTUAL(gGanonSwordTrailVtx);
     for (i = 0; i < 11; i++) {
         if ((temp_s4 - i) > 0) {
-            vtx[D_80907084[i]].n.ob[0] = sp18C[temp_s4 - i - 1].x;
-            vtx[D_80907084[i]].n.ob[1] = sp18C[temp_s4 - i - 1].y;
-            vtx[D_80907084[i]].n.ob[2] = sp18C[temp_s4 - i - 1].z;
+            vtx[D_80907084[i]].n.vector[0] = sp18C[temp_s4 - i - 1].x;
+            vtx[D_80907084[i]].n.vector[1] = sp18C[temp_s4 - i - 1].y;
+            vtx[D_80907084[i]].n.vector[2] = sp18C[temp_s4 - i - 1].z;
         }
         if ((temp_s4_2 - i) > 0) {
-            vtx[D_80907090[i]].n.ob[0] = sp9C[temp_s4_2 - i - 1].x;
-            vtx[D_80907090[i]].n.ob[1] = sp9C[temp_s4_2 - i - 1].y;
-            vtx[D_80907090[i]].n.ob[2] = sp9C[temp_s4_2 - i - 1].z;
+            vtx[D_80907090[i]].n.vector[0] = sp9C[temp_s4_2 - i - 1].x;
+            vtx[D_80907090[i]].n.vector[1] = sp9C[temp_s4_2 - i - 1].y;
+            vtx[D_80907090[i]].n.vector[2] = sp9C[temp_s4_2 - i - 1].z;
         }
     }
 }

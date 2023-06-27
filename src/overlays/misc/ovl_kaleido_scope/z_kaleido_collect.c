@@ -359,17 +359,17 @@ void KaleidoScope_DrawQuestStatus(PlayState* play, GraphicsContext* gfxCtx) {
     for (sp218 = 0; sp218 < QUEST_KOKIRI_EMERALD - QUEST_SONG_MINUET; sp218++, sp21A += 4) {
         if (CHECK_QUEST_ITEM(QUEST_SONG_MINUET + sp218)) {
             if ((QUEST_SONG_MINUET + sp218) == sp216) {
-                pauseCtx->questVtx[sp21A + 0].v.ob[0] = pauseCtx->questVtx[sp21A + 2].v.ob[0] =
-                    pauseCtx->questVtx[sp21A + 0].v.ob[0] - 2;
+                pauseCtx->questVtx[sp21A + 0].v.vector[0] = pauseCtx->questVtx[sp21A + 2].v.vector[0] =
+                    pauseCtx->questVtx[sp21A + 0].v.vector[0] - 2;
 
-                pauseCtx->questVtx[sp21A + 1].v.ob[0] = pauseCtx->questVtx[sp21A + 3].v.ob[0] =
-                    pauseCtx->questVtx[sp21A + 1].v.ob[0] + 4;
+                pauseCtx->questVtx[sp21A + 1].v.vector[0] = pauseCtx->questVtx[sp21A + 3].v.vector[0] =
+                    pauseCtx->questVtx[sp21A + 1].v.vector[0] + 4;
 
-                pauseCtx->questVtx[sp21A + 0].v.ob[1] = pauseCtx->questVtx[sp21A + 1].v.ob[1] =
-                    pauseCtx->questVtx[sp21A + 0].v.ob[1] + 2;
+                pauseCtx->questVtx[sp21A + 0].v.vector[1] = pauseCtx->questVtx[sp21A + 1].v.vector[1] =
+                    pauseCtx->questVtx[sp21A + 0].v.vector[1] + 2;
 
-                pauseCtx->questVtx[sp21A + 2].v.ob[1] = pauseCtx->questVtx[sp21A + 3].v.ob[1] =
-                    pauseCtx->questVtx[sp21A + 2].v.ob[1] - 4;
+                pauseCtx->questVtx[sp21A + 2].v.vector[1] = pauseCtx->questVtx[sp21A + 3].v.vector[1] =
+                    pauseCtx->questVtx[sp21A + 2].v.vector[1] - 4;
             }
 
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, D_8082A164[sp218], D_8082A17C[sp218], D_8082A194[sp218],
@@ -498,11 +498,11 @@ void KaleidoScope_DrawQuestStatus(PlayState* play, GraphicsContext* gfxCtx) {
                         }
                     }
 
-                    pauseCtx->questVtx[sp21A + 0].v.ob[1] = pauseCtx->questVtx[sp21A + 1].v.ob[1] =
+                    pauseCtx->questVtx[sp21A + 0].v.vector[1] = pauseCtx->questVtx[sp21A + 1].v.vector[1] =
                         VREG(21 + D_8082A124[sp218]);
 
-                    pauseCtx->questVtx[sp21A + 2].v.ob[1] = pauseCtx->questVtx[sp21A + 3].v.ob[1] =
-                        pauseCtx->questVtx[sp21A + 0].v.ob[1] - 12;
+                    pauseCtx->questVtx[sp21A + 2].v.vector[1] = pauseCtx->questVtx[sp21A + 3].v.vector[1] =
+                        pauseCtx->questVtx[sp21A + 0].v.vector[1] - 12;
 
                     gDPPipeSync(POLY_OPA_DISP++);
 
@@ -527,11 +527,11 @@ void KaleidoScope_DrawQuestStatus(PlayState* play, GraphicsContext* gfxCtx) {
             sp226 = gOcarinaSongButtons[sp224].numButtons;
 
             for (sp218 = sp21A, phi_s3 = 0; phi_s3 < sp226; phi_s3++, sp21A += 4) {
-                pauseCtx->questVtx[sp21A + 0].v.ob[1] = pauseCtx->questVtx[sp21A + 1].v.ob[1] =
+                pauseCtx->questVtx[sp21A + 0].v.vector[1] = pauseCtx->questVtx[sp21A + 1].v.vector[1] =
                     VREG(21 + gOcarinaSongButtons[sp224].buttonsIndex[phi_s3]);
 
-                pauseCtx->questVtx[sp21A + 2].v.ob[1] = pauseCtx->questVtx[sp21A + 3].v.ob[1] =
-                    pauseCtx->questVtx[sp21A + 0].v.ob[1] - 12;
+                pauseCtx->questVtx[sp21A + 2].v.vector[1] = pauseCtx->questVtx[sp21A + 3].v.vector[1] =
+                    pauseCtx->questVtx[sp21A + 0].v.vector[1] - 12;
 
                 gDPPipeSync(POLY_OPA_DISP++);
 
@@ -583,11 +583,11 @@ void KaleidoScope_DrawQuestStatus(PlayState* play, GraphicsContext* gfxCtx) {
                             D_8082A150[phi_s3] = 255;
                         }
                     }
-                    pauseCtx->questVtx[sp21A + 0].v.ob[1] = pauseCtx->questVtx[sp21A + 1].v.ob[1] =
+                    pauseCtx->questVtx[sp21A + 0].v.vector[1] = pauseCtx->questVtx[sp21A + 1].v.vector[1] =
                         VREG(21 + D_8082A124[phi_s3]);
 
-                    pauseCtx->questVtx[sp21A + 2].v.ob[1] = pauseCtx->questVtx[sp21A + 3].v.ob[1] =
-                        pauseCtx->questVtx[sp21A + 0].v.ob[1] - 12;
+                    pauseCtx->questVtx[sp21A + 2].v.vector[1] = pauseCtx->questVtx[sp21A + 3].v.vector[1] =
+                        pauseCtx->questVtx[sp21A + 0].v.vector[1] - 12;
 
                     gDPPipeSync(POLY_OPA_DISP++);
 

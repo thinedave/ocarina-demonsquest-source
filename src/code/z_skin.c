@@ -16,9 +16,9 @@ void Skin_UpdateVertices(MtxF* mtx, SkinVertex* skinVertices, SkinLimbModif* mod
     for (vertexEntry = skinVertices; vertexEntry < &skinVertices[modifEntry->vtxCount]; vertexEntry++) {
         vtx = &vtxBuf[vertexEntry->index];
 
-        vtx->n.ob[0] = pos->x;
-        vtx->n.ob[1] = pos->y;
-        vtx->n.ob[2] = pos->z;
+        vtx->n.vector[0] = pos->x;
+        vtx->n.vector[1] = pos->y;
+        vtx->n.vector[2] = pos->z;
 
         xwTemp = mtx->xw;
         ywTemp = mtx->yw;

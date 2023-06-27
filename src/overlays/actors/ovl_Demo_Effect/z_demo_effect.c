@@ -726,7 +726,7 @@ void DemoEffect_TimewarpShrink(f32 size) {
 
     for (i = 0; i < 21; i++) {
         if (sTimewarpVertexSizeIndices[i] != 0) {
-            vertices[i].v.cn[3] = sizes[sTimewarpVertexSizeIndices[i]];
+            vertices[i].v.color[3] = sizes[sTimewarpVertexSizeIndices[i]];
         }
     }
 }

@@ -72,15 +72,15 @@ void Collider_DrawPoly(GraphicsContext* gfxCtx, Vec3f* vA, Vec3f* vB, Vec3f* vC,
     vtxTbl = Graph_Alloc(gfxCtx, 3 * sizeof(Vtx));
     ASSERT(vtxTbl != NULL, "vtx_tbl != NULL", "../z_collision_check.c", 726);
 
-    vtxTbl[0].n.ob[0] = vA->x;
-    vtxTbl[0].n.ob[1] = vA->y;
-    vtxTbl[0].n.ob[2] = vA->z;
-    vtxTbl[1].n.ob[0] = vB->x;
-    vtxTbl[1].n.ob[1] = vB->y;
-    vtxTbl[1].n.ob[2] = vB->z;
-    vtxTbl[2].n.ob[0] = vC->x;
-    vtxTbl[2].n.ob[1] = vC->y;
-    vtxTbl[2].n.ob[2] = vC->z;
+    vtxTbl[0].n.vector[0] = vA->x;
+    vtxTbl[0].n.vector[1] = vA->y;
+    vtxTbl[0].n.vector[2] = vA->z;
+    vtxTbl[1].n.vector[0] = vB->x;
+    vtxTbl[1].n.vector[1] = vB->y;
+    vtxTbl[1].n.vector[2] = vB->z;
+    vtxTbl[2].n.vector[0] = vC->x;
+    vtxTbl[2].n.vector[1] = vC->y;
+    vtxTbl[2].n.vector[2] = vC->z;
 
     Math3D_DefPlane(vA, vB, vC, &nx, &ny, &nz, &originDist);
 
