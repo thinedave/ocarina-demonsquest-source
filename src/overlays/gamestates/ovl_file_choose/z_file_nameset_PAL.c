@@ -89,13 +89,13 @@ void FileSelect_SetKeyboardVtx(GameState* thisx) {
 
 static void* sNameLabelTextures[] = { gFileSelNameENGTex, gFileSelNameENGTex, gFileSelNameENGTex };
 
-static void* sBackspaceEndTextures[][2] = {
-    { gFileSelBackspaceButtonTex, gFileSelENDButtonENGTex },
-    { gFileSelBackspaceButtonTex, gFileSelENDButtonENGTex },
-    { gFileSelBackspaceButtonTex, gFileSelENDButtonENGTex },
+static void* sBackspaceEndTextures[][3] = {
+    { gFileSelDISKButtonTex,  gFileSelBackspaceButtonTex, gFileSelENDButtonENGTex },
+    { gFileSelDISKButtonTex,  gFileSelBackspaceButtonTex, gFileSelENDButtonENGTex },
+    { gFileSelDISKButtonTex,  gFileSelBackspaceButtonTex, gFileSelENDButtonENGTex },
 };
 
-static u16 sBackspaceEndWidths[] = { 28, 44 };
+static u16 sBackspaceEndWidths[] = { 44, 28, 44 };
 
 static s16 D_808125EC[] = {
     0xFFE2, 0xFFF0, 0xFFFA, 0x0004, 0x000E, 0x0018, 0x0022, 0x002C, 0x0036, 0xFFF0, 0xFFF0,
@@ -104,6 +104,8 @@ static s16 D_808125EC[] = {
 static s16 D_80812604[] = {
     0x0048, 0x0045, 0x0045, 0x0045, 0x0045, 0x0045, 0x0045, 0x0045, 0x0045, 0x0045, 0x0045,
 };
+
+static const Vtx DQ_HeroModeLabelVtx[] = {VTX_QUAD(75,56,44,16)};
 
 /**
  * Set vertices used by all elements of the name entry screen that are NOT the keyboard.
@@ -131,8 +133,8 @@ void FileSelect_SetNameEntryVtx(GameState* thisx) {
     gSP1Quadrangle(POLY_OPA_DISP++, 0, 2, 3, 1, 0);
     gDPPipeSync(POLY_OPA_DISP++);
 
-    phi_s0 = 0x10;
-    for (phi_t1 = 0; phi_t1 < 2; phi_t1++, phi_s0 += 4) {
+    phi_s0 = 12;
+    for (phi_t1 = 0; phi_t1 < 3; phi_t1++, phi_s0 += 4) {
         gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, this->windowColor[0], this->windowColor[1], this->windowColor[2], 255);
         gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 0, 0);
         gDPLoadTextureBlock(POLY_OPA_DISP++, sBackspaceEndTextures[gSaveContext.language][phi_t1], G_IM_FMT_IA,
@@ -214,13 +216,43 @@ void FileSelect_SetNameEntryVtx(GameState* thisx) {
                                  phi_s0);
     }
 
+    Math_SmoothStepToS(&this->heroModeBoxPosX, (this->wantsDemonsCurse ? 0 : -200), 1, (this->wantsDemonsCurse ? 5 : 20), 0);
+    Math_SmoothStepToS(&this->DQ_HeroModeConnectorAlpha, (this->wantsDemonsCurse ? 255 : 0), 1, 30, 0);
+
+    for(u8 i = 0; i < 4; i++) {
+        this->DQ_HeroModeLabelVtx[i].v.vector[1] = DQ_HeroModeLabelVtx[i].v.vector[1] + this->heroModeBoxPosX;
+
+    }
+
+    gDPPipeSync(POLY_OPA_DISP++);
+    gDPSetCombineLERP(POLY_OPA_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0, PRIMITIVE,
+                      ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
+    gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, this->windowColor[0], this->windowColor[1], this->windowColor[2],
+                    (this->heroModeBoxPosX <= -150 ? 0 : 255));
+    gSPVertex(POLY_OPA_DISP++, this->DQ_HeroModeLabelVtx, 4, 0);
+    gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelDISKButtonTex, G_IM_FMT_IA, G_IM_SIZ_16b, 44, 16, 0,
+                        G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                        G_TX_NOLOD);
+    gSP1Quadrangle(POLY_OPA_DISP++, 0, 2, 3, 1, 0);
+
+    gDPPipeSync(POLY_OPA_DISP++);
+    gDPSetCombineLERP(POLY_OPA_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0, PRIMITIVE,
+                      ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
+    gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, this->windowColor[0], this->windowColor[1], this->windowColor[2],
+                    this->DQ_HeroModeConnectorAlpha);
+    gSPVertex(POLY_OPA_DISP++, this->DQ_HeroModeConnectorVtx, 4, 0);
+    gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelConnectorTex, G_IM_FMT_IA, G_IM_SIZ_8b, 24, 16, 0,
+                        G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                        G_TX_NOLOD);
+    gSP1Quadrangle(POLY_OPA_DISP++, 0, 2, 3, 1, 0);
+
     this->nameEntryVtx[0x25].v.tc[0] = this->nameEntryVtx[0x26].v.tc[1] = this->nameEntryVtx[0x27].v.tc[0] =
         this->nameEntryVtx[0x27].v.tc[1] = this->nameEntryVtx[0x29].v.tc[0] = this->nameEntryVtx[0x2A].v.tc[1] =
             this->nameEntryVtx[0x2B].v.tc[0] = this->nameEntryVtx[0x2B].v.tc[1] = 0x300;
 
-    if ((this->kbdButton == 0) || (this->kbdButton == 1) || (this->kbdButton == 4)) {
+    if ((this->kbdButton == FS_KBD_BTN_HIRA) || (this->kbdButton == FS_KBD_BTN_KATA) || (this->kbdButton == FS_KBD_BTN_END) || (this->kbdButton == FS_KBD_BTN_CURSE)) {
         this->nameEntryVtx[0x29].v.tc[0] = this->nameEntryVtx[0x2B].v.tc[0] = 0x700;
-    } else if ((this->kbdButton == 2) || (this->kbdButton == 3)) {
+    } else if (this->kbdButton == FS_KBD_BTN_BACKSPACE) {
         this->nameEntryVtx[0x29].v.tc[0] = this->nameEntryVtx[0x2B].v.tc[0] = 0x500;
     }
 
@@ -281,7 +313,7 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
     this->nameEntryVtx[38].v.vector[1] = this->nameEntryVtx[39].v.vector[1] = this->nameEntryVtx[36].v.vector[1] - 24;
 
     if ((this->kbdButton == FS_KBD_BTN_HIRA) || (this->kbdButton == FS_KBD_BTN_KATA) ||
-        (this->kbdButton == FS_KBD_BTN_END)) {
+        (this->kbdButton == FS_KBD_BTN_END) || (this->kbdButton == FS_KBD_BTN_CURSE)) {
         if (this->kbdX != this->kbdButton) {
             osSyncPrintf("014 xpos=%d  contents=%d\n", this->kbdX, this->kbdButton);
         }
@@ -289,7 +321,7 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
         this->nameEntryVtx[41].v.vector[0] = this->nameEntryVtx[43].v.vector[0] = this->nameEntryVtx[40].v.vector[0] + 52;
         this->nameEntryVtx[40].v.vector[1] = this->nameEntryVtx[41].v.vector[1] = D_80811BB0[(this->kbdX + 1) * 4].v.vector[1] + 4;
 
-    } else if ((this->kbdButton == FS_KBD_BTN_ENG) || (this->kbdButton == FS_KBD_BTN_BACKSPACE)) {
+    } else if ((this->kbdButton == FS_KBD_BTN_BACKSPACE)) {
         if (this->kbdX != this->kbdButton) {
             osSyncPrintf("23 xpos=%d  contents=%d\n", this->kbdX, this->kbdButton);
         }
@@ -323,12 +355,12 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
     gSP1Quadrangle(POLY_OPA_DISP++, 0, 2, 3, 1, 0);
 
     if ((this->kbdButton == FS_KBD_BTN_HIRA) || (this->kbdButton == FS_KBD_BTN_KATA) ||
-        (this->kbdButton == FS_KBD_BTN_END)) {
+        (this->kbdButton == FS_KBD_BTN_END) || (this->kbdButton == FS_KBD_BTN_CURSE)) {
         gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelMediumButtonHighlightTex, G_IM_FMT_I, G_IM_SIZ_8b, 56, 24, 0,
                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                             G_TX_NOLOD);
 
-    } else if ((this->kbdButton == FS_KBD_BTN_ENG) || (this->kbdButton == FS_KBD_BTN_BACKSPACE)) {
+    } else if (this->kbdButton == FS_KBD_BTN_BACKSPACE) {
         gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelSmallButtonHighlightTex, G_IM_FMT_I, G_IM_SIZ_8b, 40, 24, 0,
                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                             G_TX_NOLOD);
@@ -396,8 +428,25 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                             this->newFileNameCharCount = 7;
                         }
                     }
-                } else if (CHECK_BTN_ALL(input->press.button, BTN_A) && (this->charPage != this->kbdButton)) {
-                    if (this->kbdButton == FS_KBD_BTN_BACKSPACE) {
+                } else if (CHECK_BTN_ALL(input->press.button, BTN_A)/* && (this->charPage != this->kbdButton)*/) {
+                    if (this->kbdButton == FS_KBD_BTN_CURSE && (this->heroModeBoxPosX <= -150 || this->heroModeBoxPosX == 0)) {
+                        //selected curse
+                        //Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                        //    &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                            
+                        this->wantsDemonsCurse = !this->wantsDemonsCurse;
+
+                        this->heroModeBoxPosX = (this->wantsDemonsCurse ? 120 : 0);
+
+                        Audio_PlaySfxGeneral(NA_SE_EV_DIAMOND_SWITCH, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                             &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                        if(!this->wantsDemonsCurse)
+                            Audio_PlaySfxGeneral(NA_SE_OC_ABYSS, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                             &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                        
+                        
+                    } else if (this->kbdButton == FS_KBD_BTN_BACKSPACE) {
                         if ((this->newFileNameCharCount == 7) && (this->fileNames[this->buttonIndex][7] != 0x3E)) {
                             for (i = this->newFileNameCharCount; i < 7; i++) {
                                 this->fileNames[this->buttonIndex][i] = this->fileNames[this->buttonIndex][i + 1];
@@ -550,7 +599,7 @@ void FileSelect_UpdateKeyboardCursor(GameState* thisx) {
                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
             this->kbdX++;
             if (this->kbdX > 4) {
-                this->kbdX = 3;
+                this->kbdX = 2;
             }
         }
     }
@@ -562,7 +611,7 @@ void FileSelect_UpdateKeyboardCursor(GameState* thisx) {
 
         if (this->kbdY < 0) {
             // don't go to bottom row
-            if (this->kbdX < 8) {
+            if (this->kbdX < 5) {
                 this->kbdY = 4;
                 this->charIndex = (s32)(this->kbdX + 52);
             } else {

@@ -176,7 +176,24 @@ extern struct GraphicsContext* __gfxCtx;
  */
 #define VTX(x,y,z,s,t,crnx,cgny,cbnz,a) { { { x, y, z }, 0, { s, t }, { crnx, cgny, cbnz, a } } }
 
+#define VTX_QUAD(x,y,sx,sy) \
+    { { { x, y+sy, 0 }, 0, { 0, 0 }, { 255, 255, 255, 255 } } }, \
+    { { { x+sx, y+sy, 0 }, 0, { sx*32, 0 }, { 255, 255, 255, 255 } } }, \
+    { { { x, y, 0 }, 0, { 0, sy*32 }, { 255, 255, 255, 255 } } }, \
+    { { { x+sx, y, 0 }, 0, { sx*32, sy*32 }, { 255, 255, 255, 255 } } }
+
+#define VTX_QUAD_ARR(x,y,sx,sy) \
+    { \
+        { { { x, y+sy, 0 }, 0, { 0, 0 }, { 255, 255, 255, 255 } } }, \
+        { { { x+sx, y+sy, 0 }, 0, { sx*32, 0 }, { 255, 255, 255, 255 } } }, \
+        { { { x, y, 0 }, 0, { 0, sy*32 }, { 255, 255, 255, 255 } } }, \
+        { { { x+sx, y, 0 }, 0, { sx*32, sy*32 }, { 255, 255, 255, 255 } } } \
+    }
+
 #define VTX_T(x,y,z,s,t,cr,cg,cb,a) { { x, y, z }, 0, { s, t }, { cr, cg, cb, a } }
+
+//DEMONS QUEST
+#define CHAR_TO_HEX(x) (x - 0x37)
 
 #ifdef NDEBUG
 #define ASSERT(cond, msg, file, line) ((void)0)

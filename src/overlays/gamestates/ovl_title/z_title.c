@@ -165,7 +165,7 @@ void ConsoleLogo_Main(GameState* thisx) {
     Gfx* gfx = POLY_OPA_DISP;
     s32 pad;
 
-    ConsoleLogo_PrintBuildInfo(&gfx);
+    //ConsoleLogo_PrintBuildInfo(&gfx);
     POLY_OPA_DISP = gfx;
 
     if (this->exit) {

@@ -61,6 +61,7 @@ typedef struct {
     /* 0x132C */ HorseData horseData;
     s16 savePoint; // save point
     RespawnData saveRespawnPoint;
+    bool demonsCurse;
     /* 0x1336 */ u16 checksum; // "check_sum"
 } SaveInfo;                    // size = 0x1338
 
@@ -84,6 +85,7 @@ typedef struct {
 #define DEATHS offsetof(SaveContext, deaths)
 #define NAME offsetof(SaveContext, playerName)
 #define N64DD offsetof(SaveContext, n64ddFlag)
+#define CURSED offsetof(SaveContext, demonsCurse)
 #define HEALTH_CAP offsetof(SaveContext, healthCapacity)
 #define QUEST offsetof(SaveContext, inventory.questItems)
 #define DEFENSE offsetof(SaveContext, inventory.defenseHearts)
@@ -756,8 +758,8 @@ void Sram_VerifyAndLoadAllSaves(FileSelectState* fileSelect, SramContext* sramCt
     SsSram_ReadWrite(OS_K1_TO_PHYSICAL(0xA8000000), sramCtx->readBuff, SRAM_SIZE, OS_READ);
     gSaveContext.dayTime = dayTime;
 
-    osSyncPrintf("SAVECT=%x, NAME=%x, LIFE=%x, ITEM=%x,  64DD=%x,  HEART=%x\n", DEATHS, NAME, HEALTH_CAP, QUEST, N64DD,
-                 DEFENSE);
+    osSyncPrintf("SAVECT=%x, NAME=%x, LIFE=%x, ITEM=%x,  64DD=%x,  HEART=%x, CURSE=%x\n", DEATHS, NAME, HEALTH_CAP, QUEST, N64DD,
+                 DEFENSE, CURSED);
 
     MemCpy(&fileSelect->deaths[0], sramCtx->readBuff + SLOT_OFFSET(0) + DEATHS, sizeof(fileSelect->deaths[0]));
     MemCpy(&fileSelect->deaths[1], sramCtx->readBuff + SLOT_OFFSET(1) + DEATHS, sizeof(fileSelect->deaths[0]));
@@ -782,6 +784,10 @@ void Sram_VerifyAndLoadAllSaves(FileSelectState* fileSelect, SramContext* sramCt
     MemCpy(&fileSelect->n64ddFlags[1], sramCtx->readBuff + SLOT_OFFSET(1) + N64DD, sizeof(fileSelect->n64ddFlags[0]));
     MemCpy(&fileSelect->n64ddFlags[2], sramCtx->readBuff + SLOT_OFFSET(2) + N64DD, sizeof(fileSelect->n64ddFlags[0]));
 
+    //MemCpy(&fileSelect->demonsCurses[0], sramCtx->readBuff + SLOT_OFFSET(0) + CURSED, sizeof(fileSelect->demonsCurses[0]));
+    //MemCpy(&fileSelect->demonsCurses[1], sramCtx->readBuff + SLOT_OFFSET(1) + CURSED, sizeof(fileSelect->demonsCurses[0]));
+    //MemCpy(&fileSelect->demonsCurses[2], sramCtx->readBuff + SLOT_OFFSET(2) + CURSED, sizeof(fileSelect->demonsCurses[0]));
+
     MemCpy(&fileSelect->defense[0], sramCtx->readBuff + SLOT_OFFSET(0) + DEFENSE, sizeof(fileSelect->defense[0]));
     MemCpy(&fileSelect->defense[1], sramCtx->readBuff + SLOT_OFFSET(1) + DEFENSE, sizeof(fileSelect->defense[0]));
     MemCpy(&fileSelect->defense[2], sramCtx->readBuff + SLOT_OFFSET(2) + DEFENSE, sizeof(fileSelect->defense[0]));
@@ -803,6 +809,9 @@ void Sram_InitSave(FileSelectState* fileSelect, SramContext* sramCtx) {
     u16 checksum;
 
     Sram_InitNewSave();
+
+    gSaveContext.demonsCurse = fileSelect->wantsDemonsCurse;
+    osSyncPrintf("gSaveContext.demonsCurse = %d, fileSelect->wantsDemonsCurse = %d\n", gSaveContext.demonsCurse, fileSelect->wantsDemonsCurse);
 
     gSaveContext.entranceIndex = ENTR_LINKS_HOUSE_0;
     gSaveContext.linkAge = LINK_AGE_CHILD;
@@ -867,8 +876,12 @@ void Sram_InitSave(FileSelectState* fileSelect, SramContext* sramCtx) {
            sizeof(fileSelect->questItems[0]));
     MemCpy(&fileSelect->n64ddFlags[gSaveContext.fileNum], sramCtx->readBuff + j + N64DD,
            sizeof(fileSelect->n64ddFlags[0]));
+    MemCpy(&fileSelect->demonsCurses[gSaveContext.fileNum], sramCtx->readBuff + j + CURSED,
+           sizeof(fileSelect->demonsCurses[0]));
     MemCpy(&fileSelect->defense[gSaveContext.fileNum], sramCtx->readBuff + j + DEFENSE, sizeof(fileSelect->defense[0]));
     MemCpy(&fileSelect->health[gSaveContext.fileNum], sramCtx->readBuff + j + HEALTH, sizeof(fileSelect->health[0]));
+
+    //fileSelect->demonsCurses[gSaveContext.fileNum] = gSaveContext.demonsCurse;
 
     osSyncPrintf("f_64dd[%d]=%d\n", gSaveContext.fileNum, fileSelect->n64ddFlags[gSaveContext.fileNum]);
     osSyncPrintf("heart_status[%d]=%d\n", gSaveContext.fileNum, fileSelect->defense[gSaveContext.fileNum]);
@@ -890,6 +903,8 @@ void Sram_EraseSave(FileSelectState* fileSelect, SramContext* sramCtx) {
     offset = gSramSlotOffsets[fileSelect->selectedFileIndex + 3];
     MemCpy(sramCtx->readBuff + offset, &gSaveContext, sizeof(Save));
     SsSram_ReadWrite(OS_K1_TO_PHYSICAL(0xA8000000) + offset, &gSaveContext, SLOT_SIZE, OS_WRITE);
+
+    //fileSelect->demonsCurses[fileSelect->selectedFileIndex] = false;
 
     osSyncPrintf("ＣＬＥＡＲ終了\n");
 }
@@ -924,6 +939,8 @@ void Sram_CopySave(FileSelectState* fileSelect, SramContext* sramCtx) {
            sizeof(fileSelect->questItems[0]));
     MemCpy(&fileSelect->n64ddFlags[fileSelect->copyDestFileIndex], sramCtx->readBuff + offset + N64DD,
            sizeof(fileSelect->n64ddFlags[0]));
+    MemCpy(&fileSelect->demonsCurses[fileSelect->copyDestFileIndex], sramCtx->readBuff + offset + CURSED,
+           sizeof(fileSelect->demonsCurses[0]));
     MemCpy(&fileSelect->defense[fileSelect->copyDestFileIndex], sramCtx->readBuff + offset + DEFENSE,
            sizeof(fileSelect->defense[0]));
     MemCpy(&fileSelect->health[fileSelect->copyDestFileIndex], (sramCtx->readBuff + offset) + HEALTH,

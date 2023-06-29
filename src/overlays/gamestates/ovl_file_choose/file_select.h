@@ -163,7 +163,7 @@ typedef enum {
 typedef enum {
     /* 00 */ FS_KBD_BTN_HIRA,
     /* 01 */ FS_KBD_BTN_KATA,
-    /* 02 */ FS_KBD_BTN_ENG,
+    /* 02 */ FS_KBD_BTN_CURSE,
     /* 03 */ FS_KBD_BTN_BACKSPACE,
     /* 04 */ FS_KBD_BTN_END,
     /* 99 */ FS_KBD_BTN_NONE = 99

@@ -160,6 +160,9 @@ void FileSelect_FinishFadeIn(GameState* thisx) {
     }
 }
 
+static const Vtx DQ_HeroModeLabelVtx[] = {VTX_QUAD(75,56,44,16)};
+static const Vtx DQ_HeroModeConnectorVtx[] = {VTX_QUAD(63,56,24,16)};
+
 /**
  * Update the cursor and wait for the player to select a button to change menus accordingly.
  * If an empty file is selected, enter the name entry config mode.
@@ -193,8 +196,17 @@ void FileSelect_UpdateMainMenu(GameState* thisx) {
                 this->charBgAlpha = 0;
                 this->newFileNameCharCount = 0;
                 this->nameEntryBoxPosX = 120;
+                this->heroModeBoxPosX = -200;
+                this->DQ_HeroModeConnectorAlpha = 0;
+
+                for(u8 i = 0; i < 4; i++) {
+                    this->DQ_HeroModeLabelVtx[i] = DQ_HeroModeLabelVtx[i];
+                    this->DQ_HeroModeConnectorVtx[i] = DQ_HeroModeConnectorVtx[i];
+
+                }
+
                 this->nameEntryBoxAlpha = 0;
-                this->wantsDemonsCurse[this->buttonIndex] = false;
+                this->wantsDemonsCurse = false;
                 MemCpy(&this->fileNames[this->buttonIndex][0], &emptyName, sizeof(emptyName));
             } else if (this->n64ddFlags[this->buttonIndex] == this->n64ddFlag) {
                 Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
@@ -1011,7 +1023,7 @@ void FileSelect_DrawWindowContents(GameState* thisx) {
         gSP1Quadrangle(POLY_OPA_DISP++, 4, 6, 7, 5, 0);
 
         // draw disk label for 64DD
-        if (this->wantsDemonsCurse[i]) {
+        if (this->demonsCurses[i]) {
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[isActive][0], sWindowContentColors[isActive][1],
                             sWindowContentColors[isActive][2], this->nameAlpha[i]);
             gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelDISKButtonTex, G_IM_FMT_IA, G_IM_SIZ_16b, 44, 16, 0,
@@ -1028,7 +1040,7 @@ void FileSelect_DrawWindowContents(GameState* thisx) {
                             G_TX_NOLOD);
         gSP1Quadrangle(POLY_OPA_DISP++, 12, 14, 15, 13, 0);
 
-        if (this->wantsDemonsCurse[i]) {
+        if (this->demonsCurses[i]) {
             gSP1Quadrangle(POLY_OPA_DISP++, 16, 18, 19, 17, 0);
         }
     }
