@@ -466,7 +466,8 @@ void BgDyYoseizo_HealPlayer_NoReward(BgDyYoseizo* this, PlayState* play) {
         this->refillTimer = 200;
     }
 
-    gSaveContext.heartsBlocked = 0x00;
+    if(!gSaveContext.demonsCurse)
+        gSaveContext.heartsBlocked = 0x00;
 
     if (((gSaveContext.healthCapacity-gSaveContext.heartsBlocked == gSaveContext.health) && (gSaveContext.magic == gSaveContext.magicCapacity)) ||
         (this->refillTimer == 1)) {

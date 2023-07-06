@@ -1,4 +1,5 @@
 #include "global.h"
+//#include "overlays/gamestates/ovl_hmsplash/z_hmsplash.c"
 
 typedef enum {
     NORMAL,
@@ -10,13 +11,14 @@ typedef enum {
 const StartupMode STARTUP_MODE = NORMAL;
 
 void Setup_InitImpl(SetupState* this) {
-    osSyncPrintf("ゼルダ共通データ初期化\n"); // "Zelda common data initalization"
+    osSyncPrintf("Zelda common data initalization\n"); // "Zelda common data initalization"
     SaveContext_Init();
 
     switch(STARTUP_MODE) {
         case NORMAL:
             this->state.running = false;
-            SET_NEXT_GAMESTATE(&this->state, ConsoleLogo_Init, ConsoleLogoState);
+            osSyncPrintf("ATTEMPTING LOAD SPLASH\n");
+            SET_NEXT_GAMESTATE(&this->state, HMSplash_Init, HMSplashState);
             break;
         
         case MAP_SELECT:

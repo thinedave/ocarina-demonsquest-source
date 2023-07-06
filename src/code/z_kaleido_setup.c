@@ -51,7 +51,7 @@ void KaleidoSetup_Update(PlayState* play) {
 
         if (pauseCtx->state == 1) {
             WREG(2) = -6240;
-            R_UPDATE_RATE = 2;
+            R_UPDATE_RATE = UPDATE_RATE_30;
 
             if (Letterbox_GetSizeTarget() != 0) {
                 Letterbox_SetSizeTarget(0);

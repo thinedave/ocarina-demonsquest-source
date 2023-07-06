@@ -544,6 +544,12 @@ beginseg
 endseg
 
 beginseg
+    name "ovl_hmsplash"
+    include "build/src/overlays/gamestates/ovl_hmsplash/z_hmsplash.o"
+    include "build/src/overlays/gamestates/ovl_hmsplash/ovl_hmsplash_reloc.o"
+endseg
+
+beginseg
     name "ovl_select"
     include "build/src/overlays/gamestates/ovl_select/z_select.o"
     include "build/src/overlays/gamestates/ovl_select/ovl_select_reloc.o"
@@ -6408,6 +6414,13 @@ beginseg
     name "nintendo_rogo_static"
     romalign 0x1000
     include "build/assets/textures/nintendo_rogo_static/nintendo_rogo_static.o"
+    number 1
+endseg
+
+beginseg
+    name "hmsplash_static"
+    romalign 0x1000
+    include "build/assets/textures/hmsplash_static/hmsplash_static.o"
     number 1
 endseg
 

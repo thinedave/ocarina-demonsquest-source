@@ -163,6 +163,21 @@ extern struct GraphicsContext* __gfxCtx;
     }                                                   \
     (void)0
 
+#define OPEN_DISPS_AUTO() \
+    {                                  \
+        GraphicsContext* __gfxCtx;     \
+        Gfx* dispRefs[4];              \
+        __gfxCtx = this->state.gfxCtx;             \
+        (void)__gfxCtx;                \
+        Graph_OpenDisps(dispRefs, this->state.gfxCtx, __FILE__, __LINE__)
+
+#define CLOSE_DISPS_AUTO()                 \
+        Graph_CloseDisps(dispRefs, this->state.gfxCtx, __FILE__, __LINE__); \
+    }                                                   \
+    (void)0
+
+#define DSTDXY(size, scaled) ((scaled/size)* 1 << 10)
+
 /**
  * `x` vertex x
  * `y` vertex y

@@ -2001,4 +2001,10 @@ void TitleSetup_Destroy(GameState* thisx);
 void FileSelect_Init(GameState* thisx);
 void FileSelect_Destroy(GameState* thisx);
 
+void HMSplash_Init(GameState* thisx);
+void HMSplash_Main(GameState* thisx);
+void HMSplash_Destroy(GameState* thisx);
+void HMSplash_Draw(HMSplashState* this);
+Gfx* HMSplash_TextureI8(Gfx* displayListHead, void* texture, s16 textureWidth, s16 textureHeight, s16 rectLeft, s16 rectTop, s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy);
+
 #endif

@@ -545,6 +545,24 @@ void CutsceneCmd_SetTime(PlayState* play, CutsceneContext* csCtx, CsCmdTime* cmd
     }
 }
 
+bool findInUnskippables(void* value) {
+    void* csUnskippables[] = {
+        SEGMENTED_TO_VIRTUAL(gHyruleFieldZeldaSongOfTimeCs),
+        SEGMENTED_TO_VIRTUAL(gHyruleFieldTitleScreenCs),
+        //add more eventually
+
+    };
+
+    for(s32 i = 0; i < ARRAY_COUNT(csUnskippables); i++) {
+        if(csUnskippables[i] == value)
+            return true;
+
+    }
+
+    return false;
+
+}
+
 void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDestination* cmd) {
     Player* player = GET_PLAYER(play);
     s32 titleDemoSkipped = false;
@@ -560,9 +578,9 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
         titleDemoSkipped = true;
     }
 
-    if ((csCtx->curFrame == cmd->startFrame) || titleDemoSkipped/* ||
+    if ((csCtx->curFrame == cmd->startFrame) || titleDemoSkipped ||
         ((csCtx->curFrame > 20) && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_START) &&
-         (gSaveContext.fileNum != 0xFEDC))*/) {
+         (gSaveContext.fileNum != 0xFEDC) && !findInUnskippables(csCtx->script))) {
         csCtx->state = CS_STATE_RUN_UNSTOPPABLE;
         Audio_SetCutsceneFlag(0);
         gSaveContext.cutsceneTransitionControl = 1;

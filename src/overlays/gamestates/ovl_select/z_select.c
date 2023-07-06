@@ -747,7 +747,7 @@ void MapSelect_Init(GameState* thisx) {
         this->topDisplayedScene = dREG(81);
         this->pageDownIndex = dREG(82);
     }
-    R_UPDATE_RATE = 1;
+    R_UPDATE_RATE = UPDATE_RATE_60;
 
     this->staticSegment = GameState_Alloc(&this->state, size, "../z_select.c", 1114);
     DmaMgr_RequestSyncDebug(this->staticSegment, (uintptr_t)_z_select_staticSegmentRomStart, size, "../z_select.c",

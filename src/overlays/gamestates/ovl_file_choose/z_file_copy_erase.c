@@ -73,7 +73,7 @@ void FileSelect_SelectCopySource(GameState* thisx) {
         Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CLOSE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                              &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
     } else if (CHECK_BTN_ANY(input->press.button, BTN_A | BTN_START)) {
-        if (SLOT_OCCUPIED(sramCtx, this->buttonIndex)) {
+        if (SLOT_OCCUPIED(sramCtx, this->buttonIndex) && !this->deads[this->buttonIndex]) {
             this->actionTimer = 8;
             this->selectedFileIndex = this->buttonIndex;
             this->configMode = CM_SETUP_COPY_DEST_1;
@@ -377,16 +377,23 @@ void FileSelect_CopyConfirm(GameState* thisx) {
         Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CLOSE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                              &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
     } else if (CHECK_BTN_ANY(input->press.button, BTN_A | BTN_START)) {
-        dayTime = gSaveContext.dayTime;
-        Sram_CopySave(this, sramCtx);
-        gSaveContext.dayTime = dayTime;
-        this->fileInfoAlpha[this->copyDestFileIndex] = this->nameAlpha[this->copyDestFileIndex] = 0;
-        this->nextTitleLabel = FS_TITLE_COPY_COMPLETE;
-        this->actionTimer = 8;
-        this->configMode = CM_COPY_ANIM_1;
-        Rumble_Request(300.0f, 180, 20, 100);
-        Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
-                             &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        if(this->deads[this->selectedFileIndex]) {
+            Audio_PlaySfxGeneral(NA_SE_SY_FSEL_ERROR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                 &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+        } else {
+            dayTime = gSaveContext.dayTime;
+            Sram_CopySave(this, sramCtx);
+            gSaveContext.dayTime = dayTime;
+            this->fileInfoAlpha[this->copyDestFileIndex] = this->nameAlpha[this->copyDestFileIndex] = 0;
+            this->nextTitleLabel = FS_TITLE_COPY_COMPLETE;
+            this->actionTimer = 8;
+            this->configMode = CM_COPY_ANIM_1;
+            Rumble_Request(300.0f, 180, 20, 100);
+            Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                 &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+        }
     } else if (ABS(this->stickAdjY) >= 30) {
         Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                              &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);

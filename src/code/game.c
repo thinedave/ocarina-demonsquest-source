@@ -384,7 +384,7 @@ void GameState_Init(GameState* gameState, GameStateFunc init, GraphicsContext* g
     OSTime startTime;
     OSTime endTime;
 
-    osSyncPrintf("game コンストラクタ開始\n"); // "game constructor start"
+    osSyncPrintf("game constructor start\n"); // "game constructor start"
     gameState->gfxCtx = gfxCtx;
     gameState->frames = 0;
     gameState->main = NULL;
@@ -396,22 +396,26 @@ void GameState_Init(GameState* gameState, GameStateFunc init, GraphicsContext* g
     endTime = osGetTime();
 
     // "game_set_next_game_null processing time %d us"
-    osSyncPrintf("game_set_next_game_null 処理時間 %d us\n", OS_CYCLES_TO_USEC(endTime - startTime));
+    osSyncPrintf("game_set_next_game_null processing time %d us\n", OS_CYCLES_TO_USEC(endTime - startTime));
     startTime = endTime;
     GameAlloc_Init(&gameState->alloc);
 
     endTime = osGetTime();
     // "gamealloc_init processing time %d us"
-    osSyncPrintf("gamealloc_init 処理時間 %d us\n", OS_CYCLES_TO_USEC(endTime - startTime));
+    osSyncPrintf("gamealloc_init processing time %d us\n", OS_CYCLES_TO_USEC(endTime - startTime));
 
     startTime = endTime;
     GameState_InitArena(gameState, 0x100000);
-    R_UPDATE_RATE = 3;
+    osSyncPrintf("setting fps to 20\n");
+    R_UPDATE_RATE = UPDATE_RATE_20;
+    osSyncPrintf("init gamestate please no crash\n");
+    osSyncPrintf("init func: %08x\n", init);
     init(gameState);
 
+    osSyncPrintf("get endTime\n");
     endTime = osGetTime();
     // "init processing time %d us"
-    osSyncPrintf("init 処理時間 %d us\n", OS_CYCLES_TO_USEC(endTime - startTime));
+    osSyncPrintf("init processing time %d us\n", OS_CYCLES_TO_USEC(endTime - startTime));
 
     startTime = endTime;
     LogUtils_CheckNullPointer("this->cleanup", gameState->destroy, "../game.c", 1088);
@@ -427,7 +431,7 @@ void GameState_Init(GameState* gameState, GameStateFunc init, GraphicsContext* g
 
     endTime = osGetTime();
     // "Other initialization processing time %d us"
-    osSyncPrintf("その他初期化 処理時間 %d us\n", OS_CYCLES_TO_USEC(endTime - startTime));
+    osSyncPrintf("Other initialization processing time %d us\n", OS_CYCLES_TO_USEC(endTime - startTime));
 
     Fault_AddClient(&sGameFaultClient, GameState_FaultPrint, NULL, NULL);
 

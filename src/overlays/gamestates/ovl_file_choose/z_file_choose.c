@@ -22,7 +22,7 @@ static s16 sFileInfoBoxPartWidths[] = { 36, 36, 36, 36, 24 };
 
 static s16 sWindowContentColors[2][3] = {
     { 150, 150, 150 }, // blue
-    { 100, 100, 100 }, // gray
+    { 75, 75, 75 }, // gray
 };
 
 void FileSelect_SetView(FileSelectState* this, f32 eyeX, f32 eyeY, f32 eyeZ) {
@@ -867,13 +867,28 @@ void FileSelect_DrawFileInfo(GameState* thisx, s16 fileIndex, s16 isActive) {
         gDPSetEnvColor(POLY_OPA_DISP++, sHeartEnvColors[heartType][0], sHeartEnvColors[heartType][1],
                        sHeartEnvColors[heartType][2], 255);
 
-        i = this->healthCapacities[fileIndex] / 0x10;
+        i = (this->healthCapacities[fileIndex]-this->heartsBlocked[fileIndex]) / 0x10;
 
         // draw hearts
         for (vtxOffset = 0, j = 0; j < i; j++, vtxOffset += 4) {
             gSPVertex(POLY_OPA_DISP++, &this->windowContentVtx[D_8081284C[fileIndex] + vtxOffset] + 0x30, 4, 0);
 
             POLY_OPA_DISP = FileSelect_QuadTextureIA8(POLY_OPA_DISP, sHeartTextures[heartType], 0x10, 0x10, 0);
+        }
+
+        s16 iBlocked = this->heartsBlocked[fileIndex] / 0x10;
+
+        gDPPipeSync(POLY_OPA_DISP++);
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 150, 150,
+                    150, this->fileInfoAlpha[fileIndex]);
+        gDPSetEnvColor(OVERLAY_DISP++, 25, 25,
+                       25, 255);
+
+        // draw blocked hearts
+        for (j = 0; j < iBlocked; j++, vtxOffset += 4) {
+            gSPVertex(POLY_OPA_DISP++, &this->windowContentVtx[D_8081284C[fileIndex] + vtxOffset] + 0x30, 4, 0);
+
+            POLY_OPA_DISP = FileSelect_QuadTextureIA8(POLY_OPA_DISP, gHeartFullTex, 0x10, 0x10, 0);
         }
 
         gDPPipeSync(POLY_OPA_DISP++);
@@ -988,9 +1003,11 @@ void FileSelect_DrawWindowContents(GameState* thisx) {
 
     // draw file info box (large box when a file is selected)
     for (fileIndex = 0; fileIndex < 3; fileIndex++, temp += 20) {
+        isActive = this->deads[fileIndex];
+
         gDPPipeSync(POLY_OPA_DISP++);
-        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, this->windowColor[0], this->windowColor[1], this->windowColor[2],
-                        this->fileInfoAlpha[fileIndex]);
+        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[isActive][0], sWindowContentColors[isActive][1],
+                        sWindowContentColors[isActive][2], this->fileInfoAlpha[fileIndex]);
         gSPVertex(POLY_OPA_DISP++, &this->windowContentVtx[temp], 20, 0);
 
         for (quadVtxIndex = 0, i = 0; i < 5; i++, quadVtxIndex += 4) {
@@ -1005,7 +1022,7 @@ void FileSelect_DrawWindowContents(GameState* thisx) {
         // draw file button
         gSPVertex(POLY_OPA_DISP++, &this->windowContentVtx[temp], 20, 0);
 
-        isActive = ((this->n64ddFlag == this->n64ddFlags[i]) || (this->nameBoxAlpha[i] == 0)) ? 0 : 1;
+        isActive = this->deads[i];
 
         gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[isActive][0], sWindowContentColors[isActive][1],
                         sWindowContentColors[isActive][2], this->fileButtonAlpha[i]);
@@ -1047,8 +1064,7 @@ void FileSelect_DrawWindowContents(GameState* thisx) {
 
     // draw file info
     for (fileIndex = 0; fileIndex < 3; fileIndex++) {
-        isActive = ((this->n64ddFlag == this->n64ddFlags[fileIndex]) || (this->nameBoxAlpha[fileIndex] == 0)) ? 0 : 1;
-        FileSelect_DrawFileInfo(&this->state, fileIndex, isActive);
+        FileSelect_DrawFileInfo(&this->state, fileIndex, false);
     }
 
     gDPPipeSync(POLY_OPA_DISP++);
@@ -1334,11 +1350,19 @@ void FileSelect_ConfirmFile(GameState* thisx) {
 
     if (CHECK_BTN_ALL(input->press.button, BTN_START) || (CHECK_BTN_ALL(input->press.button, BTN_A))) {
         if (this->confirmButtonIndex == FS_BTN_CONFIRM_YES) {
-            Rumble_Request(300.0f, 180, 20, 100);
-            Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
-                                 &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-            this->selectMode = SM_FADE_OUT;
-            func_800F6964(0xF);
+            if(this->deads[this->selectedFileIndex]) {
+                Audio_PlaySfxGeneral(NA_SE_SY_FSEL_ERROR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                     &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+            } else {
+                Rumble_Request(300.0f, 180, 20, 100);
+                Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                     &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                this->selectMode = SM_FADE_OUT;
+                func_800F6964(0xF);
+
+            }
+
         } else {
             Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CLOSE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);

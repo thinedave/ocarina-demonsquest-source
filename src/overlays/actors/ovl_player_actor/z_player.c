@@ -3260,9 +3260,8 @@ void func_80836448(PlayState* play, Player* this, LinkAnimationHeader* anim) {
 
             gSaveContext.heartsBlocked += 0x10;
 
-            if(gSaveContext.heartsBlocked > gSaveContext.healthCapacity-0x20) {
+            if(!gSaveContext.demonsCurse && gSaveContext.heartsBlocked > gSaveContext.healthCapacity-0x20)
                 gSaveContext.heartsBlocked = gSaveContext.healthCapacity-0x20;
-            }
 
             Audio_StopBgmAndFanfare(0);
             Audio_PlayFanfare(NA_BGM_GAME_OVER);

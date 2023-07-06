@@ -3461,10 +3461,18 @@ void KaleidoScope_Update(PlayState* play) {
                         gSaveContext.saveReturnFlag = 1;
                     }
 
-                    play->nextEntranceIndex = gSaveContext.entranceIndex;
-                    play->transitionType = 0x1;
-                    play->transitionTrigger = 1;
-                    gSaveContext.health = gSaveContext.healthCapacity-gSaveContext.heartsBlocked;
+                    if(!gSaveContext.demonsCurse || gSaveContext.heartsBlocked < gSaveContext.healthCapacity) {
+                        play->nextEntranceIndex = gSaveContext.entranceIndex;
+                        play->transitionType = 0x1;
+                        play->transitionTrigger = 1;
+                        gSaveContext.health = gSaveContext.healthCapacity-gSaveContext.heartsBlocked;
+
+                    } else if(gSaveContext.demonsCurse) {
+                        gSaveContext.dead = true;
+                        play->state.running = false;
+                        SET_NEXT_GAMESTATE(&play->state, TitleSetup_Init, TitleSetupState);
+
+                    }
 
                     SEQCMD_RESET_AUDIO_HEAP(0, 10);
                     gSaveContext.healthAccumulator = 0;
@@ -3494,7 +3502,7 @@ void KaleidoScope_Update(PlayState* play) {
                 if (interfaceCtx->unk_244 >= 255) {
                     interfaceCtx->unk_244 = 255;
                     pauseCtx->state = 0;
-                    R_UPDATE_RATE = 3;
+                    R_UPDATE_RATE = UPDATE_RATE_20;
                     R_PAUSE_BG_PRERENDER_STATE = PAUSE_BG_PRERENDER_OFF;
                     func_800981B8(&play->objectCtx);
                     func_800418D0(&play->colCtx, play);
@@ -3557,7 +3565,7 @@ void KaleidoScope_Update(PlayState* play) {
 
         case 0x13:
             pauseCtx->state = 0;
-            R_UPDATE_RATE = 3;
+            R_UPDATE_RATE = UPDATE_RATE_20;
             R_PAUSE_BG_PRERENDER_STATE = PAUSE_BG_PRERENDER_OFF;
             func_800981B8(&play->objectCtx);
             func_800418D0(&play->colCtx, play);

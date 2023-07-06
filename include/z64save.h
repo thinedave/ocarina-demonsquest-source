@@ -186,7 +186,7 @@ typedef struct {
     u8  shieldDurabilityDeku;
     u8  shieldDurabilityHylian;
     u8  shieldDurabilityMirror;
-    u8 heartsBlocked;
+    u8 UNUSED_heartsBlocked;
     u8 permHealthCapacity;
     /* 0x002E */ s16 healthCapacity; // "max_life"
     /* 0x0030 */ s16 health; // "now_life"
@@ -229,6 +229,9 @@ typedef struct {
     /* 0x1348 */ HorseData horseData;
     s16 savePoint;
     RespawnData saveRespawnPoint;
+    bool demonsCurse;
+    bool dead;
+    u8 heartsBlocked;
     /* 0x1352 */ u16 checksum; // "check_sum"
     /* 0x1354 */ s32 fileNum; // "file_no"
     /* 0x1358 */ char unk_1358[0x0004];
@@ -292,7 +295,6 @@ typedef struct {
     /* 0x1422 */ s16 sunsSongState; // controls the effects of suns song
     /* 0x1424 */ s16 healthAccumulator;
     u8 saveReturnFlag;
-    bool demonsCurse;
 } SaveContext; // size = 0x1428
 
 typedef enum {

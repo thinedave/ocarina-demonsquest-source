@@ -10,10 +10,10 @@ typedef struct {
     /* 0x06 */ s16 deaths;
     /* 0x08 */ char playerName[8];
     /* 0x10 */ s16 n64ddFlag;
-    u8  shieldDurabilityDeku;
-    u8  shieldDurabilityHylian;
-    u8  shieldDurabilityMirror;
-    u8 heartsBlocked;
+    u8 shieldDurabilityDeku;
+    u8 shieldDurabilityHylian;
+    u8 shieldDurabilityMirror;
+    u8 UNUSED_heartsBlocked;
     u8 permHealthCapacity;
     /* 0x12 */ s16 healthCapacity; // "max_life"
     /* 0x14 */ s16 health;         // "now_life"
@@ -33,6 +33,7 @@ typedef struct {
     /* 0x38 */ u32 unk_38; // this may be incorrect, currently used for alignement
     /* 0x3C */ char unk_3C[0x0E];
     /* 0x4A */ s16 savedSceneId;
+    //bool demonsCurse;
 } SavePlayerData; // size = 0x4C
 
 typedef struct {
@@ -62,6 +63,8 @@ typedef struct {
     s16 savePoint; // save point
     RespawnData saveRespawnPoint;
     bool demonsCurse;
+    bool dead;
+    u8 heartsBlocked;
     /* 0x1336 */ u16 checksum; // "check_sum"
 } SaveInfo;                    // size = 0x1338
 
@@ -86,6 +89,8 @@ typedef struct {
 #define NAME offsetof(SaveContext, playerName)
 #define N64DD offsetof(SaveContext, n64ddFlag)
 #define CURSED offsetof(SaveContext, demonsCurse)
+#define DEAD offsetof(SaveContext, dead)
+#define HEARTS_BLOCKED offsetof(SaveContext, heartsBlocked)
 #define HEALTH_CAP offsetof(SaveContext, healthCapacity)
 #define QUEST offsetof(SaveContext, inventory.questItems)
 #define DEFENSE offsetof(SaveContext, inventory.defenseHearts)
@@ -229,6 +234,8 @@ void Sram_InitNewSave(void) {
     gSaveContext.shieldDurabilityHylian = 50;
     gSaveContext.shieldDurabilityMirror = 75;
     gSaveContext.demonsCurse = false;
+    gSaveContext.dead = false;
+    gSaveContext.heartsBlocked = 0x00;
     gSaveContext.equips = sNewSaveEquips;
     gSaveContext.inventory = sNewSaveInventory;
 
@@ -380,6 +387,7 @@ void Sram_InitDebugSave(void) {
     gSaveContext.shieldDurabilityHylian = 50;
     gSaveContext.shieldDurabilityMirror = 75;
     gSaveContext.demonsCurse = true;
+    gSaveContext.dead = false;
     gSaveContext.equips = sDebugSaveEquips;
     gSaveContext.inventory = sDebugSaveInventory;
 
@@ -784,9 +792,17 @@ void Sram_VerifyAndLoadAllSaves(FileSelectState* fileSelect, SramContext* sramCt
     MemCpy(&fileSelect->n64ddFlags[1], sramCtx->readBuff + SLOT_OFFSET(1) + N64DD, sizeof(fileSelect->n64ddFlags[0]));
     MemCpy(&fileSelect->n64ddFlags[2], sramCtx->readBuff + SLOT_OFFSET(2) + N64DD, sizeof(fileSelect->n64ddFlags[0]));
 
-    //MemCpy(&fileSelect->demonsCurses[0], sramCtx->readBuff + SLOT_OFFSET(0) + CURSED, sizeof(fileSelect->demonsCurses[0]));
-    //MemCpy(&fileSelect->demonsCurses[1], sramCtx->readBuff + SLOT_OFFSET(1) + CURSED, sizeof(fileSelect->demonsCurses[0]));
-    //MemCpy(&fileSelect->demonsCurses[2], sramCtx->readBuff + SLOT_OFFSET(2) + CURSED, sizeof(fileSelect->demonsCurses[0]));
+    MemCpy(&fileSelect->demonsCurses[0], sramCtx->readBuff + SLOT_OFFSET(0) + CURSED, sizeof(fileSelect->demonsCurses[0]));
+    MemCpy(&fileSelect->demonsCurses[1], sramCtx->readBuff + SLOT_OFFSET(1) + CURSED, sizeof(fileSelect->demonsCurses[0]));
+    MemCpy(&fileSelect->demonsCurses[2], sramCtx->readBuff + SLOT_OFFSET(2) + CURSED, sizeof(fileSelect->demonsCurses[0]));
+
+    MemCpy(&fileSelect->deads[0], sramCtx->readBuff + SLOT_OFFSET(0) + DEAD, sizeof(fileSelect->deads[0]));
+    MemCpy(&fileSelect->deads[1], sramCtx->readBuff + SLOT_OFFSET(1) + DEAD, sizeof(fileSelect->deads[0]));
+    MemCpy(&fileSelect->deads[2], sramCtx->readBuff + SLOT_OFFSET(2) + DEAD, sizeof(fileSelect->deads[0]));
+
+    MemCpy(&fileSelect->heartsBlocked[0], sramCtx->readBuff + SLOT_OFFSET(0) + HEARTS_BLOCKED, sizeof(fileSelect->heartsBlocked[0]));
+    MemCpy(&fileSelect->heartsBlocked[1], sramCtx->readBuff + SLOT_OFFSET(1) + HEARTS_BLOCKED, sizeof(fileSelect->heartsBlocked[0]));
+    MemCpy(&fileSelect->heartsBlocked[2], sramCtx->readBuff + SLOT_OFFSET(2) + HEARTS_BLOCKED, sizeof(fileSelect->heartsBlocked[0]));
 
     MemCpy(&fileSelect->defense[0], sramCtx->readBuff + SLOT_OFFSET(0) + DEFENSE, sizeof(fileSelect->defense[0]));
     MemCpy(&fileSelect->defense[1], sramCtx->readBuff + SLOT_OFFSET(1) + DEFENSE, sizeof(fileSelect->defense[0]));
@@ -881,6 +897,9 @@ void Sram_InitSave(FileSelectState* fileSelect, SramContext* sramCtx) {
     MemCpy(&fileSelect->defense[gSaveContext.fileNum], sramCtx->readBuff + j + DEFENSE, sizeof(fileSelect->defense[0]));
     MemCpy(&fileSelect->health[gSaveContext.fileNum], sramCtx->readBuff + j + HEALTH, sizeof(fileSelect->health[0]));
 
+    MemCpy(&fileSelect->deads[gSaveContext.fileNum], sramCtx->readBuff + j + DEAD, sizeof(fileSelect->deads[0]));
+    MemCpy(&fileSelect->heartsBlocked[gSaveContext.fileNum], sramCtx->readBuff + j + HEARTS_BLOCKED, sizeof(fileSelect->heartsBlocked[0]));
+
     //fileSelect->demonsCurses[gSaveContext.fileNum] = gSaveContext.demonsCurse;
 
     osSyncPrintf("f_64dd[%d]=%d\n", gSaveContext.fileNum, fileSelect->n64ddFlags[gSaveContext.fileNum]);
@@ -904,7 +923,8 @@ void Sram_EraseSave(FileSelectState* fileSelect, SramContext* sramCtx) {
     MemCpy(sramCtx->readBuff + offset, &gSaveContext, sizeof(Save));
     SsSram_ReadWrite(OS_K1_TO_PHYSICAL(0xA8000000) + offset, &gSaveContext, SLOT_SIZE, OS_WRITE);
 
-    //fileSelect->demonsCurses[fileSelect->selectedFileIndex] = false;
+    fileSelect->demonsCurses[fileSelect->selectedFileIndex] = false;
+    fileSelect->deads[fileSelect->selectedFileIndex] = false;
 
     osSyncPrintf("ＣＬＥＡＲ終了\n");
 }
@@ -945,6 +965,11 @@ void Sram_CopySave(FileSelectState* fileSelect, SramContext* sramCtx) {
            sizeof(fileSelect->defense[0]));
     MemCpy(&fileSelect->health[fileSelect->copyDestFileIndex], (sramCtx->readBuff + offset) + HEALTH,
            sizeof(fileSelect->health[0]));
+
+    MemCpy(&fileSelect->deads[fileSelect->copyDestFileIndex], (sramCtx->readBuff + offset) + DEAD,
+           sizeof(fileSelect->deads[0]));
+
+    MemCpy(&fileSelect->heartsBlocked[fileSelect->copyDestFileIndex], sramCtx->readBuff + offset + HEARTS_BLOCKED, sizeof(fileSelect->heartsBlocked[0]));
 
     osSyncPrintf("f_64dd[%d]=%d\n", gSaveContext.fileNum, fileSelect->n64ddFlags[gSaveContext.fileNum]);
     osSyncPrintf("heart_status[%d]=%d\n", gSaveContext.fileNum, fileSelect->defense[gSaveContext.fileNum]);

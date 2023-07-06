@@ -61,5 +61,5 @@ void PreNMI_Init(GameState* thisx) {
     this->timer = 30;
     this->unk_A8 = 10;
 
-    R_UPDATE_RATE = 1;
+    R_UPDATE_RATE = UPDATE_RATE_60;
 }

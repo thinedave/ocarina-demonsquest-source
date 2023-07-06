@@ -251,12 +251,12 @@ endif
 clean:
 	$(RM) -r $(ROM) $(ELF) build
 
-clean_builtsrc:
+cleansrc:
 	$(RM) -r $(ROM) $(ELF) build/src build/data
 # Delete files directly inside build/ (but not in subfolders)
 	find build -maxdepth 1 -type f -exec $(RM) {} \;
 
-clean_builtassets:
+cleanassets:
 	$(RM) -r $(ROM) $(ELF) build/assets
 	find build -maxdepth 1 -type f -exec $(RM) {} \;
 

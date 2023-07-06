@@ -162,11 +162,11 @@ void ConsoleLogo_Main(GameState* thisx) {
     ConsoleLogo_Calc(this);
     ConsoleLogo_Draw(this);
 
-    Gfx* gfx = POLY_OPA_DISP;
-    s32 pad;
+    if(this->coverAlpha >= 15 && CHECK_BTN_ANY(thisx->input[0].cur.button, BTN_A | BTN_B | BTN_L | BTN_R | BTN_Z | BTN_START | BTN_CUP | BTN_CLEFT | BTN_CRIGHT
+        | BTN_CDOWN | BTN_DUP | BTN_DDOWN | BTN_DLEFT | BTN_DRIGHT)) {
+        this->exit = true;
 
-    //ConsoleLogo_PrintBuildInfo(&gfx);
-    POLY_OPA_DISP = gfx;
+    }
 
     if (this->exit) {
         gSaveContext.seqId = (u8)NA_BGM_DISABLED;
@@ -194,7 +194,7 @@ void ConsoleLogo_Init(GameState* thisx) {
     ASSERT(this->staticSegment != NULL, "this->staticSegment != NULL", "../z_title.c", 614);
     DmaMgr_RequestSyncDebug(this->staticSegment, (uintptr_t)_nintendo_rogo_staticSegmentRomStart, size, "../z_title.c",
                             615);
-    R_UPDATE_RATE = 1;
+    R_UPDATE_RATE = UPDATE_RATE_60;
     Matrix_Init(&this->state);
     View_Init(&this->view, this->state.gfxCtx);
     this->state.main = ConsoleLogo_Main;

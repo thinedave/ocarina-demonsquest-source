@@ -973,6 +973,8 @@ typedef struct {
     Vtx DQ_HeroModeLabelVtx[4];
     Vtx DQ_HeroModeConnectorVtx[4];
     s16 DQ_HeroModeConnectorAlpha;
+    bool deads[3];
+    u8 heartsBlocked[3];
 } FileSelectState; // size = 0x1CAE0
 
 // Macros for `EntranceInfo.field`
@@ -1429,6 +1431,19 @@ typedef struct {
     /* 0x00 */ u16* value;
     /* 0x04 */ const char* name;
 } FlagSetEntry; // size = 0x08
+
+typedef struct {
+    GameState state;
+    View view;
+    u8* staticSegment;
+    u8 exit;
+    s16 timer;
+    s16 logoAlpha;
+} HMSplashState;
+
+#define UPDATE_RATE_60 1
+#define UPDATE_RATE_30 2
+#define UPDATE_RATE_20 3
 
 #define ROM_FILE(name) \
     { (uintptr_t)_##name##SegmentRomStart, (uintptr_t)_##name##SegmentRomEnd }
