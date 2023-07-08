@@ -140,23 +140,6 @@ s32 Skybox_CalculateFace256(SkyboxContext* skyboxCtx, Vtx* roomVtx, s32 roomVtxS
             break;
     }
 
-<<<<<<< HEAD
-    for (phi_a2_4 = 0, sp424 = 0; sp424 < 2; sp424++) {
-        skyboxCtx->unk_138 = skyboxCtx->dListBuf[arg9 + sp424];
-
-        for (i = 0; i < 0x20; i++) {
-            index = D_8012ACA0[sp424][i];
-
-            roomVtx[arg2 + i].v.vector[0] = sp358[index];
-            roomVtx[arg2 + i].v.vector[1] = sp2A4[index];
-            roomVtx[arg2 + i].v.vector[2] = sp1F0[index];
-            roomVtx[arg2 + i].v.flag = 0;
-            roomVtx[arg2 + i].v.tc[0] = sp13C[index];
-            roomVtx[arg2 + i].v.tc[1] = sp88[index];
-            roomVtx[arg2 + i].v.color[1] = 0;
-            roomVtx[arg2 + i].v.color[2] = 0;
-            roomVtx[arg2 + i].v.color[0] = 255;
-=======
     // For a 256x256 texture with 63x31 tiles there are 32 tiles which requires at least 45 vertices,
     // 45 > 32 (the maximum number of vertices that can be loaded at once) so it is split into two passes
     for (ult = 0, n = 0; n < 2; n++) {
@@ -169,16 +152,15 @@ s32 Skybox_CalculateFace256(SkyboxContext* skyboxCtx, Vtx* roomVtx, s32 roomVtxS
         for (i = 0; i < 32; i++) {
             index = sSkybox256VtxBufIndices[n][i];
 
-            roomVtx[roomVtxStartIndex + i].v.ob[0] = xPoints[index];
-            roomVtx[roomVtxStartIndex + i].v.ob[1] = yPoints[index];
-            roomVtx[roomVtxStartIndex + i].v.ob[2] = zPoints[index];
+            roomVtx[roomVtxStartIndex + i].v.vector[0] = xPoints[index];
+            roomVtx[roomVtxStartIndex + i].v.vector[1] = yPoints[index];
+            roomVtx[roomVtxStartIndex + i].v.vector[2] = zPoints[index];
             roomVtx[roomVtxStartIndex + i].v.flag = 0;
             roomVtx[roomVtxStartIndex + i].v.tc[0] = tcS[index];
             roomVtx[roomVtxStartIndex + i].v.tc[1] = tcT[index];
-            roomVtx[roomVtxStartIndex + i].v.cn[1] = 0;
-            roomVtx[roomVtxStartIndex + i].v.cn[2] = 0;
-            roomVtx[roomVtxStartIndex + i].v.cn[0] = 255;
->>>>>>> 0ce03133425867723dd81fc66f57bbb8d40aaf7a
+            roomVtx[roomVtxStartIndex + i].v.color[1] = 0;
+            roomVtx[roomVtxStartIndex + i].v.color[2] = 0;
+            roomVtx[roomVtxStartIndex + i].v.color[0] = 255;
         }
         gSPVertex(skyboxCtx->gfx++, &roomVtx[roomVtxStartIndex], 32, 0);
         roomVtxStartIndex += i; // += 32
@@ -321,22 +303,6 @@ s32 Skybox_CalculateFace128(SkyboxContext* skyboxCtx, Vtx* roomVtx, s32 roomVtxS
             }
             break;
     }
-<<<<<<< HEAD
-    skyboxCtx->unk_138 = &skyboxCtx->dListBuf[2 * arg8][0];
-
-    for (i = 0; i < 0x20; i++) {
-        index = D_8012ADD8[i];
-
-        roomVtx[arg2 + i].v.vector[0] = sp2B4[index];
-        roomVtx[arg2 + i].v.vector[1] = sp250[index];
-        roomVtx[arg2 + i].v.vector[2] = sp1EC[index];
-        roomVtx[arg2 + i].v.flag = 0;
-        roomVtx[arg2 + i].v.tc[0] = sp188[index];
-        roomVtx[arg2 + i].v.tc[1] = sp124[index];
-        roomVtx[arg2 + i].v.color[1] = 0;
-        roomVtx[arg2 + i].v.color[2] = 0;
-        roomVtx[arg2 + i].v.color[0] = 255;
-=======
 
     // Select gfx buffer
     skyboxCtx->gfx = &skyboxCtx->dListBuf[2 * faceNum][0];
@@ -345,16 +311,15 @@ s32 Skybox_CalculateFace128(SkyboxContext* skyboxCtx, Vtx* roomVtx, s32 roomVtxS
     for (i = 0; i < 32; i++) {
         index = sSkybox128VtxBufIndices[i];
 
-        roomVtx[roomVtxStartIndex + i].v.ob[0] = xPoints[index];
-        roomVtx[roomVtxStartIndex + i].v.ob[1] = yPoints[index];
-        roomVtx[roomVtxStartIndex + i].v.ob[2] = zPoints[index];
+        roomVtx[roomVtxStartIndex + i].v.vector[0] = xPoints[index];
+        roomVtx[roomVtxStartIndex + i].v.vector[1] = yPoints[index];
+        roomVtx[roomVtxStartIndex + i].v.vector[2] = zPoints[index];
         roomVtx[roomVtxStartIndex + i].v.flag = 0;
         roomVtx[roomVtxStartIndex + i].v.tc[0] = tcS[index];
         roomVtx[roomVtxStartIndex + i].v.tc[1] = tcT[index];
-        roomVtx[roomVtxStartIndex + i].v.cn[1] = 0;
-        roomVtx[roomVtxStartIndex + i].v.cn[2] = 0;
-        roomVtx[roomVtxStartIndex + i].v.cn[0] = 255;
->>>>>>> 0ce03133425867723dd81fc66f57bbb8d40aaf7a
+        roomVtx[roomVtxStartIndex + i].v.color[1] = 0;
+        roomVtx[roomVtxStartIndex + i].v.color[2] = 0;
+        roomVtx[roomVtxStartIndex + i].v.color[0] = 255;
     }
     gSPVertex(skyboxCtx->gfx++, &roomVtx[roomVtxStartIndex], 32, 0);
     roomVtxStartIndex += i;

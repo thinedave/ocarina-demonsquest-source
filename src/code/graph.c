@@ -121,16 +121,10 @@ GameStateOverlay* Graph_GetNextGameState(GameState* gameState) {
     if (gameStateInitFunc == typeName##_Init) {       \
         return &gGameStateOverlayTable[enumName];     \
     }
-<<<<<<< HEAD
-    if (gameStateInitFunc == HMSplash_Init) {
-        return &gGameStateOverlayTable[6];
-    }
-=======
 #define DEFINE_GAMESTATE(typeName, enumName, name) DEFINE_GAMESTATE_INTERNAL(typeName, enumName)
 #include "tables/gamestate_table.h"
 #undef DEFINE_GAMESTATE
 #undef DEFINE_GAMESTATE_INTERNAL
->>>>>>> 0ce03133425867723dd81fc66f57bbb8d40aaf7a
 
     LOG_ADDRESS("game_init_func", gameStateInitFunc, "../graph.c", 696);
     return NULL;
