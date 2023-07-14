@@ -228,7 +228,7 @@ void FileSelect_SetNameEntryVtx(GameState* thisx) {
     gDPSetCombineLERP(POLY_OPA_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0, PRIMITIVE,
                       ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
     gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, this->windowColor[0], this->windowColor[1], this->windowColor[2],
-                    (this->heroModeBoxPosX <= -150 ? 0 : 255));
+                    (this->heroModeBoxPosX <= -150 ? 0 : this->DQ_HeroModeConnectorAlpha));
     gSPVertex(POLY_OPA_DISP++, this->DQ_HeroModeLabelVtx, 4, 0);
     gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelDISKButtonTex, G_IM_FMT_IA, G_IM_SIZ_16b, 44, 16, 0,
                         G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,

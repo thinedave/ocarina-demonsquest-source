@@ -250,6 +250,9 @@ ifeq ($(COMPARE),1)
 	@md5sum -c checksum.md5
 endif
 
+copy:
+	cp -a assets_mod/. assets/
+
 clean:
 	$(RM) -r $(ROM) $(ELF) build
 
