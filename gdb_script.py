@@ -85,7 +85,8 @@ bp_load.silent = True
 bl_free = BreakpointFree("ZeldaArena_FreeDebug")
 bl_free.silent = True
 
+bl_system_free = BreakpointFree("SystemArena_FreeDebug")
+bl_system_free.silent = True
+
 bl_kaleido = BreakpointKaleidoFree("KaleidoManager_ClearOvl")
 bl_kaleido.silent = True
-
-# TODO: handle particle(?) unload
