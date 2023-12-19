@@ -1,0 +1,1 @@
+extern AnimationHeader gIronKnuckleSpinAttackAnimObject_ik_anim_003dbcAnim;

@@ -251,7 +251,16 @@ ifeq ($(COMPARE),1)
 endif
 
 copy:
-	cp -a assets_mod/. assets/
+	python3 appendmodassets.py
+
+copynbuild:
+	make -j copy
+	make -j
+
+copycleanbuild:
+	make -j copy
+	make -j clean
+	make -j
 
 clean:
 	$(RM) -r $(ROM) $(ELF) build
@@ -286,8 +295,7 @@ setup:
 test: $(ROM)
 	$(EMULATOR) $(EMU_FLAGS) $<
 
-
-.PHONY: all clean clean_builtsrc clean_builtassets setup test distclean assetclean
+.PHONY: all clean clean_builtsrc clean_builtassets setup test distclean assetclean copy
 
 #### Various Recipes ####
 

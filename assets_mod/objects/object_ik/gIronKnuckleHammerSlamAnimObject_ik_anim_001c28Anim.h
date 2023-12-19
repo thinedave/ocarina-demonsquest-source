@@ -1,0 +1,1 @@
+extern AnimationHeader gIronKnuckleHammerSlamAnimObject_ik_anim_001c28Anim;

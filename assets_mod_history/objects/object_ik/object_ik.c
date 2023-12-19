@@ -1,0 +1,3 @@
+#include "gIronKnuckleHammerSlamAnimObject_ik_anim_001c28Anim.c"
+
+#include "gIronKnuckleSpinAttackAnimObject_ik_anim_003dbcAnim.c"
