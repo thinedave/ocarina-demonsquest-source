@@ -8,38 +8,26 @@
 #include "alloca.h"
 #include "assets/textures/nintendo_rogo_static/nintendo_rogo_static.h"
 
-void ConsoleLogo_PrintBuildInfo(Gfx** gfxp) {
-    Gfx* g;
+void ConsoleLogo_PrintBuildInfo(Gfx** gfxP) {
+    Gfx* gfx;
     GfxPrint* printer;
 
-    g = *gfxp;
-    g = Gfx_SetupDL_28(g);
+    gfx = *gfxP;
+    gfx = Gfx_SetupDL_28(gfx);
     printer = alloca(sizeof(GfxPrint));
     GfxPrint_Init(printer);
-    GfxPrint_Open(printer, g);
-    GfxPrint_SetColor(printer, 150, 50, 50, 255);
-    GfxPrint_SetPos(printer, 2, 2);
-    GfxPrint_Printf(printer, "WARNING:");
-    GfxPrint_SetPos(printer, 2, 4);
-    GfxPrint_Printf(printer, "THIS MOD IS NOT INTENDED TO BE EASY");
-    GfxPrint_SetPos(printer, 2, 5);
-    GfxPrint_Printf(printer, "YOU MAY EXPERIENCE EXTREME ANGER");
-    GfxPrint_SetPos(printer, 2, 6);
-    GfxPrint_Printf(printer, "DURING GAMEPLAY");
-    GfxPrint_SetPos(printer, 2, 7);
-    GfxPrint_Printf(printer, "THINEDAVE IS NOT RESPONSIBLE FOR ANY");
-    GfxPrint_SetPos(printer, 2, 8);
-    GfxPrint_Printf(printer, "DAMAGES TO YOUR 'REAL N64' DUE TO");
-    GfxPrint_SetPos(printer, 2, 9);
-    GfxPrint_Printf(printer, "ANGER, RAGE, OR ANY OTHER SYMPTOMS");
-    GfxPrint_SetPos(printer, 2, 10);
-    GfxPrint_Printf(printer, "OF SUCKING ASS.");
-    GfxPrint_SetPos(printer, 2, 11);
-    GfxPrint_Printf(printer, "YOU HAVE BEEN WARNED");
-    g = GfxPrint_Close(printer);
+    GfxPrint_Open(printer, gfx);
+    GfxPrint_SetColor(printer, 255, 155, 255, 255);
+    GfxPrint_SetPos(printer, 9, 21);
+    GfxPrint_Printf(printer, "NOT MARIO CLUB VERSION");
+    GfxPrint_SetColor(printer, 255, 255, 255, 255);
+    GfxPrint_SetPos(printer, 7, 23);
+    GfxPrint_Printf(printer, "[Creator:%s]", gBuildTeam);
+    GfxPrint_SetPos(printer, 7, 24);
+    GfxPrint_Printf(printer, "[Date:%s]", gBuildDate);
+    gfx = GfxPrint_Close(printer);
     GfxPrint_Destroy(printer);
-    *gfxp = g;
-
+    *gfxP = gfx;
 }
 
 // Note: In other rom versions this function also updates unk_1D4, coverAlpha, addAlpha, visibleDuration to calculate

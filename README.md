@@ -1,9 +1,12 @@
-# The Legend of Zelda: Ocarina of Time
+# The Legend of Zelda: Ocarina of Time - Demon's Quest
+# This repository contains the source code for the Ocarina of Time mod, Demon's Quest.
+# If you are looking for the release builds, they are located [here](https://github.com/thinedave/demonsquest).
+# If you are to build from this repository, note that the code presented is largely experimental, some features may not be fully implemented, and there may be many bugs present.
 
 [![Build Status][jenkins-badge]][jenkins] [![Decompilation Progress][progress-badge]][progress] [![Contributors][contributors-badge]][contributors] [![Discord Channel][discord-badge]][discord]
 
-[jenkins]: https://jenkins.deco.mp/job/OOT/job/master
-[jenkins-badge]: https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fjenkins.deco.mp%2Fjob%2FOOT%2Fjob%2Fmaster
+[jenkins]: https://jenkins.deco.mp/job/OOT/job/main
+[jenkins-badge]: https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fjenkins.deco.mp%2Fjob%2FOOT%2Fjob%2Fmain
 
 [progress]: https://zelda64.dev/games/oot
 [progress-badge]: https://img.shields.io/endpoint?url=https://zelda64.dev/assets/csv/progress-oot-shield.json

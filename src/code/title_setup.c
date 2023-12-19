@@ -49,8 +49,8 @@ void Setup_InitImpl(SetupState* this) {
             gSaveContext.magic = 0;
             gSaveContext.magicLevel = 0;
 
-            gSaveContext.saveRespawnPoint.entranceIndex = ENTR_SPIRIT_TEMPLE_BOSS_0;
-            //gSaveContext.saveRespawnPoint.roomIndex = play->roomCtx.curRoom.num;
+            gSaveContext.save.info.saveRespawnPoint.entranceIndex = ENTR_SPIRIT_TEMPLE_BOSS_0;
+            //gSaveContext.save.info.saveRespawnPoint.roomIndex = play->roomCtx.curRoom.num;
 
             // Load Play state
             gSaveContext.gameMode = GAMEMODE_NORMAL;

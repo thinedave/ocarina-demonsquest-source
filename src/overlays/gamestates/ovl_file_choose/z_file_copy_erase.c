@@ -382,9 +382,9 @@ void FileSelect_CopyConfirm(GameState* thisx) {
                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
 
         } else {
-            dayTime = gSaveContext.dayTime;
+            dayTime = gSaveContext.save.dayTime;
             Sram_CopySave(this, sramCtx);
-            gSaveContext.dayTime = dayTime;
+            gSaveContext.save.dayTime = dayTime;
             this->fileInfoAlpha[this->copyDestFileIndex] = this->nameAlpha[this->copyDestFileIndex] = 0;
             this->nextTitleLabel = FS_TITLE_COPY_COMPLETE;
             this->actionTimer = 8;
@@ -392,7 +392,6 @@ void FileSelect_CopyConfirm(GameState* thisx) {
             Rumble_Request(300.0f, 180, 20, 100);
             Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-
         }
     } else if (ABS(this->stickAdjY) >= 30) {
         Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,

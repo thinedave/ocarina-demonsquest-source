@@ -7,11 +7,11 @@ SHELL = /bin/bash
 # Build options can either be changed by modifying the makefile, or by building with 'make SETTING=value'
 
 # If COMPARE is 1, check the output md5sum after building
-COMPARE ?= 1
+COMPARE := 1
 # If NON_MATCHING is 1, define the NON_MATCHING C flag when building
 NON_MATCHING ?= 1
 # If ORIG_COMPILER is 1, compile with QEMU_IRIX and the original compiler
-ORIG_COMPILER ?= 0
+ORIG_COMPILER := 0
 # If COMPILER is "gcc", compile with GCC instead of IDO.
 COMPILER ?= gcc
 
@@ -60,7 +60,7 @@ else
     endif
 endif
 
-N_THREADS ?= $(shell nproc)
+N_THREADS := $(shell nproc)
 
 #### Tools ####
 ifneq ($(shell type $(MIPS_BINUTILS_PREFIX)ld >/dev/null 2>/dev/null; echo $$?), 0)
@@ -95,10 +95,10 @@ AS         := $(MIPS_BINUTILS_PREFIX)as
 LD         := $(MIPS_BINUTILS_PREFIX)ld
 OBJCOPY    := $(MIPS_BINUTILS_PREFIX)objcopy
 OBJDUMP    := $(MIPS_BINUTILS_PREFIX)objdump
-EMULATOR = mupen64plus
-EMU_FLAGS = --noosd
+EMULATOR   := 
+EMU_FLAGS  := 
 
-INC        := -Iinclude -Isrc -Ibuild -I.
+INC := -Iinclude -Iinclude/libc -Isrc -Ibuild -I.
 
 # Check code syntax with host compiler
 CHECK_WARNINGS := -Wall -Wextra -Wno-format-security -Wno-unknown-pragmas -Wno-unused-parameter -Wno-unused-variable -Wno-missing-braces
@@ -292,7 +292,10 @@ setup:
 	python3 extract_10u.py
 	python3 extract_assets.py -j$(N_THREADS) -f
 
-test: $(ROM)
+run: $(ROM)
+ifeq ($(EMULATOR),)
+	$(error Emulator path not set. Set EMULATOR in the Makefile or define it as an environment variable)
+endif
 	$(EMULATOR) $(EMU_FLAGS) $<
 
 .PHONY: all clean clean_builtsrc clean_builtassets setup test distclean assetclean copy
@@ -335,10 +338,13 @@ build/data/%.o: data/%.s
 build/assets/text/%.enc.h: assets/text/%.h assets/text/charmap.txt
 	python3 tools/msgenc.py assets/text/charmap.txt $< $@
 
+# Dependencies for files including message data headers
+# TODO remove when full header dependencies are used.
 build/assets/text/fra_message_data_static.o: build/assets/text/message_data.enc.h
 build/assets/text/ger_message_data_static.o: build/assets/text/message_data.enc.h
 build/assets/text/nes_message_data_static.o: build/assets/text/message_data.enc.h
 build/assets/text/staff_message_data_static.o: build/assets/text/message_data_staff.enc.h
+build/src/code/z_message_PAL.o: build/assets/text/message_data.enc.h build/assets/text/message_data_staff.enc.h
 
 build/assets/%.o: assets/%.c
 	$(CC) -c $(CFLAGS) $(MIPS_VERSION) $(OPTFLAGS) -o $@ $<
@@ -350,20 +356,24 @@ build/src/%.o: src/%.s
 build/dmadata_table_spec.h: build/$(SPEC)
 	$(MKDMADATA) $< $@
 
+# Dependencies for files that may include the dmadata header automatically generated from the spec file
 build/src/boot/z_std_dma.o: build/dmadata_table_spec.h
 build/src/dmadata/dmadata.o: build/dmadata_table_spec.h
-
-build/src/code/z_actor_dlftbls.o: include/tables/actor_table.h
-build/src/code/z_actor.o: include/tables/actor_table.h
-build/src/code/z_scene.o: include/tables/object_table.h
-build/src/code/z_effect_soft_sprite_dlftbls.o: include/tables/effect_ss_table.h
-build/src/code/z_scene_table.o: include/tables/scene_table.h
-build/src/code/z_scene_table.o: include/tables/entrance_table.h
 
 build/src/code/z_kanfont.o: assets/text/message_data.h
 build/src/code/z_kanfont.o: assets/text/message_data_staff.h
 build/src/code/z_message_PAL.o: assets/text/message_data.h
 build/src/code/z_message_PAL.o: assets/text/message_data_staff.h
+
+# Dependencies for files including from include/tables/
+# TODO remove when full header dependencies are used.
+build/src/code/graph.o: include/tables/gamestate_table.h
+build/src/code/object_table.o: include/tables/object_table.h
+build/src/code/z_actor.o: include/tables/actor_table.h # so uses of ACTOR_ID_MAX update when the table length changes
+build/src/code/z_actor_dlftbls.o: include/tables/actor_table.h
+build/src/code/z_effect_soft_sprite_dlftbls.o: include/tables/effect_ss_table.h
+build/src/code/z_game_dlftbls.o: include/tables/gamestate_table.h
+build/src/code/z_scene_table.o: include/tables/scene_table.h include/tables/entrance_table.h
 
 build/src/%.o: src/%.c
 	$(CC_CHECK) $<

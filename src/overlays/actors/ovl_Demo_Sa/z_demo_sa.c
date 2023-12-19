@@ -87,15 +87,15 @@ static DemoSaDrawFunc sDrawFuncs[] = {
 };
 
 ActorInit Demo_Sa_InitVars = {
-    ACTOR_DEMO_SA,
-    ACTORCAT_NPC,
-    FLAGS,
-    OBJECT_SA,
-    sizeof(DemoSa),
-    (ActorFunc)DemoSa_Init,
-    (ActorFunc)DemoSa_Destroy,
-    (ActorFunc)DemoSa_Update,
-    (ActorFunc)DemoSa_Draw,
+    /**/ ACTOR_DEMO_SA,
+    /**/ ACTORCAT_NPC,
+    /**/ FLAGS,
+    /**/ OBJECT_SA,
+    /**/ sizeof(DemoSa),
+    /**/ DemoSa_Init,
+    /**/ DemoSa_Destroy,
+    /**/ DemoSa_Update,
+    /**/ DemoSa_Draw,
 };
 
 void DemoSa_Destroy(Actor* thisx, PlayState* play) {
@@ -376,7 +376,7 @@ void func_8098EDB0(DemoSa* this) {
 }
 
 void func_8098EE08(void) {
-    func_800788CC(NA_SE_SY_WHITE_OUT_T);
+    Sfx_PlaySfxCentered2(NA_SE_SY_WHITE_OUT_T);
 }
 
 void func_8098EE28(DemoSa* this, PlayState* play) {

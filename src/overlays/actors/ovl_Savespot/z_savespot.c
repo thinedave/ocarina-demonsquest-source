@@ -43,7 +43,7 @@ void Savespot_Init(Actor* thisx, PlayState* play) {
     this->b = 255;
     this->activationEventTimer = 0;
 
-    if (gSaveContext.savePoint == this->actor.params) {
+    if (gSaveContext.save.info.savePoint == this->actor.params) {
         this->active = true;
     }
 }
