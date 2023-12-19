@@ -74,6 +74,7 @@ typedef struct {
     /* 0x0130 */ u8*    parameterSegment;
     /* 0x0134 */ u8*    doActionSegment;
     /* 0x0138 */ u8*    iconItemSegment;
+    u8* dpadItemSegment;
     /* 0x013C */ u8*    mapSegment;
     /* 0x0140 */ u8     mapPalette[32];
     /* 0x0160 */ DmaRequest dmaRequest_160;

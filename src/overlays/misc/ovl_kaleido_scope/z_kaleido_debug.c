@@ -374,10 +374,10 @@ void KaleidoScope_DrawDebugEditor(PlayState* play) {
                 }
             } else if (CHECK_BTN_ALL(input->press.button, BTN_CDOWN) ||
                        CHECK_BTN_ALL(input->press.button, BTN_CRIGHT)) {
-                gSaveContext.save.info.healthCapacity += 0x10;
+                gSaveContext.save.info.playerData.healthCapacity += 0x10;
                 gSaveContext.save.info.playerData.permHealthCapacity += 0x10;
-                if (gSaveContext.save.info.healthCapacity >= 0x140) {
-                    gSaveContext.save.info.healthCapacity = 0x140;
+                if (gSaveContext.save.info.playerData.healthCapacity >= 0x140) {
+                    gSaveContext.save.info.playerData.healthCapacity = 0x140;
                     gSaveContext.save.info.playerData.permHealthCapacity = 0x140;
                 }
             }

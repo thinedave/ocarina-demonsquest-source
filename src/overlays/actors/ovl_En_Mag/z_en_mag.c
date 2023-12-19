@@ -297,7 +297,7 @@ void EnMag_DrawTextureIA8(Gfx** gfxp, void* texture, s16 texWidth, s16 texHeight
 void EnMag_DrawEffectTextures(Gfx** gfxp, void* maskTex, void* effectTex, s16 maskWidth, s16 maskHeight,
                               s16 effectWidth, s16 effectHeight, s16 rectLeft, s16 rectTop, s16 rectWidth,
                               s16 rectHeight, u16 dsdx, u16 dtdy, u16 shifts, u16 shiftt, u16 flag, EnMag* this) {
-    Gfx* gfx = *gfxP;
+    Gfx* gfx = *gfxp;
 
     gDPLoadMultiBlock_4b(gfx++, maskTex, 0x0000, G_TX_RENDERTILE, G_IM_FMT_I, maskWidth, maskHeight, 0,
                          G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
@@ -313,7 +313,7 @@ void EnMag_DrawEffectTextures(Gfx** gfxp, void* maskTex, void* effectTex, s16 ma
     gSPTextureRectangle(gfx++, rectLeft << 2, rectTop << 2, (rectLeft + rectWidth) << 2, (rectTop + rectHeight) << 2,
                         G_TX_RENDERTILE, 0, 0, dsdx, dtdy);
 
-    *gfxP = gfx;
+    *gfxp = gfx;
 }
 
 void EnMag_DrawImageRGBA32(Gfx** gfxP, s16 centerX, s16 centerY, u8* source, u32 width, u32 height) {

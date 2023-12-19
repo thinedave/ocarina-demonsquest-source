@@ -3357,10 +3357,10 @@ void func_80836448(PlayState* play, Player* this, LinkAnimationHeader* anim) {
         } else {
             play->gameOverCtx.state = GAMEOVER_DEATH_START;
 
-            gSaveContext.save.info.heartsblocked += 0x10;
+            gSaveContext.save.info.heartsBlocked += 0x10;
 
-            if(!gSaveContext.save.info.demonsCurse && gSaveContext.save.info.heartsblocked > gSaveContext.save.info.playerData.healthcapacity-0x20)
-                gSaveContext.save.info.heartsblocked = gSaveContext.save.info.playerData.healthcapacity-0x20;
+            if(!gSaveContext.save.info.demonsCurse && gSaveContext.save.info.heartsBlocked > gSaveContext.save.info.playerData.healthCapacity-0x20)
+                gSaveContext.save.info.heartsBlocked = gSaveContext.save.info.playerData.healthCapacity-0x20;
 
             Audio_StopBgmAndFanfare(0);
             Audio_PlayFanfare(NA_BGM_GAME_OVER);
@@ -5993,7 +5993,7 @@ s32 Player_ActionChange_10(Player* this, PlayState* play) {
                         func_8083BC04(this, play);
                     }
                 } else {
-                    if ((Player_GetMeleeWeaponHeld(this) != 0) && Player_CanUpdateItems(this)) && play->stamina > 40 /*&& play->stability > 25*/) {
+                    if ((Player_GetMeleeWeaponHeld(this) != 0) && Player_CanUpdateItems(this) && play->stamina > 40 /*&& play->stability > 25*/) {
                         func_8083BA90(play, this, PLAYER_MWA_JUMPSLASH_START, 5.0f, 5.0f);
                     } else {
                         func_8083BC04(this, play);
@@ -10071,9 +10071,9 @@ static Vec3s sSkeletonBaseTransl = { -57, 3377, 0 };
 void Player_InitCommon(Player* this, PlayState* play, FlexSkeletonHeader* skelHeader) {
     // save point
     if (gSaveContext.saveReturnFlag > 0 && gSaveContext.save.info.savePoint != -1) {
-        Camera_ChangeMode(Play_GetCamera(play, CAM_ID_MAIN), CAM_MODE_FIRST_PERSON);
+        Camera_RequestMode(Play_GetCamera(play, CAM_ID_MAIN), CAM_MODE_FIRST_PERSON);
         if (play->mainCamera.setting == CAM_SET_PIVOT_IN_FRONT) {
-            Camera_ChangeSetting(&play->mainCamera, CAM_SET_NORMAL1);
+            Camera_RequestSetting(&play->mainCamera, CAM_SET_NORMAL1);
         }
 
         // link's position
@@ -10340,7 +10340,7 @@ void activateSaveSpot(Player* this, PlayState* play) {
         gSaveContext.save.info.saveRespawnPoint.yaw = save->actor.world.rot.y;
         gSaveContext.save.info.saveRespawnPoint.playerParams = 0x0D00;
         if ((u16)(save->actor.world.rot.z) == 0xFFFF) { // use previous
-            gSaveContext.save.info.saveRespawnPoint.entranceIndex = gSaveContext.entranceIndex;
+            gSaveContext.save.info.saveRespawnPoint.entranceIndex = gSaveContext.save.entranceIndex;
         }
         else {
             gSaveContext.save.info.saveRespawnPoint.entranceIndex = save->actor.world.rot.z;
@@ -10351,7 +10351,7 @@ void activateSaveSpot(Player* this, PlayState* play) {
         save->activationEventTimer = 0;
 
         Play_SaveSceneFlags(play);
-        gSaveContext.savedSceneId = play->sceneId;
+        gSaveContext.save.info.playerData.savedSceneId = play->sceneId;
         Sram_WriteSave(&play->sramCtx);
 
     }

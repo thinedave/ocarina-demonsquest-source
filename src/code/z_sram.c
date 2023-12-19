@@ -155,8 +155,6 @@ void Sram_InitNewSave(void) {
     gSaveContext.save.info.demonsCurse = false;
     gSaveContext.save.info.dead = false;
     gSaveContext.save.info.heartsBlocked = 0x00;
-    gSaveContext.equips = sNewSaveEquips;
-    gSaveContext.inventory = sNewSaveInventory;
     gSaveContext.save.info.equips = sNewSaveEquips;
     gSaveContext.save.info.inventory = sNewSaveInventory;
 
@@ -310,8 +308,6 @@ void Sram_InitDebugSave(void) {
     gSaveContext.save.info.demonsCurse = true;
     gSaveContext.save.info.dead = false;
     gSaveContext.save.info.heartsBlocked = 0x00;
-    gSaveContext.equips = sDebugSaveEquips;
-    gSaveContext.inventory = sDebugSaveInventory;
     gSaveContext.save.info.equips = sDebugSaveEquips;
     gSaveContext.save.info.inventory = sDebugSaveInventory;
 

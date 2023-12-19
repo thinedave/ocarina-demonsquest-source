@@ -3587,26 +3587,26 @@ void KaleidoScope_Update(PlayState* play) {
                             gSaveContext.save.entranceIndex = ENTR_GANONS_TOWER_0;
                             break;
                         default:
-                            if (gSaveContext.savedSceneId != SCENE_LINKS_HOUSE) {
-                                gSaveContext.entranceIndex = (LINK_AGE_IN_YEARS == YEARS_CHILD) ? ENTR_LINKS_HOUSE_0 : ENTR_TEMPLE_OF_TIME_7;
+                            if (gSaveContext.save.info.playerData.savedSceneId != SCENE_LINKS_HOUSE) {
+                                gSaveContext.save.entranceIndex = (LINK_AGE_IN_YEARS == YEARS_CHILD) ? ENTR_LINKS_HOUSE_0 : ENTR_TEMPLE_OF_TIME_7;
                             }
                             else {
-                                gSaveContext.entranceIndex = ENTR_LINKS_HOUSE_0;
+                                gSaveContext.save.entranceIndex = ENTR_LINKS_HOUSE_0;
                             }
                             break;
                         }
 
                     if (gSaveContext.save.info.savePoint != -1) {
                         // start the game from the last save point
-                        gSaveContext.entranceIndex = gSaveContext.save.info.saveRespawnPoint.entranceIndex;
+                        gSaveContext.save.entranceIndex = gSaveContext.save.info.saveRespawnPoint.entranceIndex;
                         gSaveContext.saveReturnFlag = 1;
                     }
 
-                    if(!gSaveContext.save.info.demonsCurse || gSaveContext.save.info.heartsblocked < gSaveContext.save.info.playerData.healthcapacity) {
-                        play->nextEntranceIndex = gSaveContext.entranceIndex;
+                    if(!gSaveContext.save.info.demonsCurse || gSaveContext.save.info.heartsBlocked < gSaveContext.save.info.playerData.healthCapacity) {
+                        play->nextEntranceIndex = gSaveContext.save.entranceIndex;
                         play->transitionType = 0x1;
                         play->transitionTrigger = 1;
-                        gSaveContext.save.info.playerData.health = gSaveContext.save.info.playerData.healthcapacity-gSaveContext.save.info.heartsblocked;
+                        gSaveContext.save.info.playerData.health = gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked;
 
                     } else if(gSaveContext.save.info.demonsCurse) {
                         gSaveContext.save.info.dead = true;
@@ -3620,18 +3620,18 @@ void KaleidoScope_Update(PlayState* play) {
                     gSaveContext.magicState = MAGIC_STATE_IDLE;
                     gSaveContext.prevMagicState = MAGIC_STATE_IDLE;
                     gSaveContext.magicCapacity = 0;
-                    gSaveContext.magicFillTarget = gSaveContext.magic;
-                    gSaveContext.magicLevel = gSaveContext.magic = 0;
+                    gSaveContext.magicFillTarget = gSaveContext.save.info.playerData.magic;
+                    gSaveContext.save.info.playerData.magicLevel = gSaveContext.save.info.playerData.magic = 0;
 
-                    gSaveContext.deaths++;
-                    if (gSaveContext.deaths > 999) {
-                        gSaveContext.deaths = 999;
+                    gSaveContext.save.info.playerData.deaths++;
+                    if (gSaveContext.save.info.playerData.deaths > 999) {
+                        gSaveContext.save.info.playerData.deaths = 999;
                     }
 
                 }
 
                 Play_SaveSceneFlags(play);
-                gSaveContext.savedSceneId = play->sceneId;
+                gSaveContext.save.info.playerData.savedSceneId = play->sceneId;
                 Sram_WriteSave(&play->sramCtx); // save
                 pauseCtx->state = PAUSE_STATE_17;
             }
@@ -3652,7 +3652,7 @@ void KaleidoScope_Update(PlayState* play) {
                         gSaveContext.respawnFlag = -2;
                         gSaveContext.nextTransitionType = TRANS_TYPE_FADE_BLACK;
                         gSaveContext.save.info.playerData.health = 0x30;
-                        if(gSaveContext.save.info.playerData.healthcapacity-gSaveContext.save.info.heartsBlocked<=0x20) {
+                        if(gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked<=0x20) {
                             gSaveContext.save.info.playerData.health = 0x20;
 
                         }

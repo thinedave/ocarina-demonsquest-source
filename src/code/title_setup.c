@@ -23,10 +23,10 @@ void Setup_InitImpl(SetupState* this) {
         
         case MAP_SELECT:
             this->state.running = false;
-            gSaveContext.linkAge = LINK_AGE_ADULT;
+            gSaveContext.save.linkAge = LINK_AGE_ADULT;
             Sram_InitDebugSave();
-            gSaveContext.dayTime = CLOCK_TIME(12, 0);
-            gSaveContext.entranceIndex = ENTR_HYRULE_FIELD_0;
+            gSaveContext.save.dayTime = CLOCK_TIME(12, 0);
+            gSaveContext.save.entranceIndex = ENTR_HYRULE_FIELD_0;
             gSaveContext.respawnFlag = 0;
             gSaveContext.respawn[RESPAWN_MODE_DOWN].entranceIndex = ENTR_LOAD_OPENING;
             gSaveContext.gameMode = GAMEMODE_NORMAL;
@@ -36,18 +36,18 @@ void Setup_InitImpl(SetupState* this) {
         case KNUCKLE_DEMO:
             Sram_InitDebugSave();
 
-            gSaveContext.linkAge = LINK_AGE_ADULT;
-            gSaveContext.dayTime = CLOCK_TIME(12, 0);
-            gSaveContext.entranceIndex = ENTR_SPIRIT_TEMPLE_BOSS_0;
+            gSaveContext.save.linkAge = LINK_AGE_ADULT;
+            gSaveContext.save.dayTime = CLOCK_TIME(12, 0);
+            gSaveContext.save.entranceIndex = ENTR_SPIRIT_TEMPLE_BOSS_0;
 
             gSaveContext.respawnFlag = 0;
             gSaveContext.respawn[RESPAWN_MODE_DOWN].entranceIndex = ENTR_LOAD_OPENING;
 
             // Have the magic meter load correctly
-            gSaveContext.magicFillTarget = gSaveContext.magic;
+            gSaveContext.magicFillTarget = gSaveContext.save.info.playerData.magic;
             gSaveContext.magicCapacity = 0;
-            gSaveContext.magic = 0;
-            gSaveContext.magicLevel = 0;
+            gSaveContext.save.info.playerData.magic = 0;
+            gSaveContext.save.info.playerData.magicLevel = 0;
 
             gSaveContext.save.info.saveRespawnPoint.entranceIndex = ENTR_SPIRIT_TEMPLE_BOSS_0;
             //gSaveContext.save.info.saveRespawnPoint.roomIndex = play->roomCtx.curRoom.num;

@@ -1077,7 +1077,7 @@ void Item_DropCollectibleRandom(PlayState* play, Actor* fromActor, Vec3f* spawnP
             EffectSsDeadSound_SpawnStationary(play, spawnPos, NA_SE_EV_BUTTERFRY_TO_FAIRY, true,
                                               DEADSOUND_REPEAT_MODE_OFF, 40);
             return;
-        } else if (gSaveContext.save.info.playerData.health <= 0x30 && !gSaveContext.save.info.save.info.demonsCurse) { // 3 hearts or less
+        } else if (gSaveContext.save.info.playerData.health <= 0x30 && !gSaveContext.save.info.demonsCurse) { // 3 hearts or less
             params = 0xB * 0x10;
             dropTableIndex = 0x0;
             dropId = ITEM00_RECOVERY_HEART;

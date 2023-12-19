@@ -203,14 +203,6 @@ extern struct GraphicsContext* __gfxCtx;
 //DEMONS QUEST
 #define CHAR_TO_HEX(x) (x - 0x37)
 
-#ifdef NDEBUG
-#define ASSERT(cond, msg, file, line) ((void)0)
-#elif defined(REAL_ASSERT_MACRO)
-#define ASSERT(cond, msg, file, line) ((cond) ? ((void)0) : __assert(#cond, __FILE__, __LINE__))
-#else
-#define ASSERT(cond, msg, file, line) ((cond) ? ((void)0) : __assert(msg, file, line))
-#endif
-
 #define gDPSetTileCustom(pkt, fmt, siz, width, height, pal, cms, cmt, masks, maskt, shifts, shiftt)                    \
     do {                                                                                                               \
         gDPPipeSync(pkt);                                                                                              \

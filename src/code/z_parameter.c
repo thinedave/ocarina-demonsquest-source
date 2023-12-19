@@ -3010,7 +3010,7 @@ void Stamina_DrawMeter(PlayState* play) {
     u8 stamina = play->stamina;
     u16 meterY;
 
-    if (gSaveContext.save.info.playerData.healthcapacity > 0xA0) {
+    if (gSaveContext.save.info.playerData.healthCapacity > 0xA0) {
         meterY = R_MAGIC_METER_Y_LOWER+9; // two rows of hearts
     } else {
         meterY = R_MAGIC_METER_Y_HIGHER+9; // one row of hearts
@@ -4818,8 +4818,8 @@ void Interface_Update(PlayState* play) {
 
         osSyncPrintf("now_life=%d  max_life=%d\n", gSaveContext.save.info.playerData.health, gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked);
 
-        if (gSaveContext.save.info.playerData.health >= gSaveContext.save.info.playerData.healthcapacity-gSaveContext.save.info.heartsblocked) {
-            gSaveContext.save.info.playerData.health = gSaveContext.save.info.playerData.healthcapacity-gSaveContext.save.info.heartsblocked;
+        if (gSaveContext.save.info.playerData.health >= gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked) {
+            gSaveContext.save.info.playerData.health = gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked;
             osSyncPrintf("S_Private.now_life=%d  S_Private.max_life=%d\n", gSaveContext.save.info.playerData.health, gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked);
             gSaveContext.healthAccumulator = 0;
         }

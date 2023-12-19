@@ -253,15 +253,6 @@ endif
 copy:
 	python3 appendmodassets.py
 
-copynbuild:
-	make -j copy
-	make -j
-
-copycleanbuild:
-	make -j copy
-	make -j clean
-	make -j
-
 clean:
 	$(RM) -r $(ROM) $(ELF) build
 

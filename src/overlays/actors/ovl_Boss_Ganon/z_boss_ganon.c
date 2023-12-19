@@ -1190,7 +1190,7 @@ void BossGanon_SetupTowerCutscene(BossGanon* this, PlayState* play) {
         this->csTimer = 0;
         this->csState = 100;
         this->unk_198 = 1;
-        gSaveContext.save.info.playerData.magic = gSaveContext.save.info.playerData.magicCapacity;
+        gSaveContext.save.info.playerData.magic = gSaveContext.magicCapacity;
         gSaveContext.save.info.playerData.health = gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked;
     } else {
         this->actionFunc = BossGanon_SetupTowerCutscene;

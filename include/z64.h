@@ -191,121 +191,6 @@ typedef struct {
     /* 0x10 */ Vec3f projectedPos;
 } SfxSource; // size = 0x1C
 
-typedef enum {
-    /* 0x00 */ DO_ACTION_ATTACK,
-    /* 0x01 */ DO_ACTION_CHECK,
-    /* 0x02 */ DO_ACTION_ENTER,
-    /* 0x03 */ DO_ACTION_RETURN,
-    /* 0x04 */ DO_ACTION_OPEN,
-    /* 0x05 */ DO_ACTION_JUMP,
-    /* 0x06 */ DO_ACTION_DECIDE,
-    /* 0x07 */ DO_ACTION_DIVE,
-    /* 0x08 */ DO_ACTION_FASTER,
-    /* 0x09 */ DO_ACTION_THROW,
-    /* 0x0A */ DO_ACTION_NONE, // in do_action_static, the texture at this position is NAVI, however this value is in practice the "No Action" value
-    /* 0x0B */ DO_ACTION_CLIMB,
-    /* 0x0C */ DO_ACTION_DROP,
-    /* 0x0D */ DO_ACTION_DOWN,
-    /* 0x0E */ DO_ACTION_SAVE,
-    /* 0x0F */ DO_ACTION_SPEAK,
-    /* 0x10 */ DO_ACTION_NEXT,
-    /* 0x11 */ DO_ACTION_GRAB,
-    /* 0x12 */ DO_ACTION_STOP,
-    /* 0x13 */ DO_ACTION_PUTAWAY,
-    /* 0x14 */ DO_ACTION_REEL,
-    /* 0x15 */ DO_ACTION_1,
-    /* 0x16 */ DO_ACTION_2,
-    /* 0x17 */ DO_ACTION_3,
-    /* 0x18 */ DO_ACTION_4,
-    /* 0x19 */ DO_ACTION_5,
-    /* 0x1A */ DO_ACTION_6,
-    /* 0x1B */ DO_ACTION_7,
-    /* 0x1C */ DO_ACTION_8,
-    /* 0x1D */ DO_ACTION_MAX
-} DoAction;
-
-// TODO extract this information from the texture definitions themselves
-#define DO_ACTION_TEX_WIDTH 48
-#define DO_ACTION_TEX_HEIGHT 16
-#define DO_ACTION_TEX_SIZE ((DO_ACTION_TEX_WIDTH * DO_ACTION_TEX_HEIGHT) / 2) // (sizeof(gCheckDoActionENGTex))
-
-typedef struct {
-    /* 0x0000 */ View   view;
-    /* 0x0128 */ Vtx*   actionVtx;
-    /* 0x012C */ Vtx*   beatingHeartVtx;
-    /* 0x0130 */ u8*    parameterSegment;
-    /* 0x0134 */ u8*    doActionSegment;
-    /* 0x0138 */ u8*    iconItemSegment;
-    /* 0x013C */ u8*    mapSegment;
-    /* 0x0140 */ u8     mapPalette[32];
-    /* 0x0160 */ DmaRequest dmaRequest_160;
-    /* 0x0180 */ DmaRequest dmaRequest_180;
-    /* 0x01A0 */ char   unk_1A0[0x20];
-    /* 0x01C0 */ OSMesgQueue loadQueue;
-    /* 0x01D8 */ OSMesg loadMsg;
-    /* 0x01DC */ Viewport viewport;
-    /* 0x01EC */ s16    unk_1EC;
-    /* 0x01EE */ u16    unk_1EE;
-    /* 0x01F0 */ u16    unk_1F0;
-    /* 0x01F4 */ f32    unk_1F4;
-    /* 0x01F8 */ s16    naviCalling;
-    /* 0x01FA */ s16    unk_1FA;
-    /* 0x01FC */ s16    unk_1FC;
-    /* 0x01FE */ s16    heartColorOscillator;
-    /* 0x0200 */ s16    heartColorOscillatorDirection;
-    /* 0x0202 */ s16    beatingHeartPrim[3];
-    /* 0x0208 */ s16    beatingHeartEnv[3];
-    /* 0x020E */ s16    heartsPrimR[2];
-    /* 0x0212 */ s16    heartsPrimG[2];
-    /* 0x0216 */ s16    heartsPrimB[2];
-    /* 0x021A */ s16    heartsEnvR[2];
-    /* 0x021E */ s16    heartsEnvG[2];
-    /* 0x0222 */ s16    heartsEnvB[2];
-    /* 0x0226 */ s16    unk_226; // Used only in unused functions
-    /* 0x0228 */ s16    unk_228; // Used only in unused functions
-    /* 0x022A */ s16    beatingHeartOscillator;
-    /* 0x022C */ s16    beatingHeartOscillatorDirection;
-    /* 0x022E */ s16    unk_22E;
-    /* 0x0230 */ s16    lensMagicConsumptionTimer; // When lens is active, 1 unit of magic is consumed every time the timer reaches 0
-    /* 0x0232 */ s16    counterDigits[4]; // used for key and rupee counters
-    /* 0x023A */ u8     numHorseBoosts;
-    /* 0x023C */ u16    unk_23C;
-    /* 0x023E */ u16    hbaAmmo; // ammo while playing the horseback archery minigame
-    /* 0x0240 */ u16    unk_240;
-    /* 0x0242 */ u16    unk_242;
-    /* 0x0224 */ u16    unk_244; // screen fill alpha?
-    /* 0x0246 */ u16    aAlpha; // also carrots alpha
-    /* 0x0248 */ u16    bAlpha; // also HBA score alpha
-    /* 0x024A */ u16    cLeftAlpha;
-    /* 0x024C */ u16    cDownAlpha;
-    /* 0x024E */ u16    cRightAlpha;
-    /* 0x0250 */ u16    healthAlpha; // also max C-Up alpha
-    /* 0x0252 */ u16    magicAlpha; // also Rupee and Key counters alpha
-    /* 0x0254 */ u16    minimapAlpha;
-    /* 0x0256 */ s16    startAlpha;
-    /* 0x0258 */ s16    unk_258;
-    /* 0x025A */ s16    unk_25A;
-    /* 0x025C */ s16    mapRoomNum;
-    /* 0x025E */ s16    mapPaletteIndex; // "map_palete_no"
-    /* 0x0260 */ u8     unk_260;
-    /* 0x0261 */ u8     unk_261;
-    u8*                 dpadItemSegment;
-    struct {
-        /* 0x0262 */ u8    hGauge;     // "h_gage"; unknown?
-        /* 0x0263 */ u8    bButton;    // "b_button"
-        /* 0x0264 */ u8    aButton;    // "a_button"
-        /* 0x0265 */ u8    bottles;    // "c_bottle"
-        /* 0x0266 */ u8    tradeItems; // "c_warasibe"
-        /* 0x0267 */ u8    hookshot;   // "c_hook"
-        /* 0x0268 */ u8    ocarina;    // "c_ocarina"
-        /* 0x0269 */ u8    warpSongs;  // "c_warp"
-        /* 0x026A */ u8    sunsSong;   // "m_sunmoon"
-        /* 0x026B */ u8    farores;    // "m_wind"
-        /* 0x026C */ u8    dinsNayrus; // "m_magic"; din's fire and nayru's love
-        /* 0x026D */ u8    all;        // "another"; enables all item restrictions
-    }                   restrictions;
-} InterfaceContext; // size = 0x270
-
 typedef struct {
     /* 0x00 */ void* loadedRamAddr;
     /* 0x04 */ uintptr_t vromStart;
@@ -919,15 +804,6 @@ typedef struct {
     /* 0x0C */ Color_RGBA8_u32 envColor;
 } struct_801664F0; // size = 0x10
 
-typedef struct {
-    /* 0x00 */ u32 unk_00;
-    /* 0x04 */ u32 setScissor;
-    /* 0x08 */ Color_RGBA8_u32 primColor;
-    /* 0x0C */ Color_RGBA8_u32 envColor;
-    /* 0x10 */ u16* tlut;
-    /* 0x14 */ Gfx* dList;
-} VisMono; // size = 0x18
-
 // Vis...
 typedef struct {
     /* 0x00 */ u32 useRgba;
@@ -935,64 +811,6 @@ typedef struct {
     /* 0x08 */ Color_RGBA8_u32 primColor;
     /* 0x08 */ Color_RGBA8_u32 envColor;
 } struct_80166500; // size = 0x10
-
-typedef struct {
-    /* 0x00 */ char unk_00[0x18];
-    /* 0x18 */ s32 unk_18;
-    /* 0x1C */ s32 y;
-} SpeedMeter; // size = 0x20
-
-typedef struct {
-    /* 0x00 */ s32 maxval;
-    /* 0x04 */ s32 val;
-    /* 0x08 */ u16 backColor;
-    /* 0x0A */ u16 foreColor;
-    /* 0x0C */ s32 ulx;
-    /* 0x10 */ s32 lrx;
-    /* 0x14 */ s32 uly;
-    /* 0x18 */ s32 lry;
-} SpeedMeterAllocEntry; // size = 0x1C
-
-typedef struct {
-    /* 0x00 */ volatile OSTime* time;
-    /* 0x04 */ u8 x;
-    /* 0x05 */ u8 y;
-    /* 0x06 */ u16 color;
-} SpeedMeterTimeEntry; // size = 0x08
-
-typedef struct {
-    /* 0x00 */ u32 value;
-    /* 0x04 */ const char* name;
-} F3dzexConst; // size = 0x8
-
-typedef struct {
-    /* 0x00 */ u32 value;
-    /* 0x04 */ const char* setName;
-    /* 0x08 */ const char* unsetName;
-} F3dzexFlag; // size = 0x0C
-
-typedef struct {
-    /* 0x00 */ const char* name;
-    /* 0x04 */ u32 value;
-    /* 0x08 */ u32 mask;
-} F3dzexRenderMode; // size = 0x0C
-
-typedef struct {
-    /* 0x00 */ const char* name;
-    /* 0x04 */ u32 value;
-} F3dzexSetModeMacroValue; // size = 0x8
-
-typedef struct {
-    /* 0x00 */ const char* name;
-    /* 0x04 */ u32 shift;
-    /* 0x08 */ u32 len;
-    /* 0x0C */ F3dzexSetModeMacroValue values[4];
-} F3dzexSetModeMacro; // size = 0x2C
-
-typedef struct {
-    /* 0x00 */ u16* value;
-    /* 0x04 */ const char* name;
-} FlagSetEntry; // size = 0x08
 
 typedef struct {
     GameState state;
