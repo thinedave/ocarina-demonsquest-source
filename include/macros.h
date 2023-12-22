@@ -156,16 +156,16 @@ extern struct GraphicsContext* __gfxCtx;
     }                                                   \
     (void)0
 
-#define OPEN_DISPS_AUTO() \
+#define OPEN_DISPS_AUTO(play) \
     {                                  \
         GraphicsContext* __gfxCtx;     \
         Gfx* dispRefs[4];              \
-        __gfxCtx = this->state.gfxCtx;             \
+        __gfxCtx = (play)->state.gfxCtx;             \
         (void)__gfxCtx;                \
-        Graph_OpenDisps(dispRefs, this->state.gfxCtx, __FILE__, __LINE__)
+        Graph_OpenDisps(dispRefs, (play)->state.gfxCtx, __FILE__, __LINE__)
 
-#define CLOSE_DISPS_AUTO()                 \
-        Graph_CloseDisps(dispRefs, this->state.gfxCtx, __FILE__, __LINE__); \
+#define CLOSE_DISPS_AUTO(play)                 \
+        Graph_CloseDisps(dispRefs, (play)->state.gfxCtx, __FILE__, __LINE__); \
     }                                                   \
     (void)0
 

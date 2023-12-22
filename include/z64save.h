@@ -171,6 +171,15 @@ typedef enum {
 #define ENV_HAZARD_TEXT_TRIGGER_HOTROOM (1 << 0)
 #define ENV_HAZARD_TEXT_TRIGGER_UNDERWATER (1 << 1)
 
+typedef struct {
+    u16 points;
+    u8 strength;
+    u8 intelligence;
+    u8 endurance;
+    u8 luck;
+
+} SavePlayerLevels;
+
 // offsets in SavePlayerData and SaveContext/Save
 typedef struct {
     /* 0x00  0x001C */ char newf[6]; // string "ZELDAZ"
@@ -200,6 +209,7 @@ typedef struct {
     /* 0x38  0x0054 */ u32 unk_54; // this may be incorrect, currently used for alignment
     /* 0x3C  0x0058 */ char unk_58[0x0E];
     /* 0x4A  0x0066 */ s16 savedSceneId;
+    SavePlayerLevels levels;
 } SavePlayerData;
 
 // offsets in SaveInfo and SaveContext/Save
@@ -230,7 +240,7 @@ typedef struct {
     RespawnData saveRespawnPoint;
     bool demonsCurse;
     bool dead;
-    u8 heartsBlocked;
+    s16 heartsBlocked;
     /* 0x1336  0x1352 */ u16 checksum; // "check_sum"
 } SaveInfo;
 

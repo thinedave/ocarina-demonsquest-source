@@ -371,10 +371,10 @@ void Fault_PadCallback(Input* inputs) {
     //! In Majora's Mask, PadMgr functions were changed to not require this argument, and this was
     //! likely just not addressed when backporting.
 #ifndef AVOID_UB
-    PadMgr_RequestPadData(&gPadMgr, inputs, false);
+    //PadMgr_RequestPadData(&gPadMgr, inputs, false);
 #else
     // Guarantee crashing behavior: false -> NULL, previous value in a2 is more often non-zero than zero
-    PadMgr_RequestPadData((PadMgr*)inputs, NULL, true);
+    //PadMgr_RequestPadData((PadMgr*)inputs, NULL, true);
 #endif
 }
 

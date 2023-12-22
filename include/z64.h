@@ -543,7 +543,7 @@ typedef struct {
     Vtx DQ_HeroModeConnectorVtx[4];
     s16 DQ_HeroModeConnectorAlpha;
     bool deads[3];
-    u8 heartsBlocked[3];
+    s16 heartsBlocked[3];
 } FileSelectState; // size = 0x1CAE0
 
 // Macros for `EntranceInfo.field`

@@ -150,7 +150,7 @@ void ConsoleLogo_Main(GameState* thisx) {
     ConsoleLogo_Calc(this);
     ConsoleLogo_Draw(this);
 
-    if(this->coverAlpha >= 15 && CHECK_BTN_ANY(thisx->input[0].cur.button, BTN_A | BTN_B | BTN_L | BTN_R | BTN_Z | BTN_START | BTN_CUP | BTN_CLEFT | BTN_CRIGHT
+    if(this->coverAlpha < 150 && CHECK_BTN_ANY(thisx->input[0].cur.button, BTN_A | BTN_B | BTN_L | BTN_R | BTN_Z | BTN_START | BTN_CUP | BTN_CLEFT | BTN_CRIGHT
         | BTN_CDOWN | BTN_DUP | BTN_DDOWN | BTN_DLEFT | BTN_DRIGHT)) {
         this->exit = true;
 

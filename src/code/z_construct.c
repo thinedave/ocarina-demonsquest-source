@@ -6,6 +6,28 @@ void Interface_Destroy(PlayState* play) {
 
 #define ICON_ITEM_SEGMENT_SIZE (4 * ITEM_ICON_SIZE)
 
+static SaveRestingContext sSaveRestingContext = {
+    0,                      // alpha
+    0,                      // targetAlpha
+    15,                     // alphaStep
+    0,                      // timer
+    REST_STATE_INACTIVE,    // state
+    0,                      // selection
+    {},                     // font
+    {0,0,0,0,0}             // wantedLevels
+
+};
+
+void Interface_SaveResting_Init(PlayState* play) {
+    InterfaceContext* interfaceCtx = &play->interfaceCtx;
+    interfaceCtx->saveRestingCtx = sSaveRestingContext;
+
+    interfaceCtx->saveRestingCtx.wantedLevels = gSaveContext.save.info.playerData.levels;
+
+    Font_LoadOrderedFont(&interfaceCtx->saveRestingCtx.font);
+
+}
+
 void Interface_Init(PlayState* play) {
     InterfaceContext* interfaceCtx = &play->interfaceCtx;
     u32 parameterSize;
@@ -181,6 +203,7 @@ void Interface_Init(PlayState* play) {
 
     Health_InitMeter(play);
     Map_Init(play);
+    Interface_SaveResting_Init(play);
 
     interfaceCtx->unk_23C = interfaceCtx->unk_242 = 0;
 

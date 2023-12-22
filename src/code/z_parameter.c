@@ -3,6 +3,8 @@
 #include "assets/textures/parameter_static/parameter_static.h"
 #include "assets/textures/do_action_static/do_action_static.h"
 #include "assets/textures/icon_item_static/icon_item_static.h"
+#include "saveresting.h"
+#include "assets/objects/gameplay_keep/gameplay_keep.h"
 
 typedef struct {
     /* 0x00 */ u8 sceneId;
@@ -4378,7 +4380,7 @@ void Interface_Draw(PlayState* play) {
 
     Player* player = GET_PLAYER(play);
 
-    if(LINK_AGE_IN_YEARS == YEARS_ADULT) {
+    if(LINK_AGE_IN_YEARS == YEARS_ADULT && gSaveContext.hudVisibilityMode == CAM_HUD_VISIBILITY_ALL) {
         gSPSegment(OVERLAY_DISP++, 0x08, interfaceCtx->dpadItemSegment);
 
         //DPad
@@ -4433,7 +4435,7 @@ void Interface_Draw(PlayState* play) {
             dPadScale[0][1] = -.25f;
 
         }
-        
+
         if(CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DUP)) {
             dPadScale[1][0] = 1.25f;
             dPadScale[1][1] = -.25f;
@@ -4604,7 +4606,7 @@ void Interface_Draw(PlayState* play) {
         }
 
         gSPSegment(OVERLAY_DISP++, 0x08, interfaceCtx->iconItemSegment);
-    
+
     }
 
     /*
@@ -4630,7 +4632,7 @@ void Interface_Draw(PlayState* play) {
     GfxPrint_SetColor(&printer, 255, 255, 255, 255);
 
     u8 printPos = 10;
-    
+
     GfxPrint_SetPos(&printer, 1, printPos);
     GfxPrint_Printf(&printer, "PC:%08xH", (u32)thread->context.pc);
 
@@ -4664,6 +4666,8 @@ void Interface_Draw(PlayState* play) {
 
     //CLOSE_DISPS(play->state.gfxCtx);
     */
+
+    Interface_SaveResting_Draw(play);
 
     CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", 4269);
 }
@@ -5059,4 +5063,806 @@ void Interface_Update(PlayState* play) {
             gSaveContext.sunsSongState = SUNSSONG_SPECIAL;
         }
     }
+
+    Interface_SaveResting_Update(play);
+
+}
+
+static Gfx sSaveRestingSetupDL[] = {
+    gsDPPipeSync(),
+    gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_TEXTURE_GEN |
+                          G_TEXTURE_GEN_LINEAR | G_LOD | G_SHADING_SMOOTH),
+    gsDPSetOtherMode(G_AD_DISABLE | G_CD_MAGICSQ | G_CK_NONE | G_TC_FILT | G_TF_BILERP | G_TT_NONE | G_TL_TILE |
+                         G_TD_CLAMP | G_TP_NONE | G_CYC_1CYCLE | G_PM_1PRIMITIVE,
+                     G_AC_NONE | G_ZS_PIXEL | G_RM_CLD_SURF | G_RM_CLD_SURF2),
+    gsDPSetCombineLERP(0, 0, 0, PRIMITIVE, 0, 0, 0, PRIMITIVE, 0, 0, 0, PRIMITIVE, 0, 0, 0, PRIMITIVE),
+    gsSPEndDisplayList(),
+};
+
+void Interface_SaveResting_Start(PlayState* play) {
+    SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
+    Player* player = GET_PLAYER(play);
+
+    this->targetAlpha = 255;
+    this->alphaStep = 70;
+    this->state = REST_STATE_ENTER_FADEIN;
+    player->stateFlags1 |= PLAYER_STATE1_0;
+
+}
+
+void Interface_SaveResting_CheckAlpha(PlayState* play) {
+    SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
+    Player* player = GET_PLAYER(play);
+
+    if(this->alpha != this->targetAlpha) return;
+
+    switch(this->state) {
+        case REST_STATE_ENTER_FADEIN:
+            this->timer = 10;
+            this->alphaStep = 15;
+            this->state = REST_STATE_ENTER_WAIT;
+
+            Actor* save = Actor_FindNearby(play, &player->actor, ACTOR_SAVESPOT, ACTORCAT_ITEMACTION, 35.0f);
+
+            if(save != NULL)
+                player->actor.world.pos = save->world.pos;
+
+            Interface_ChangeHudVisibilityMode(HUD_VISIBILITY_HEARTS_FORCE);
+
+            break;
+        case REST_STATE_ENTER_WAIT:
+            if(this->timer > 0) this->timer--;
+            else {
+                this->targetAlpha = 0;
+                this->state = REST_STATE_ENTER_FADEOUT;
+
+            }
+            break;
+        case REST_STATE_ENTER_FADEOUT:
+            this->state = REST_STATE_IDLE;
+            break;
+
+        case REST_STATE_EXIT_FADEIN:
+            this->timer = 10;
+            this->state = REST_STATE_EXIT_WAIT;
+
+            Interface_ChangeHudVisibilityMode(HUD_VISIBILITY_ALL);
+
+            break;
+        case REST_STATE_EXIT_WAIT:
+            if(this->timer > 0) this->timer--;
+            else {
+                this->targetAlpha = 0;
+                this->state = REST_STATE_EXIT_FADEOUT;
+
+            }
+            break;
+        case REST_STATE_EXIT_FADEOUT:
+            Interface_ChangeHudVisibilityMode(HUD_VISIBILITY_ALL);
+            this->state = REST_STATE_INACTIVE;
+            player->stateFlags1 &= ~PLAYER_STATE1_0;
+            break;
+
+        default:
+            break;
+
+    }
+
+}
+
+void Interface_DrawCharTexture(Gfx** gfxP, u8* texture, s32 rectLeft, s32 rectTop, f32 scale) {
+    Gfx* gfx = *gfxP;
+
+    YREG(0) = 1024.0f * scale;
+    YREG(2) = 16.0f * scale;
+
+    gDPLoadTextureBlock_4b(gfx++, texture, G_IM_FMT_I, 16, 16, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+                           G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+    gSPTextureRectangle(gfx++, rectLeft << 2, rectTop << 2, (rectLeft + YREG(2)) << 2, (rectTop + YREG(2)) << 2,
+                        G_TX_RENDERTILE, 0, 0, YREG(0), YREG(0));
+
+    *gfxP = gfx;
+}
+
+void Interface_SaveResting_ApproachTargetAlpha(PlayState* play) {
+    SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
+
+    this->alpha = SAVEREST_APPROACH(0, 255);
+
+}
+
+void Interface_SaveResting_Update(PlayState* play) {
+    SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
+
+    if(this->alpha != this->targetAlpha) {
+        Interface_SaveResting_ApproachTargetAlpha(play);
+
+    }
+
+    Interface_SaveResting_CheckAlpha(play);
+
+    Interface_SaveResting_TakeInput(play);
+
+}
+
+f32 sFontWidthsParameter[144] = {
+    8.0f,  // ' '
+    8.0f,  // '!'
+    6.0f,  // '"'
+    9.0f,  // '#'
+    9.0f,  // '$'
+    14.0f, // '%'
+    12.0f, // '&'
+    3.0f,  // '''
+    7.0f,  // '('
+    7.0f,  // ')'
+    7.0f,  // '*'
+    9.0f,  // '+'
+    4.0f,  // ','
+    6.0f,  // '-'
+    4.0f,  // '.'
+    9.0f,  // '/'
+    10.0f, // '0'
+    5.0f,  // '1'
+    9.0f,  // '2'
+    9.0f,  // '3'
+    10.0f, // '4'
+    9.0f,  // '5'
+    9.0f,  // '6'
+    9.0f,  // '7'
+    9.0f,  // '8'
+    9.0f,  // '9'
+    6.0f,  // ':'
+    6.0f,  // ';'
+    9.0f,  // '<'
+    11.0f, // '='
+    9.0f,  // '>'
+    11.0f, // '?'
+    13.0f, // '@'
+    12.0f, // 'A'
+    9.0f,  // 'B'
+    11.0f, // 'C'
+    11.0f, // 'D'
+    8.0f,  // 'E'
+    8.0f,  // 'F'
+    12.0f, // 'G'
+    10.0f, // 'H'
+    4.0f,  // 'I'
+    8.0f,  // 'J'
+    10.0f, // 'K'
+    8.0f,  // 'L'
+    13.0f, // 'M'
+    11.0f, // 'N'
+    13.0f, // 'O'
+    9.0f,  // 'P'
+    13.0f, // 'Q'
+    10.0f, // 'R'
+    10.0f, // 'S'
+    9.0f,  // 'T'
+    10.0f, // 'U'
+    11.0f, // 'V'
+    15.0f, // 'W'
+    11.0f, // 'X'
+    10.0f, // 'Y'
+    10.0f, // 'Z'
+    7.0f,  // '['
+    10.0f, // '\'
+    7.0f,  // ']'
+    10.0f, // '^'
+    9.0f,  // '_'
+    5.0f,  // '`'
+    8.0f,  // 'a'
+    9.0f,  // 'b'
+    8.0f,  // 'c'
+    9.0f,  // 'd'
+    9.0f,  // 'e'
+    6.0f,  // 'f'
+    9.0f,  // 'g'
+    8.0f,  // 'h'
+    4.0f,  // 'i'
+    6.0f,  // 'j'
+    8.0f,  // 'k'
+    4.0f,  // 'l'
+    12.0f, // 'm'
+    9.0f,  // 'n'
+    9.0f,  // 'o'
+    9.0f,  // 'p'
+    9.0f,  // 'q'
+    7.0f,  // 'r'
+    8.0f,  // 's'
+    7.0f,  // 't'
+    8.0f,  // 'u'
+    9.0f,  // 'v'
+    12.0f, // 'w'
+    8.0f,  // 'x'
+    9.0f,  // 'y'
+    8.0f,  // 'z'
+    7.0f,  // '{'
+    5.0f,  // '|'
+    7.0f,  // '}'
+    10.0f, // '~'
+    10.0f, // '‾'
+    12.0f, // 'À'
+    6.0f,  // 'î'
+    12.0f, // 'Â'
+    12.0f, // 'Ä'
+    11.0f, // 'Ç'
+    8.0f,  // 'È'
+    8.0f,  // 'É'
+    8.0f,  // 'Ê'
+    6.0f,  // 'Ë'
+    6.0f,  // 'Ï'
+    13.0f, // 'Ô'
+    13.0f, // 'Ö'
+    10.0f, // 'Ù'
+    10.0f, // 'Û'
+    10.0f, // 'Ü'
+    9.0f,  // 'ß'
+    8.0f,  // 'à'
+    8.0f,  // 'á'
+    8.0f,  // 'â'
+    8.0f,  // 'ä'
+    8.0f,  // 'ç'
+    9.0f,  // 'è'
+    9.0f,  // 'é'
+    9.0f,  // 'ê'
+    9.0f,  // 'ë'
+    6.0f,  // 'ï'
+    9.0f,  // 'ô'
+    9.0f,  // 'ö'
+    9.0f,  // 'ù'
+    9.0f,  // 'û'
+    9.0f,  // 'ü'
+    14.0f, // '[A]'
+    14.0f, // '[B]'
+    14.0f, // '[C]'
+    14.0f, // '[L]'
+    14.0f, // '[R]'
+    14.0f, // '[Z]'
+    14.0f, // '[C-Up]'
+    14.0f, // '[C-Down]'
+    14.0f, // '[C-Left]'
+    14.0f, // '[C-Right]'
+    14.0f, // '▼'
+    14.0f, // '[Control-Pad]'
+    14.0f, // '[D-Pad]'
+    14.0f, // ?
+    14.0f, // ?
+    14.0f, // ?
+    14.0f, // ?
+};
+
+static s16 sLowercaseOffset = 0x3D;
+static s16 sNumberOffset = 0x30;
+static s16 sButtonOffset = -0x12;
+static f32 sCharKerning = 0.92f;
+
+#define RESTING_DETERMINE_CHAROFFSET(v) ((v == '-') ? sButtonOffset : ((v >= '0' && v <= '9') ? sNumberOffset : ((v >= 'a' && v <= 'z') ? sLowercaseOffset : 0x37)))
+#define CHARNULL ']'
+#define SAVEREST_LINESPACE 15
+#define SAVEREST_GETR(i) (this->selection == i ? 255 : 255)
+#define SAVEREST_GETG(i) (this->selection == i ? 255 : 255)
+#define SAVEREST_GETB(i) (this->selection == i ? 0 : 255)
+#define SAVEREST_GETR_STAT(i, stat) 
+#define SAVEREST_GETG_STAT(i, stat) ((this->selection == i || stat > stats->##stat) ? 255 : 255)
+#define SAVEREST_GETB_STAT(i, stat) ((this->selection == i || stat > stats->##stat) ? 0 : 255)
+
+void SaveResting_DrawString(PlayState* play, Gfx** gfxP, char* text, s32 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale) {
+    Gfx* gfx = *gfxP;
+
+    SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
+    u16 textPos = x;
+
+    gDPPipeSync(gfx++);
+    gDPSetCombineLERP(gfx++, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0);
+    gDPSetPrimColor(gfx++, 0, 0, r, g, b, a);
+
+    for(s16 i = (rightJustified ? textLength : 0); (rightJustified ? (i >= 0) : (i < textLength)); (rightJustified ? i-- : i++)) {
+        if(text[i] == CHARNULL) continue;
+
+        Interface_DrawCharTexture(&gfx, this->font.fontBuf + (text[i] - RESTING_DETERMINE_CHAROFFSET(text[i])) * FONT_CHAR_TEX_SIZE, textPos, y+1, scale);
+
+        s32 diff = (s32)(sFontWidthsParameter[text[(rightJustified ? MAX(i-1, 0) : i)] - ' '] * (sCharKerning * (2-scale)));
+        textPos = (rightJustified ? (textPos - diff) : (textPos + diff));
+
+    }
+
+    *gfxP = gfx;
+
+}
+
+void SaveResting_DrawStringShadowed(PlayState* play, Gfx** gfx, char* text, s32 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale) {
+    SaveResting_DrawString(play, gfx, text, textLength, x+1, y+1, 0, 0, 0, a, rightJustified, scale);
+    SaveResting_DrawString(play, gfx, text, textLength, x, y, r, g, b, a, rightJustified, scale);
+
+}
+
+void SaveResting_DrawHelp(PlayState* play, Gfx** gfx) {
+    char helpText[] = "Control Pad - Navigate and Assign Points";
+    SaveResting_DrawStringShadowed(play, gfx, helpText, ARRAY_COUNT(helpText), 20, 90 + (SAVEREST_LINESPACE*7.6), 255, 255, 255, 255, false, 1.2f);
+
+    char helpText2[] = "A - Select B - Back";
+    SaveResting_DrawStringShadowed(play, gfx, helpText2, ARRAY_COUNT(helpText2), 20, 90 + (SAVEREST_LINESPACE*8.6), 255, 255, 255, 255, false, 1.2f);
+
+}
+
+u8 Interface_SaveResting_GetRWithStat(s8 selection, s8 i, u8 wantedStat, u8 stat) {
+    return ((selection == i || wantedStat > stat) ? 255 : 255);
+
+}
+
+u8 Interface_SaveResting_GetGWithStat(s8 selection, s8 i, u8 wantedStat, u8 stat) {
+    return ((selection == i || wantedStat > stat) ? 255 : 255);
+
+}
+
+u8 Interface_SaveResting_GetBWithStat(s8 selection, s8 i, u8 wantedStat, u8 stat) {
+    return ((selection == i || wantedStat > stat) ? 0 : 255);
+
+}
+
+void SaveResting_IntIntoArr(char* arr, s16* num) {
+    if(*num == 0) {
+        arr[0] = '0';
+        return;
+
+    }
+
+    u16 i = 0;
+    s16 dummy = *num;
+    while(dummy > 0) {
+        i++;
+        dummy /= 10;
+
+    }
+
+    i--;
+
+    while(*num > 0) {
+        arr[i] = (*num % 10) + '0';
+        *num /= 10;
+        i--;
+
+    }
+
+}
+
+void Interface_SaveResting_Draw(PlayState* play) {
+    SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
+    GraphicsContext* gfxCtx = play->state.gfxCtx;
+
+    if(this->state == REST_STATE_INACTIVE) return;
+
+    //osSyncPrintf("SaveResting_Draw has been called. ADDR:%x", &this);
+
+    Interface_SaveResting_DrawDebug(play, gfxCtx);
+
+    GfxPrint printer;
+    Gfx* gfx;
+
+    OPEN_DISPS_AUTO(play);
+
+    gfx = POLY_OPA_DISP + 1;
+    gSPDisplayList(OVERLAY_DISP++, gfx);
+
+    Gfx_SetupDL_39Ptr(&gfx);
+
+    gDPSetAlphaCompare(gfx++, G_AC_NONE);
+    gDPSetCombineMode(gfx++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+
+    s32 textPos;
+    SavePlayerLevels* stats = &gSaveContext.save.info.playerData.levels;
+    SavePlayerLevels wantedStats = this->wantedLevels;
+    char backText[] = "Back";
+
+    u16 textY = 90;
+    u8 dummy = 0;
+    u8 i = 0;
+
+    switch(this->state) {
+        case REST_STATE_IDLE:
+            char levelUpText[] = "Level Up";
+            SaveResting_DrawStringShadowed(play, &gfx, levelUpText, ARRAY_COUNT(levelUpText), 20, textY, SAVEREST_GETR(0), SAVEREST_GETG(0), SAVEREST_GETB(0), 255, false, 1.0f);
+        
+            char exitText[] = "Exit";
+            SaveResting_DrawStringShadowed(play, &gfx, exitText, ARRAY_COUNT(exitText), 20, textY + SAVEREST_LINESPACE, SAVEREST_GETR(1), SAVEREST_GETG(1), SAVEREST_GETB(1), 255, false, 1.0f);
+
+            SaveResting_DrawHelp(play, &gfx);
+
+            break;
+        case REST_STATE_MENU:
+            char pointsText[] = "Points";
+            SaveResting_DrawStringShadowed(play, &gfx, pointsText, ARRAY_COUNT(pointsText), 20, textY - SAVEREST_LINESPACE, 255, 255, 255, 255, false, 1);
+
+            char pointsStat[5] = {CHARNULL, CHARNULL, CHARNULL, CHARNULL, CHARNULL};
+            s16 points = wantedStats.points;
+            SaveResting_IntIntoArr(pointsStat, &points);
+            SaveResting_DrawStringShadowed(play, &gfx, pointsStat, ARRAY_COUNT(pointsStat), 130, textY - SAVEREST_LINESPACE, 255, 255, 255, 255, true, 1);
+
+            char strengthText[] = "Strength";
+            SaveResting_DrawStringShadowed(play, &gfx, strengthText, ARRAY_COUNT(strengthText), 20, textY, SAVEREST_GETR(0), SAVEREST_GETG(0), SAVEREST_GETB(0), 255, false, 1);
+
+            char strengthStat[3] = {CHARNULL, CHARNULL, CHARNULL};
+            s16 strength = wantedStats.strength;
+            SaveResting_IntIntoArr(strengthStat, &strength);
+            SaveResting_DrawStringShadowed(play, &gfx, strengthStat, ARRAY_COUNT(strengthStat), 130, textY, Interface_SaveResting_GetRWithStat(0, i, wantedStats.strength, stats->strength), Interface_SaveResting_GetGWithStat(0, i, wantedStats.strength, stats->strength), Interface_SaveResting_GetBWithStat(1, i, wantedStats.strength, stats->strength), 255, true, 1);
+        
+            char intelligenceText[] = "Intelligence";
+            SaveResting_DrawStringShadowed(play, &gfx, intelligenceText, ARRAY_COUNT(intelligenceText), 20, textY + (SAVEREST_LINESPACE*1), SAVEREST_GETR(1), SAVEREST_GETG(1), SAVEREST_GETB(1), 255, false, 1);
+
+            char intelligenceStat[3] = {CHARNULL, CHARNULL, CHARNULL};
+            s16 intelligence = wantedStats.intelligence;
+            SaveResting_IntIntoArr(intelligenceStat, &intelligence);
+            SaveResting_DrawStringShadowed(play, &gfx, intelligenceStat, ARRAY_COUNT(intelligenceStat), 130, textY + (SAVEREST_LINESPACE*1), Interface_SaveResting_GetRWithStat(1, i, wantedStats.intelligence, stats->intelligence), Interface_SaveResting_GetGWithStat(1, i, wantedStats.intelligence, stats->intelligence), Interface_SaveResting_GetBWithStat(1, i, wantedStats.intelligence, stats->intelligence), 255, true, 1);
+
+            char enduranceText[] = "Endurance";
+            SaveResting_DrawStringShadowed(play, &gfx, enduranceText, ARRAY_COUNT(enduranceText), 20, textY + (SAVEREST_LINESPACE*2), SAVEREST_GETR(2), SAVEREST_GETG(2), SAVEREST_GETB(2), 255, false, 1);
+
+            char enduranceStat[3] = {CHARNULL, CHARNULL, CHARNULL};
+            s16 endurance = wantedStats.endurance;
+            SaveResting_IntIntoArr(enduranceStat, &endurance);
+            SaveResting_DrawStringShadowed(play, &gfx, enduranceStat, ARRAY_COUNT(enduranceStat), 130, textY + (SAVEREST_LINESPACE*2), Interface_SaveResting_GetRWithStat(2, i, wantedStats.endurance, stats->endurance), Interface_SaveResting_GetGWithStat(2, i, wantedStats.endurance, stats->endurance), Interface_SaveResting_GetBWithStat(2, i, wantedStats.endurance, stats->endurance), 255, true, 1);
+
+            char luckText[] = "Luck";
+            SaveResting_DrawStringShadowed(play, &gfx, luckText, ARRAY_COUNT(luckText), 20, textY + (SAVEREST_LINESPACE*3), SAVEREST_GETR(3), SAVEREST_GETG(3), SAVEREST_GETB(3), 255, false, 1);
+
+            char luckStat[3] = {CHARNULL, CHARNULL, CHARNULL};
+            s16 luck = wantedStats.luck;
+            SaveResting_IntIntoArr(luckStat, &luck);
+            SaveResting_DrawStringShadowed(play, &gfx, luckStat, ARRAY_COUNT(luckStat), 130, textY + (SAVEREST_LINESPACE*3), Interface_SaveResting_GetRWithStat(3, i, wantedStats.luck, stats->luck), Interface_SaveResting_GetGWithStat(3, i, wantedStats.luck, stats->luck), Interface_SaveResting_GetBWithStat(3, i, wantedStats.luck, stats->luck), 255, true, 1);
+            
+            char confirmText[] = "Confirm";
+            SaveResting_DrawStringShadowed(play, &gfx, confirmText, ARRAY_COUNT(confirmText), 20, textY + (SAVEREST_LINESPACE*4.5), SAVEREST_GETR(4), SAVEREST_GETG(4), SAVEREST_GETB(4), 255, false, 1);
+            
+            SaveResting_DrawStringShadowed(play, &gfx, backText, ARRAY_COUNT(backText), 20, textY + (SAVEREST_LINESPACE*5.5), SAVEREST_GETR(5), SAVEREST_GETG(5), SAVEREST_GETB(5), 255, false, 1);
+
+            SaveResting_DrawHelp(play, &gfx);
+
+            break;
+        default:
+            break;
+
+    }
+
+    gSPEndDisplayList(gfx++);
+    gSPBranchList(POLY_OPA_DISP, gfx);
+    POLY_OPA_DISP = gfx;
+
+    CLOSE_DISPS_AUTO(play);
+
+    OPEN_DISPS_AUTO(play);
+
+    gSPDisplayList(OVERLAY_DISP++, sSaveRestingSetupDL);
+    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, this->alpha);
+    gDPFillRectangle(OVERLAY_DISP++, 0, 0, gScreenWidth - 1, gScreenHeight - 1);
+    gDPPipeSync(OVERLAY_DISP++);
+
+    CLOSE_DISPS_AUTO(play);
+
+}
+
+void Interface_SaveResting_DrawDebug(PlayState* play, GraphicsContext* gfxCtx) {
+    SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
+    SavePlayerLevels* stats = &gSaveContext.save.info.playerData.levels;
+
+    GfxPrint printer;
+    Gfx* gfx;
+
+    OPEN_DISPS_AUTO(play);
+
+    // the dlist will be written in the opa buffer because that buffer is larger,
+    // but executed from the overlay buffer (overlay draws last, for example the hud is drawn to overlay)
+    gfx = POLY_OPA_DISP + 1;
+    gSPDisplayList(OVERLAY_DISP++, gfx);
+
+    // initialize GfxPrint struct
+    GfxPrint_Init(&printer);
+    GfxPrint_Open(&printer, gfx);
+
+    GfxPrint_SetColor(&printer, 255, 255, 255, 255);
+
+    //GfxPrint_SetPos(&printer, 1, 4);
+    //GfxPrint_Printf(&printer, "STATE: %i", this->state);
+
+    //GfxPrint_SetPos(&printer, 1, 4);
+    //GfxPrint_Printf(&printer, "sNumberOffset: %x", sNumberOffset);
+
+    //GfxPrint_SetPos(&printer, 1, 4);
+    //GfxPrint_Printf(&printer, "sButtonOffset: %x", sButtonOffset);
+
+    //GfxPrint_SetPos(&printer, 1, 6);
+    //GfxPrint_Printf(&printer, "LEVELS: %x", &stats);
+
+    //GfxPrint_SetPos(&printer, 1, 7);
+    //GfxPrint_Printf(&printer, "WANTED: %x", &this->wantedLevels);
+
+    //GfxPrint_SetPos(&printer, 1, 5);
+    //GfxPrint_Printf(&printer, "ALPHA: %i", this->alpha);
+
+    //GfxPrint_SetPos(&printer, 1, 6);
+    //GfxPrint_Printf(&printer, "TARGETALPHA: %i", this->targetAlpha);
+
+    //GfxPrint_SetPos(&printer, 1, 7);
+    //GfxPrint_Printf(&printer, "ALPHASTEP: %i", this->alphaStep);
+
+    //GfxPrint_SetPos(&printer, 1, 8);
+    //GfxPrint_Printf(&printer, "TIMER: %i", this->timer);
+
+    //GfxPrint_SetPos(&printer, 1, 9);
+    //GfxPrint_Printf(&printer, "SELECTION: %i", this->selection);
+    
+    /*switch(this->state) {
+        case REST_STATE_IDLE:
+            SAVEREST_SETCOLOR(0);
+            GfxPrint_SetPos(&printer, 4, 12);
+            GfxPrint_Printf(&printer, "STATS");
+            
+            SAVEREST_SETCOLOR(1);
+            GfxPrint_SetPos(&printer, 4, 13);
+            GfxPrint_Printf(&printer, "LEAVE");
+            break;
+        case REST_STATE_MENU:
+            SAVEREST_SETCOLOR(0);
+            GfxPrint_SetPos(&printer, 4, 12);
+            GfxPrint_Printf(&printer, "STRENGTH: %i", stats->strength);
+
+            SAVEREST_SETCOLOR(1);
+            GfxPrint_SetPos(&printer, 4, 13);
+            GfxPrint_Printf(&printer, "INTELLIGENCE: %i", stats->intelligence);
+
+            SAVEREST_SETCOLOR(2);
+            GfxPrint_SetPos(&printer, 4, 14);
+            GfxPrint_Printf(&printer, "ENDURANCE: %i", stats->endurance);
+
+            SAVEREST_SETCOLOR(3);
+            GfxPrint_SetPos(&printer, 4, 15);
+            GfxPrint_Printf(&printer, "LUCK: %i", stats->luck);
+            break;
+        default:
+            break;
+
+    }*/
+
+    // end of text printing
+    gfx = GfxPrint_Close(&printer);
+    GfxPrint_Destroy(&printer);
+
+    gSPEndDisplayList(gfx++);
+    // make the opa dlist jump over the part that will be executed as part of overlay
+    gSPBranchList(POLY_OPA_DISP, gfx);
+    POLY_OPA_DISP = gfx;
+
+    CLOSE_DISPS_AUTO(play);
+
+}
+
+static bool Interface_SaveResting_CursorDebounce = false;
+
+void SaveResting_TryTakeLevel(u8 stat, u8* wantedLevel, u16* points, u16* soundToPlay) {
+    if(*wantedLevel <= stat) return;
+
+    *soundToPlay = NA_SE_SY_FSEL_CURSOR;
+    *wantedLevel = MAX(*wantedLevel - 1, 0);
+    *points = *points + 1;
+
+}
+
+void SaveResting_TryGiveLevel(u8* wantedLevel, u16* points, u16* soundToPlay) {
+    if(*points <= 0 || *wantedLevel >= 255) return;
+
+    *soundToPlay = NA_SE_SY_FSEL_CURSOR;
+    *wantedLevel = MIN(*wantedLevel + 1, 255);
+    *points = *points - 1;
+
+}
+
+void Interface_SaveResting_TakeInput(PlayState* play) {
+    SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
+    Input* input = &play->state.input[0];
+
+    u8 state = this->state;
+
+    if(!REST_ISRESTING(state)) return;
+
+    //if(CHECK_BTN_ALL(input->press.button, BTN_DLEFT))
+    //    sNumberOffset--;
+
+    //if(CHECK_BTN_ALL(input->press.button, BTN_DRIGHT))
+    //    sNumberOffset++;
+
+    if(input->rel.stick_y < 30 && input->rel.stick_y > -30 && input->rel.stick_x < 30 && input->rel.stick_x > -30)
+        Interface_SaveResting_CursorDebounce = false;
+
+    SavePlayerLevels* stats = &gSaveContext.save.info.playerData.levels;
+    SavePlayerLevels* wantedLevels = &this->wantedLevels;
+
+    if(CHECK_BTN_ALL(input->cur.button, BTN_DLEFT) || (input->rel.stick_x <= -30 && !Interface_SaveResting_CursorDebounce)) {
+        Interface_SaveResting_CursorDebounce = true;
+
+        u16 soundToPlay = NA_SE_NONE;
+
+        switch(state) {
+            case REST_STATE_MENU:
+                switch(this->selection) {
+                    case 0:
+                        SaveResting_TryTakeLevel(stats->strength, &wantedLevels->strength, &wantedLevels->points, &soundToPlay);
+                        break;
+                    case 1:
+                        SaveResting_TryTakeLevel(stats->intelligence, &wantedLevels->intelligence, &wantedLevels->points, &soundToPlay);
+                        break;
+                    case 2:
+                        SaveResting_TryTakeLevel(stats->endurance, &wantedLevels->endurance, &wantedLevels->points, &soundToPlay);
+                        break;
+                    case 3:
+                        SaveResting_TryTakeLevel(stats->luck, &wantedLevels->luck, &wantedLevels->points, &soundToPlay);
+                        break;
+                    default:
+                        break;
+
+                }
+                break;
+            default:
+                break;
+
+        }
+
+        Audio_PlaySfxGeneral(soundToPlay, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+    }
+
+    if(CHECK_BTN_ALL(input->cur.button, BTN_DRIGHT) || (input->rel.stick_x > 30 && !Interface_SaveResting_CursorDebounce)) {
+        Interface_SaveResting_CursorDebounce = true;
+
+        u16 soundToPlay = NA_SE_NONE;
+
+        switch(state) {
+            case REST_STATE_MENU:
+                switch(this->selection) {
+                    case 0:
+                        SaveResting_TryGiveLevel(&wantedLevels->strength, &wantedLevels->points, &soundToPlay);
+                        break;
+                    case 1:
+                        SaveResting_TryGiveLevel(&wantedLevels->intelligence, &wantedLevels->points, &soundToPlay);
+                        break;
+                    case 2:
+                        SaveResting_TryGiveLevel(&wantedLevels->endurance, &wantedLevels->points, &soundToPlay);
+                        break;
+                    case 3:
+                        SaveResting_TryGiveLevel(&wantedLevels->luck, &wantedLevels->points, &soundToPlay);
+                        break;
+                    default:
+                        break;
+
+                }
+                break;
+            default:
+                break;
+
+        }
+
+        Audio_PlaySfxGeneral(soundToPlay, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+    }
+    
+    if(CHECK_BTN_ALL(input->press.button, BTN_DDOWN) || (input->rel.stick_y <= -30 && !Interface_SaveResting_CursorDebounce)) {
+        Interface_SaveResting_CursorDebounce = true;
+
+        Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+        switch(state) {
+            case REST_STATE_IDLE:
+                this->selection++;
+                if(this->selection > 1) this->selection = 0;
+                break;
+            case REST_STATE_MENU:
+                this->selection++;
+                if(this->selection > 5) this->selection = 0;
+                break;
+            default:
+                break;
+
+        }
+
+    }
+
+    if(CHECK_BTN_ALL(input->press.button, BTN_DUP) || (input->rel.stick_y >= 30 && !Interface_SaveResting_CursorDebounce)) {
+        Interface_SaveResting_CursorDebounce = true;
+
+        Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+        switch(state) {
+            case REST_STATE_IDLE:
+                this->selection--;
+                if(this->selection < 0) this->selection = 1;
+                break;
+            case REST_STATE_MENU:
+                this->selection--;
+                if(this->selection < 0) this->selection = 5;
+                break;
+            default:
+                break;
+
+        }
+
+    }
+
+    if(CHECK_BTN_ALL(input->press.button, BTN_B)) {
+        Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CLOSE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+        switch(state) {
+            case REST_STATE_IDLE:
+                this->targetAlpha = 0;
+                this->selection = 0;
+                this->state = REST_STATE_EXIT_FADEOUT;
+                break;
+            case REST_STATE_MENU:
+                this->state = REST_STATE_IDLE;
+                this->selection = 0;
+                break;
+            default:
+                break;
+
+        }
+
+    }
+
+    if(CHECK_BTN_ALL(input->press.button, BTN_A)) {
+        u16 soundToPlay = NA_SE_SY_FSEL_DECIDE_S;
+
+        switch(state) {
+            case REST_STATE_IDLE:
+                switch(this->selection) {
+                    case 0:
+                        this->state = REST_STATE_MENU;
+                        this->selection = 0;
+                        break;
+                    case 1:
+                        soundToPlay = NA_SE_SY_FSEL_CLOSE;
+                        this->targetAlpha = 0;
+                        this->selection = 0;
+                        this->state = REST_STATE_EXIT_FADEOUT;
+                        break;
+                    default:
+                        break;
+
+                }
+                break;
+            case REST_STATE_MENU:
+                switch(this->selection) {
+                    case 4:
+                        stats->strength = wantedLevels->strength;
+                        stats->intelligence = wantedLevels->intelligence;
+                        stats->endurance = wantedLevels->endurance;
+                        stats->luck = wantedLevels->luck;
+                        stats->points = wantedLevels->points;
+
+                        soundToPlay = NA_SE_SY_FSEL_DECIDE_L;
+
+                        break;
+                    case 5:
+                        soundToPlay = NA_SE_SY_FSEL_CLOSE;
+                        this->state = REST_STATE_IDLE;
+                        this->selection = 0;
+                        break;
+                    default:
+                        break;
+
+                }
+                break;
+            default:
+                break;
+
+        }
+
+        Audio_PlaySfxGeneral(soundToPlay, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+    }
+
 }

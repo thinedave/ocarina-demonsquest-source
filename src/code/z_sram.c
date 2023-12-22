@@ -29,6 +29,15 @@ u16 gSramSlotOffsets[] = {
 
 static char sZeldaMagic[] = { '\0', '\0', '\0', '\x98', '\x09', '\x10', '\x21', 'Z', 'E', 'L', 'D', 'A' };
 
+static const SavePlayerLevels sNewSaveLevels = {
+    0, // points
+    2,  // strength
+    12,  // intelligence
+    5,  // endurance
+    0,  // luck
+
+};
+
 static SavePlayerData sNewSavePlayerData = {
     { '\0', '\0', '\0', '\0', '\0', '\0' },             // newf
     0,                                                  // deaths
@@ -65,6 +74,7 @@ static SavePlayerData sNewSavePlayerData = {
     0,                                                  // unk_38
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },       // unk_3C
     SCENE_LINKS_HOUSE,                                  // savedSceneId
+    sNewSaveLevels,                                     // levels
 };
 
 static ItemEquips sNewSaveEquips = {
@@ -149,9 +159,6 @@ void Sram_InitNewSave(void) {
     gSaveContext.save.info.savePoint = -1; // default save point
 
     gSaveContext.save.info.playerData = sNewSavePlayerData;
-    gSaveContext.save.info.playerData.shieldDurabilityDeku = 25;
-    gSaveContext.save.info.playerData.shieldDurabilityHylian = 50;
-    gSaveContext.save.info.playerData.shieldDurabilityMirror = 75;
     gSaveContext.save.info.demonsCurse = false;
     gSaveContext.save.info.dead = false;
     gSaveContext.save.info.heartsBlocked = 0x00;
@@ -169,6 +176,15 @@ void Sram_InitNewSave(void) {
     gSaveContext.save.info.sceneFlags[SCENE_WATER_TEMPLE].swch = 0x40000000;
 }
 
+static const SavePlayerLevels sDebugSaveLevels = {
+    12, // points
+    255,  // strength
+    42,  // intelligence
+    37,  // endurance
+    4,  // luck
+
+};
+
 static SavePlayerData sDebugSavePlayerData = {
     { 'Z', 'E', 'L', 'D', 'A', 'Z' },                   // newf
     0,                                                  // deaths
@@ -180,7 +196,7 @@ static SavePlayerData sDebugSavePlayerData = {
     0x20,                                               // heartsBlocked
     0xE0,                                               // permHeathCapacity
     0xE0,                                               // healthCapacity
-    0xE0,                                               // health
+    0xB0,                                               // health
     0,                                                  // magicLevel
     MAGIC_NORMAL_METER,                                 // magic
     150,                                                // rupees
@@ -205,6 +221,7 @@ static SavePlayerData sDebugSavePlayerData = {
     0,                                                  // unk_38
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },       // unk_3C
     SCENE_HYRULE_FIELD,                                 // savedSceneId
+    sDebugSaveLevels,                                   // levels
 };
 
 static ItemEquips sDebugSaveEquips = {
@@ -302,12 +319,9 @@ void Sram_InitDebugSave(void) {
     gSaveContext.save.bgsDayCount = 0;
 
     gSaveContext.save.info.playerData = sDebugSavePlayerData;
-    gSaveContext.save.info.playerData.shieldDurabilityDeku = 25;
-    gSaveContext.save.info.playerData.shieldDurabilityHylian = 50;
-    gSaveContext.save.info.playerData.shieldDurabilityMirror = 75;
     gSaveContext.save.info.demonsCurse = true;
     gSaveContext.save.info.dead = false;
-    gSaveContext.save.info.heartsBlocked = 0x00;
+    gSaveContext.save.info.heartsBlocked = 0x30;
     gSaveContext.save.info.equips = sDebugSaveEquips;
     gSaveContext.save.info.inventory = sDebugSaveInventory;
 

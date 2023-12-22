@@ -62,7 +62,7 @@ void HMSplash_TextureRGBA32(Gfx** gfxp, s16 centerX, s16 centerY, u8* source, u3
 }
 
 void HMSplash_Draw(HMSplashState* this) {
-    OPEN_DISPS_AUTO();
+    OPEN_DISPS_AUTO(this);
 
     gSPSegment(POLY_OPA_DISP++, 0, NULL);
     gSPSegment(POLY_OPA_DISP++, 1, this->staticSegment);
@@ -74,7 +74,7 @@ void HMSplash_Draw(HMSplashState* this) {
     gDPSetEnvColor(POLY_OPA_DISP++, 0, 255, 255, 255);
     HMSplash_TextureRGBA32(&POLY_OPA_DISP, 160, 120, (u8*)gHylianModdingLogoTex, 320, 240);
 
-    CLOSE_DISPS_AUTO();
+    CLOSE_DISPS_AUTO(this);
 
 }
 
@@ -97,7 +97,7 @@ void HMSplash_Main(GameState* thisx) {
     if(this->timer >= 45 && CHECK_BTN_ANY(thisx->input[0].cur.button, BTN_A | BTN_B | BTN_L | BTN_R | BTN_Z | BTN_START | BTN_CUP | BTN_CLEFT | BTN_CRIGHT | BTN_CDOWN | BTN_DUP | BTN_DDOWN | BTN_DLEFT | BTN_DRIGHT))
         this->exit = true;
 
-    OPEN_DISPS_AUTO();
+    OPEN_DISPS_AUTO(this);
 
     HMSplash_Draw(this);
 
@@ -107,7 +107,7 @@ void HMSplash_Main(GameState* thisx) {
 
     }
 
-    CLOSE_DISPS_AUTO();
+    CLOSE_DISPS_AUTO(this);
 
 }
 

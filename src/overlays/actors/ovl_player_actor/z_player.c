@@ -23,6 +23,7 @@
 #include "overlays/effects/ovl_Effect_Ss_Fhg_Flash/z_eff_ss_fhg_flash.h"
 #include "assets/objects/gameplay_keep/gameplay_keep.h"
 #include "assets/objects/object_link_child/object_link_child.h"
+#include "saveresting.h"
 
 u32 Player_PerfectTime = 0;
 u32 Player_PerfectResetTimer = 0;
@@ -3359,8 +3360,20 @@ void func_80836448(PlayState* play, Player* this, LinkAnimationHeader* anim) {
 
             gSaveContext.save.info.heartsBlocked += 0x10;
 
+            LOG("demonsCurse", gSaveContext.save.info.demonsCurse, "%i", __FILE__, __LINE__);
+
             if(!gSaveContext.save.info.demonsCurse && gSaveContext.save.info.heartsBlocked > gSaveContext.save.info.playerData.healthCapacity-0x20)
                 gSaveContext.save.info.heartsBlocked = gSaveContext.save.info.playerData.healthCapacity-0x20;
+
+            LOG("heartsBlocked", gSaveContext.save.info.heartsBlocked, "%x", __FILE__, __LINE__);
+            LOG("healthCapacity", gSaveContext.save.info.playerData.healthCapacity, "%x", __FILE__, __LINE__);
+            LOG("healthCapacity-heartsBlocked", (gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.playerData.healthCapacity), "%x", __FILE__, __LINE__);
+            LOG("heartsBlocked >= healthCapacity", (gSaveContext.save.info.heartsBlocked >= gSaveContext.save.info.playerData.healthCapacity), "%x", __FILE__, __LINE__);
+
+            if(gSaveContext.save.info.demonsCurse && gSaveContext.save.info.heartsBlocked >= gSaveContext.save.info.playerData.healthCapacity)
+                gSaveContext.save.info.dead = true;
+
+            LOG("dead", gSaveContext.save.info.dead, "%i", __FILE__, __LINE__);
 
             Audio_StopBgmAndFanfare(0);
             Audio_PlayFanfare(NA_BGM_GAME_OVER);
@@ -4080,7 +4093,15 @@ void Player_ChangeStability(PlayState* play, s8 amount) {
 
 }
 
+f32 Player_GetStaminaScale() {
+    return F_32LERP(1.0f, 0.1f, gSaveContext.save.info.playerData.levels.endurance/255);
+
+}
+
 void Player_ChangeStamina(PlayState* play, s8 amount) {
+    if(amount < 0)
+        amount *= Player_GetStaminaScale();
+
     play->stamina = play->stamina + amount;
 
     if(play->stamina > 100) {
@@ -10354,6 +10375,8 @@ void activateSaveSpot(Player* this, PlayState* play) {
         gSaveContext.save.info.playerData.savedSceneId = play->sceneId;
         Sram_WriteSave(&play->sramCtx);
 
+        Interface_SaveResting_Start(play);
+
     }
 }
 
@@ -10825,7 +10848,33 @@ void Player_UpdateCamAndSeqModes(PlayState* play, Player* this) {
     if (this->actor.category == ACTORCAT_PLAYER) {
         seqMode = SEQ_MODE_DEFAULT;
 
-        if (this->csAction != PLAYER_CSACTION_NONE) {
+        SaveRestingContext* saveRestingCtx = &play->interfaceCtx.saveRestingCtx;
+        SaveRestingState restingState = saveRestingCtx->state;
+
+        if(REST_ISRESTING(restingState)) {
+            //Camera_SetViewParam(Play_GetCamera(play, CAM_ID_MAIN), CAM_VIEW_TARGET, this->actor.parent);
+            //play->viewpoint = VIEWPOINT_LOCKED;
+
+            Vec3f playerPos = this->actor.world.pos;
+            Vec3f targetPos = {0, 0, 0};
+            Vec3f offset = {0, 55, 65};
+            f32 fov = 32;
+
+            Player_GetRelativePosition(this, &playerPos, &offset, &targetPos);
+
+            Vec3f atPos = {0, 0, 90};
+            Player_GetRelativePosition(this, &playerPos, &atPos, &atPos);
+
+            //Play_SetCameraAtEye(play, CAM_ID_MAIN, &targetPos, &playerPos);
+
+            Camera_RequestMode(Play_GetCamera(play, CAM_ID_MAIN), CAM_MODE_STILL);
+            Camera_SetViewParam(Play_GetCamera(play, CAM_ID_MAIN), CAM_VIEW_FOV, &fov);
+            Camera_SetViewParam(Play_GetCamera(play, CAM_ID_MAIN), CAM_VIEW_EYE, &targetPos);
+            //Camera_SetViewParam(Play_GetCamera(play, CAM_ID_MAIN), CAM_VIEW_TARGET_POS, &atPos);
+            Camera_SetViewParam(Play_GetCamera(play, CAM_ID_MAIN), CAM_VIEW_TARGET, NULL);
+            //Camera_SetViewParam(Play_GetCamera(play, CAM_ID_MAIN), CAM_VIEW_AT, &atPos);
+            
+        } else if (this->csAction != PLAYER_CSACTION_NONE) {
             Camera_RequestMode(Play_GetCamera(play, CAM_ID_MAIN), CAM_MODE_NORMAL);
         } else if (!(this->stateFlags1 & PLAYER_STATE1_20)) {
             if ((this->actor.parent != NULL) && (this->stateFlags3 & PLAYER_STATE3_7)) {

@@ -1140,7 +1140,7 @@ void Message_DrawText(PlayState* play, Gfx** gfxP) {
     }
     if (msgCtx->textDelayTimer == 0) {
         msgCtx->textDrawPos = i + 1;
-        msgCtx->textDelayTimer = msgCtx->textDelay;
+        msgCtx->textDelayTimer = msgCtx->textDelay * .05;
     } else {
         msgCtx->textDelayTimer--;
     }

@@ -3602,19 +3602,6 @@ void KaleidoScope_Update(PlayState* play) {
                         gSaveContext.saveReturnFlag = 1;
                     }
 
-                    if(!gSaveContext.save.info.demonsCurse || gSaveContext.save.info.heartsBlocked < gSaveContext.save.info.playerData.healthCapacity) {
-                        play->nextEntranceIndex = gSaveContext.save.entranceIndex;
-                        play->transitionType = 0x1;
-                        play->transitionTrigger = 1;
-                        gSaveContext.save.info.playerData.health = gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked;
-
-                    } else if(gSaveContext.save.info.demonsCurse) {
-                        gSaveContext.save.info.dead = true;
-                        play->state.running = false;
-                        SET_NEXT_GAMESTATE(&play->state, TitleSetup_Init, TitleSetupState);
-
-                    }
-
                     SEQCMD_RESET_AUDIO_HEAP(0, 10);
                     gSaveContext.healthAccumulator = 0;
                     gSaveContext.magicState = MAGIC_STATE_IDLE;
@@ -3648,30 +3635,44 @@ void KaleidoScope_Update(PlayState* play) {
                     func_800981B8(&play->objectCtx);
                     func_800418D0(&play->colCtx, play);
                     if (pauseCtx->promptChoice == 0) {
-                        Play_TriggerRespawn(play);
-                        gSaveContext.respawnFlag = -2;
-                        gSaveContext.nextTransitionType = TRANS_TYPE_FADE_BLACK;
-                        gSaveContext.save.info.playerData.health = 0x30;
-                        if(gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked<=0x20) {
-                            gSaveContext.save.info.playerData.health = 0x20;
+                        if(gSaveContext.save.info.demonsCurse && gSaveContext.save.info.dead) {
+                            play->state.running = false;
+                            SET_NEXT_GAMESTATE(&play->state, TitleSetup_Init, TitleSetupState);
 
-                        }
-                        SEQCMD_RESET_AUDIO_HEAP(0, 10);
-                        gSaveContext.healthAccumulator = 0;
-                        gSaveContext.magicState = MAGIC_STATE_IDLE;
-                        gSaveContext.prevMagicState = MAGIC_STATE_IDLE;
-                        osSyncPrintf(VT_FGCOL(YELLOW));
-                        osSyncPrintf("MAGIC_NOW=%d ", gSaveContext.save.info.playerData.magic);
-                        osSyncPrintf("Z_MAGIC_NOW_NOW=%d   →  ", gSaveContext.magicFillTarget);
-                        gSaveContext.magicCapacity = 0;
-                        // Set the fill target to be the magic amount before game over
-                        gSaveContext.magicFillTarget = gSaveContext.save.info.playerData.magic;
-                        // Set `magicLevel` and `magic` to 0 so `magicCapacity` then `magic` grows from nothing
-                        // to respectively the full capacity and `magicFillTarget`
-                        gSaveContext.save.info.playerData.magicLevel = gSaveContext.save.info.playerData.magic = 0;
-                        osSyncPrintf("MAGIC_NOW=%d ", gSaveContext.save.info.playerData.magic);
-                        osSyncPrintf("Z_MAGIC_NOW_NOW=%d\n", gSaveContext.magicFillTarget);
-                        osSyncPrintf(VT_RST);
+                        } else {
+                            play->nextEntranceIndex = gSaveContext.save.entranceIndex;
+                            play->transitionType = 0x1;
+                            play->transitionTrigger = 1;
+
+                            Play_TriggerRespawn(play);
+                            gSaveContext.respawnFlag = -2;
+                            gSaveContext.nextTransitionType = TRANS_TYPE_FADE_BLACK;
+
+                            gSaveContext.save.info.playerData.health = 0x30;
+                            if(gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked<=0x20) {
+                                gSaveContext.save.info.playerData.health = 0x20;
+
+                            }
+
+                            SEQCMD_RESET_AUDIO_HEAP(0, 10);
+                            gSaveContext.healthAccumulator = 0;
+                            gSaveContext.magicState = MAGIC_STATE_IDLE;
+                            gSaveContext.prevMagicState = MAGIC_STATE_IDLE;
+                            osSyncPrintf(VT_FGCOL(YELLOW));
+                            osSyncPrintf("MAGIC_NOW=%d ", gSaveContext.save.info.playerData.magic);
+                            osSyncPrintf("Z_MAGIC_NOW_NOW=%d   →  ", gSaveContext.magicFillTarget);
+                            gSaveContext.magicCapacity = 0;
+                            // Set the fill target to be the magic amount before game over
+                            gSaveContext.magicFillTarget = gSaveContext.save.info.playerData.magic;
+                            // Set `magicLevel` and `magic` to 0 so `magicCapacity` then `magic` grows from nothing
+                            // to respectively the full capacity and `magicFillTarget`
+                            gSaveContext.save.info.playerData.magicLevel = gSaveContext.save.info.playerData.magic = 0;
+                            osSyncPrintf("MAGIC_NOW=%d ", gSaveContext.save.info.playerData.magic);
+                            osSyncPrintf("Z_MAGIC_NOW_NOW=%d\n", gSaveContext.magicFillTarget);
+                            osSyncPrintf(VT_RST);
+
+                            }
+
                     } else {
                         play->state.running = false;
                         SET_NEXT_GAMESTATE(&play->state, TitleSetup_Init, TitleSetupState);

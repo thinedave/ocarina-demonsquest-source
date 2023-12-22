@@ -1,0 +1,1 @@
+extern LinkAnimationHeader gPlayerAnim_Savespot_Pray;

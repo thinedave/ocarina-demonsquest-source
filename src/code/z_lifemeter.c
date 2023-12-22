@@ -312,7 +312,7 @@ void Health_DrawMeter(PlayState* play) {
     Vtx* beatingHeartVtx = interfaceCtx->beatingHeartVtx;
     s32 curHeartFraction = gSaveContext.save.info.playerData.health % 0x10;
     s16 totalHeartCount = (gSaveContext.save.info.playerData.healthCapacity) / 0x10;
-    u8 blockedHeartCount = gSaveContext.save.info.heartsBlocked/0x10;
+    s16 blockedHeartCount = (gSaveContext.save.info.heartsBlocked) /0x10;
     s16 fullHeartCount = (gSaveContext.save.info.playerData.health) / 0x10;
     s32 pad2;
     f32 beatingHeartPulsingSize = interfaceCtx->beatingHeartOscillator * 0.1f;
@@ -509,10 +509,10 @@ void Health_DrawMeter(PlayState* play) {
     gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE,
                       0, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
 
-    osSyncPrintf("%u\n", blockedHeartCount);
+    //osSyncPrintf("%u\n", blockedHeartCount);
 
     for(heartIndexBlocked = heartIndex; heartIndexBlocked < totalHeartCount; heartIndexBlocked++) {
-        osSyncPrintf("INDEX:%u\n", heartIndexBlocked);
+        //osSyncPrintf("INDEX:%u\n", heartIndexBlocked);
         heartCenterY = 26.0f + offsetY;
         heartCenterX = 30.0f + offsetX;
         heartTexCoordPerPixel = 1.0f;

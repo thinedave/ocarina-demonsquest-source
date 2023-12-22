@@ -67,6 +67,37 @@ typedef enum {
 #define DO_ACTION_TEX_HEIGHT 16
 #define DO_ACTION_TEX_SIZE ((DO_ACTION_TEX_WIDTH * DO_ACTION_TEX_HEIGHT) / 2) // (sizeof(gCheckDoActionENGTex))
 
+// Order of these enums is very important. All states before and including REST_STATE_IDLE are to be considered in the 'resting' state,
+// meaning that all of the effects (e.g. HUD visibility, camera locking) are in place.
+
+#define REST_ISRESTING(state) (state <= REST_STATE_IDLE)
+
+typedef enum {
+    REST_STATE_ENTER_FADEOUT,
+    REST_STATE_ENTER_WAIT,
+    REST_STATE_EXIT_FADEIN,
+    REST_STATE_MENU,
+    REST_STATE_IDLE,
+    REST_STATE_ENTER_FADEIN,
+    REST_STATE_EXIT_WAIT,
+    REST_STATE_EXIT_FADEOUT,
+    REST_STATE_INACTIVE,
+    
+
+} SaveRestingState;
+
+typedef struct {
+    s16 alpha;
+    s16 targetAlpha;
+    u8 alphaStep;
+    u8 timer;
+    SaveRestingState state;
+    s8 selection;
+    Font font;
+    SavePlayerLevels wantedLevels;
+
+} SaveRestingContext;
+
 typedef struct {
     /* 0x0000 */ View   view;
     /* 0x0128 */ Vtx*   actionVtx;
@@ -142,6 +173,7 @@ typedef struct {
         /* 0x026C */ u8    dinsNayrus; // "m_magic"; din's fire and nayru's love
         /* 0x026D */ u8    all;        // "another"; enables all item restrictions
     }                   restrictions;
+    SaveRestingContext saveRestingCtx;
 } InterfaceContext; // size = 0x270
 
 /**

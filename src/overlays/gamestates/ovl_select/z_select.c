@@ -284,8 +284,8 @@ static SceneSelectEntry sScenes[] = {
     { "124:depth" GFXP_KATAKANA "ﾃｽﾄ", MapSelect_LoadGame, ENTR_DEPTH_TEST_0 },
     // "125: Hyrule Garden Game 2" (Early Hyrule Garden Game)
     { "125:" GFXP_KATAKANA "ﾊｲﾗﾙ" GFXP_HIRAGANA "ﾆﾜ" GFXP_KATAKANA "ｹﾞｰﾑ2", MapSelect_LoadGame, ENTR_HAIRAL_NIWA2_0 },
-    // "title" (Title Screen)
-    { "title", (void*)MapSelect_LoadTitle, 0 },
+    // Save test scene
+    { "126:SAVETEST", MapSelect_LoadGame, ENTR_SAVETEST_0 },
 };
 
 void MapSelect_UpdateMenu(MapSelectState* this) {
