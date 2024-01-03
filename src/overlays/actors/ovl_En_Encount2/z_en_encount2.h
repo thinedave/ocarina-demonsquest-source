@@ -36,7 +36,7 @@ typedef struct EnEncount2 {
     /* 0x0174 */ char unk174[0x4];
     /* 0x0178 */ s16 envEffectsTimer;
     /* 0x017C */ f32 unk_17C;
-    /* 0x0180 */ u64 isQuaking;
+    /* 0x0180 */ bool isQuaking;
     /* 0x0188 */ EnEncount2Effect effects[EN_ENCOUNT2_EFFECT_COUNT];
 } EnEncount2; // size = 0x0A20
 

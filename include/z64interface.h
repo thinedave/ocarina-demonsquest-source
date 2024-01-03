@@ -93,7 +93,6 @@ typedef struct {
     u8 timer;
     SaveRestingState state;
     s8 selection;
-    Font font;
     SavePlayerLevels wantedLevels;
 
 } SaveRestingContext;

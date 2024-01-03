@@ -4,19 +4,19 @@
 #define LOG_SEVERITY_ERROR 2
 #define LOG_SEVERITY_VERBOSE 3
 
-s32 gZeldaArenaLogSeverity = LOG_SEVERITY_ERROR;
+s32 gZeldaArenaLogSeverity = LOG_SEVERITY_VERBOSE;
 Arena sZeldaArena;
 
 void ZeldaArena_CheckPointer(void* ptr, u32 size, const char* name, const char* action) {
     if (ptr == NULL) {
         if (gZeldaArenaLogSeverity >= LOG_SEVERITY_ERROR) {
             // "%s: %u bytes %s failed\n"
-            osSyncPrintf("%s: %u バイトの%sに失敗しました\n", name, size, action);
+            osSyncPrintf("%s: %u bytes %s failed\n", name, size, action);
             __osDisplayArena(&sZeldaArena);
         }
     } else if (gZeldaArenaLogSeverity >= LOG_SEVERITY_VERBOSE) {
         // "%s: %u bytes %s succeeded\n"
-        osSyncPrintf("%s: %u バイトの%sに成功しました\n", name, size, action);
+        osSyncPrintf("%s: %u bytes %s succeeded\n", name, size, action);
     }
 }
 

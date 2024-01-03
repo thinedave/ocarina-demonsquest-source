@@ -140,7 +140,7 @@ void BossGanon2_Init(Actor* thisx, PlayState* play) {
     }
 
     this->actor.colChkInfo.mass = MASS_IMMOVABLE;
-    this->actor.colChkInfo.health = 30;
+    this->actor.colChkInfo.health = 300;
     Collider_InitJntSph(play, &this->unk_424);
     Collider_SetJntSph(play, &this->unk_424, &this->actor, &sJntSphInit1, this->unk_464);
     Collider_InitJntSph(play, &this->unk_444);
@@ -1421,7 +1421,7 @@ void func_80900890(BossGanon2* this, PlayState* play) {
             if (Animation_OnFrame(&this->skelAnime, this->unk_194)) {
                 func_808FFDB0(this, play);
                 if (this->unk_334 == 0) {
-                    this->actor.colChkInfo.health = 25;
+                    this->actor.colChkInfo.health = 250;
                 }
                 this->unk_336 = 1;
             }
@@ -1908,7 +1908,7 @@ void func_80902524(BossGanon2* this, PlayState* play) {
                     this->unk_342 = 5;
                     Actor_PlaySfx(&this->actor, NA_SE_EN_MGANON_DAMAGE);
                     Audio_StopSfxById(NA_SE_EN_MGANON_UNARI);
-                    this->actor.colChkInfo.health -= 2;
+                    this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-20, 0);
                     temp_v0_4 = this->actor.colChkInfo.health;
                     if (temp_v0_4 < 0x15 && this->unk_334 == 0) {
                         func_80900818(this, play);
@@ -1934,23 +1934,23 @@ void func_80902524(BossGanon2* this, PlayState* play) {
             this->unk_342 = 5;
             Actor_PlaySfx(&this->actor, NA_SE_EN_MGANON_DAMAGE);
             Audio_StopSfxById(NA_SE_EN_MGANON_UNARI);
-            phi_v1_2 = 1;
+            phi_v1_2 = 10;
             if (acHitInfo->toucher.dmgFlags & (DMG_JUMP_MASTER | DMG_SPIN_MASTER | DMG_SLASH_MASTER)) {
                 if (acHitInfo->toucher.dmgFlags & DMG_JUMP_MASTER) {
-                    phi_v1_2 = 4;
+                    phi_v1_2 = 40;
                 } else {
-                    phi_v1_2 = 2;
+                    phi_v1_2 = 20;
                 }
             }
-            this->actor.colChkInfo.health -= phi_v1_2;
+            this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-phi_v1_2, 0);
             temp_v0_4 = this->actor.colChkInfo.health;
             if ((temp_v0_4 < 0x15) && (this->unk_334 == 0)) {
                 func_80900818(this, play);
-            } else if ((temp_v0_4 <= 0) && (phi_v1_2 >= 2)) {
+            } else if ((temp_v0_4 <= 0) && (phi_v1_2 >= 20)) {
                 func_80901020(this, play);
             } else {
                 if (temp_v0_4 <= 0) {
-                    this->actor.colChkInfo.health = 1;
+                    this->actor.colChkInfo.health = 10;
                 }
                 func_80900210(this, play);
             }

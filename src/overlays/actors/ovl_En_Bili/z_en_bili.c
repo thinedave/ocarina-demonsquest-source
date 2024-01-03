@@ -60,7 +60,7 @@ static ColliderCylinderInit sCylinderInit = {
     { 9, 28, -20, { 0, 0, 0 } },
 };
 
-static CollisionCheckInfoInit2 sColChkInfoInit = { 1, 9, 28, -20, 30 };
+static CollisionCheckInfoInit2 sColChkInfoInit = { 10, 9, 28, -20, 30 };
 
 typedef enum {
     /* 0x0 */ BIRI_DMGEFF_NONE,

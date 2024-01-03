@@ -53,7 +53,7 @@ static ColliderCylinderInit sCylinderInit = {
     { 20, 40, 0, { 0, 0, 0 } },
 };
 
-static CollisionCheckInfoInit sColChkInfoInit = { 1, 20, 40, MASS_HEAVY };
+static CollisionCheckInfoInit sColChkInfoInit = { 10, 20, 40, MASS_HEAVY };
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, NAVI_ENEMY_BUSINESS_SCRUB, ICHAIN_CONTINUE),

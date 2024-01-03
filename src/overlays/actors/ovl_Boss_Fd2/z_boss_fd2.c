@@ -211,11 +211,11 @@ void BossFd2_SetupEmerge(BossFd2* this, PlayState* play) {
     this->timers[0] = 10;
     if (bossFd != NULL) {
         health = bossFd->actor.colChkInfo.health;
-        if (health >= 18) {
+        if (health >= 180) {
             this->work[FD2_FAKEOUT_COUNT] = 0;
-        } else if (health >= 12) {
+        } else if (health >= 120) {
             this->work[FD2_FAKEOUT_COUNT] = 1;
-        } else if (health >= 6) {
+        } else if (health >= 60) {
             this->work[FD2_FAKEOUT_COUNT] = 2;
         } else {
             this->work[FD2_FAKEOUT_COUNT] = 3;
@@ -248,13 +248,13 @@ void BossFd2_Emerge(BossFd2* this, PlayState* play) {
                 this->work[FD2_HOLE_COUNTER]++;
                 this->actor.world.pos.y = -200.0f;
                 health = bossFd->actor.colChkInfo.health;
-                if (health == 24) {
+                if (health == 240) {
                     holeTime = 30;
-                } else if (health >= 18) {
+                } else if (health >= 180) {
                     holeTime = 25;
-                } else if (health >= 12) {
+                } else if (health >= 120) {
                     holeTime = 20;
-                } else if (health >= 6) {
+                } else if (health >= 60) {
                     holeTime = 10;
                 } else {
                     holeTime = 5;
@@ -314,13 +314,13 @@ void BossFd2_SetupIdle(BossFd2* this, PlayState* play) {
     Animation_PlayLoop(&this->skelAnime, &gHoleVolvagiaTurnAnim);
     this->actionFunc = BossFd2_Idle;
     health = bossFd->actor.colChkInfo.health;
-    if (health == 24) {
+    if (health == 240) {
         idleTime = 50;
-    } else if (health >= 18) {
+    } else if (health >= 180) {
         idleTime = 40;
-    } else if (health >= 12) {
+    } else if (health >= 120) {
         idleTime = 40;
-    } else if (health >= 6) {
+    } else if (health >= 60) {
         idleTime = 30;
     } else {
         idleTime = 20;
@@ -374,7 +374,7 @@ void BossFd2_Burrow(BossFd2* this, PlayState* play) {
     } else {
         Math_ApproachF(&this->actor.world.pos.y, -100.0f, 1.0f, 10.0f);
         if (this->timers[0] == 0) {
-            if ((this->work[FD2_HOLE_COUNTER] >= 3) && ((s8)bossFd->actor.colChkInfo.health < 24)) {
+            if ((this->work[FD2_HOLE_COUNTER] >= 3) && ((s8)bossFd->actor.colChkInfo.health < 240)) {
                 this->work[FD2_HOLE_COUNTER] = 0;
                 this->actionFunc = BossFd2_Wait;
                 bossFd->handoffSignal = FD2_SIGNAL_FLY;
@@ -833,9 +833,9 @@ void BossFd2_CollisionCheck(BossFd2* this, PlayState* play) {
         hurtbox = this->collider.elements[0].info.acHitInfo;
         if (!bossFd->faceExposed) {
             if (hurtbox->toucher.dmgFlags & DMG_HAMMER) {
-                bossFd->actor.colChkInfo.health -= 2;
-                if ((s8)bossFd->actor.colChkInfo.health <= 2) {
-                    bossFd->actor.colChkInfo.health = 1;
+                bossFd->actor.colChkInfo.health = MAX(bossFd->actor.colChkInfo.health-20, 0);
+                if ((s8)bossFd->actor.colChkInfo.health <= 20) {
+                    bossFd->actor.colChkInfo.health = 10;
                 }
                 bossFd->faceExposed = true;
                 BossFd2_SetupVulnerable(this, play);
@@ -861,7 +861,7 @@ void BossFd2_CollisionCheck(BossFd2* this, PlayState* play) {
             }
         } else {
             u8 canKill = false;
-            u8 damage;
+            u16 damage;
 
             if ((damage = CollisionCheck_GetSwordDamage(hurtbox->toucher.dmgFlags)) == 0) {
                 damage = (hurtbox->toucher.dmgFlags & DMG_ARROW_ICE) ? 4 : 2;
@@ -871,8 +871,8 @@ void BossFd2_CollisionCheck(BossFd2* this, PlayState* play) {
             if (hurtbox->toucher.dmgFlags & DMG_HOOKSHOT) {
                 damage = 0;
             }
-            if (((s8)bossFd->actor.colChkInfo.health > 2) || canKill) {
-                bossFd->actor.colChkInfo.health -= damage;
+            if (((s8)bossFd->actor.colChkInfo.health > 20) || canKill) {
+                bossFd->actor.colChkInfo.health = MAX(bossFd->actor.colChkInfo.health-damage, 0);
                 osSyncPrintf(VT_FGCOL(GREEN));
                 osSyncPrintf("damage   %d\n", damage);
             }

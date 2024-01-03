@@ -59,7 +59,7 @@ static ColliderCylinderInit sCylinderInit = {
     { 18, 32, 0, { 0, 0, 0 } },
 };
 
-static CollisionCheckInfoInit sColChkInfoInit = { 1, 18, 32, MASS_HEAVY };
+static CollisionCheckInfoInit sColChkInfoInit = { 10, 18, 32, MASS_HEAVY };
 
 static s16 sPuzzleCounter = 0;
 

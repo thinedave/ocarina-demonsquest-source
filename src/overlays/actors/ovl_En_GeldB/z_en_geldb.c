@@ -224,7 +224,7 @@ void EnGeldB_Init(Actor* thisx, PlayState* play) {
     thisx->colChkInfo.damageTable = &sDamageTable;
     ActorShape_Init(&thisx->shape, 0.0f, ActorShadow_DrawFeet, 0.0f);
     this->actor.colChkInfo.mass = MASS_HEAVY;
-    thisx->colChkInfo.health = 20;
+    thisx->colChkInfo.health = 200;
     thisx->colChkInfo.cylRadius = 50;
     thisx->colChkInfo.cylHeight = 100;
     thisx->naviEnemyId = NAVI_ENEMY_GERUDO_THIEF;

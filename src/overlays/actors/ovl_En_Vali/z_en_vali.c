@@ -81,7 +81,7 @@ static ColliderCylinderInit sCylinderInit = {
     { 17, 35, -15, { 0, 0, 0 } },
 };
 
-static CollisionCheckInfoInit sColChkInfoInit = { 2, 18, 32, MASS_HEAVY };
+static CollisionCheckInfoInit sColChkInfoInit = { 20, 18, 32, MASS_HEAVY };
 
 typedef enum {
     /* 0x0 */ BARI_DMGEFF_NONE,

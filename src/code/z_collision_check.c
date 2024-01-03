@@ -2983,6 +2983,26 @@ void CollisionCheck_ApplyDamage(PlayState* play, CollisionCheckContext* colChkCt
         damage = tbl->table[i] & 0xF;
         collider->actor->colChkInfo.damageEffect = tbl->table[i] >> 4 & 0xF;
     }
+
+    Player* player = GET_PLAYER(play);
+
+    if(collider->ac != NULL && collider->ac->id == ACTOR_PLAYER) {
+        if(player->storedDoubleDamage) {
+            player->storedDoubleDamage = false;
+            damage *= 2;
+
+        }
+
+        u8 statToScale = (info->acHitInfo->toucher.dmgFlags & (DMG_MAGIC_FIRE | DMG_MAGIC_ICE | DMG_MAGIC_LIGHT)) ? gSaveContext.save.info.playerData.levels.intelligence : gSaveContext.save.info.playerData.levels.strength;
+
+        osSyncPrintf("statToScale: %i\n", statToScale);
+
+        damage *= F32_LERP(1.0f, 2.0f, (f32)(statToScale)/100);
+
+        osSyncPrintf("PLAYER ATTACK ! %d DMG\n", damage);
+
+    }
+
     if (!(collider->acFlags & AC_HARD)) {
         collider->actor->colChkInfo.damage += damage;
     }
@@ -3592,16 +3612,16 @@ s32 CollisionCheck_CylSideVsLineSeg(f32 radius, f32 height, f32 offset, Vec3f* a
  * not sword-type. Used by bosses to require that a sword attack deal the killing blow.
  */
 u8 CollisionCheck_GetSwordDamage(s32 dmgFlags) {
-    u8 damage = 0;
+    u16 damage = 0;
 
     if (dmgFlags & (DMG_SPIN_KOKIRI | DMG_SLASH_KOKIRI)) {
-        damage = 1;
+        damage = 10;
     } else if (dmgFlags & (DMG_JUMP_KOKIRI | DMG_SPIN_MASTER | DMG_SLASH_MASTER | DMG_HAMMER_SWING | DMG_DEKU_STICK)) {
-        damage = 2;
+        damage = 20;
     } else if (dmgFlags & (DMG_HAMMER_JUMP | DMG_JUMP_MASTER | DMG_SPIN_GIANT | DMG_SLASH_GIANT)) {
-        damage = 4;
+        damage = 40;
     } else if (dmgFlags & DMG_JUMP_GIANT) {
-        damage = 8;
+        damage = 80;
     }
 
     KREG(7) = damage;

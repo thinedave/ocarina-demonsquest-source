@@ -139,7 +139,7 @@ void EnGoma_Init(Actor* thisx, PlayState* play) {
         SkelAnime_Init(play, &this->skelanime, &gObjectGolSkel, &gObjectGolStandAnim, this->jointTable,
                        this->morphTable, GOMA_LIMB_MAX);
         Animation_PlayLoop(&this->skelanime, &gObjectGolStandAnim);
-        this->actor.colChkInfo.health = 2;
+        this->actor.colChkInfo.health = 20;
 
         if (this->actor.params < 3) { // Spawned by boss
             this->actionFunc = EnGoma_EggFallToGround;
@@ -611,7 +611,7 @@ void EnGoma_UpdateHit(EnGoma* this, PlayState* play) {
         this->hurtTimer--;
     } else {
         ColliderInfo* acHitInfo;
-        u8 swordDamage;
+        u16 swordDamage;
 
         if ((this->colCyl1.base.atFlags & AT_HIT) && this->actionFunc == EnGoma_Jump) {
             EnGoma_SetupLand(this);
@@ -647,10 +647,10 @@ void EnGoma_UpdateHit(EnGoma* this, PlayState* play) {
                     if (swordDamage != 0) {
                         EffectSsSibuki_SpawnBurst(play, &this->actor.focus.pos);
                     } else {
-                        swordDamage = 1;
+                        swordDamage = 10;
                     }
 
-                    this->actor.colChkInfo.health -= swordDamage;
+                    this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-swordDamage, 0);
                     EnGoma_SetupHurt(this, play);
                     Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 5);
                     this->hurtTimer = 13;

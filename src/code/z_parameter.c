@@ -5333,26 +5333,28 @@ f32 sFontWidthsParameter[144] = {
     14.0f, // ?
 };
 
-static s16 sLowercaseOffset = 0x3D;
-static s16 sNumberOffset = 0x30;
-static s16 sButtonOffset = -0x12;
-static f32 sCharKerning = 0.92f;
+s32 sLowercaseOffset = 0x3D;
+s32 sNumberOffset = 0x30;
+s32 sButtonOffset = -0x12;
 
-#define RESTING_DETERMINE_CHAROFFSET(v) ((v == '-') ? sButtonOffset : ((v >= '0' && v <= '9') ? sNumberOffset : ((v >= 'a' && v <= 'z') ? sLowercaseOffset : 0x37)))
+#define LOWERCASE_OFFSET 0x3D
+#define NUMBER_OFFSET 0x30
+#define BUTTON_OFFSET -0x12
+#define CHAR_KERNING 0.92f
+#define RESTING_DETERMINE_CHAROFFSET(v) ((v == '-') ? sButtonOffset : ((v >= '0' && v <= '9') ? sNumberOffset : (((v >= 'a' && v <= 'z') || v == ' ') ? sLowercaseOffset : 0x37)))
 #define CHARNULL ']'
 #define SAVEREST_LINESPACE 15
 #define SAVEREST_GETR(i) (this->selection == i ? 255 : 255)
 #define SAVEREST_GETG(i) (this->selection == i ? 255 : 255)
 #define SAVEREST_GETB(i) (this->selection == i ? 0 : 255)
-#define SAVEREST_GETR_STAT(i, stat) 
-#define SAVEREST_GETG_STAT(i, stat) ((this->selection == i || stat > stats->##stat) ? 255 : 255)
-#define SAVEREST_GETB_STAT(i, stat) ((this->selection == i || stat > stats->##stat) ? 0 : 255)
 
-void SaveResting_DrawString(PlayState* play, Gfx** gfxP, char* text, s32 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale) {
+void SaveResting_DrawString(PlayState* play, Gfx** gfxP, char* text, u16 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale) {
     Gfx* gfx = *gfxP;
 
     SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
+    Font* font = &play->msgCtx.font;
     u16 textPos = x;
+    u16 codePointIndex = 0;
 
     gDPPipeSync(gfx++);
     gDPSetCombineLERP(gfx++, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0);
@@ -5360,10 +5362,20 @@ void SaveResting_DrawString(PlayState* play, Gfx** gfxP, char* text, s32 textLen
 
     for(s16 i = (rightJustified ? textLength : 0); (rightJustified ? (i >= 0) : (i < textLength)); (rightJustified ? i-- : i++)) {
         if(text[i] == CHARNULL) continue;
+        if(text[i] == '\0') continue;
+        if(text[i] == ' ') {
+            u16 diff = (u16)(sFontWidthsParameter[0] * (CHAR_KERNING * (2-scale)));
+            textPos = (rightJustified ? (textPos - diff) : (textPos + diff));
+            continue;
 
-        Interface_DrawCharTexture(&gfx, this->font.fontBuf + (text[i] - RESTING_DETERMINE_CHAROFFSET(text[i])) * FONT_CHAR_TEX_SIZE, textPos, y+1, scale);
+        }
 
-        s32 diff = (s32)(sFontWidthsParameter[text[(rightJustified ? MAX(i-1, 0) : i)] - ' '] * (sCharKerning * (2-scale)));
+        Font_LoadChar(font, text[i] - ' ', codePointIndex);
+        codePointIndex = codePointIndex + FONT_CHAR_TEX_SIZE;
+
+        Interface_DrawCharTexture(&gfx, font->fontBuf + (text[i] - RESTING_DETERMINE_CHAROFFSET(text[i])) * FONT_CHAR_TEX_SIZE, textPos, y+1, scale);
+
+        u16 diff = (u16)(sFontWidthsParameter[text[(rightJustified ? MAX(i-1, 0) : i)] - ' '] * (CHAR_KERNING * (2-scale)));
         textPos = (rightJustified ? (textPos - diff) : (textPos + diff));
 
     }
@@ -5372,7 +5384,7 @@ void SaveResting_DrawString(PlayState* play, Gfx** gfxP, char* text, s32 textLen
 
 }
 
-void SaveResting_DrawStringShadowed(PlayState* play, Gfx** gfx, char* text, s32 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale) {
+void SaveResting_DrawStringShadowed(PlayState* play, Gfx** gfx, char* text, u16 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale) {
     SaveResting_DrawString(play, gfx, text, textLength, x+1, y+1, 0, 0, 0, a, rightJustified, scale);
     SaveResting_DrawString(play, gfx, text, textLength, x, y, r, g, b, a, rightJustified, scale);
 
@@ -5475,7 +5487,7 @@ void Interface_SaveResting_Draw(PlayState* play) {
             char pointsText[] = "Points";
             SaveResting_DrawStringShadowed(play, &gfx, pointsText, ARRAY_COUNT(pointsText), 20, textY - SAVEREST_LINESPACE, 255, 255, 255, 255, false, 1);
 
-            char pointsStat[5] = {CHARNULL, CHARNULL, CHARNULL, CHARNULL, CHARNULL};
+            char pointsStat[] = {CHARNULL, CHARNULL, CHARNULL, CHARNULL, CHARNULL, CHARNULL};
             s16 points = wantedStats.points;
             SaveResting_IntIntoArr(pointsStat, &points);
             SaveResting_DrawStringShadowed(play, &gfx, pointsStat, ARRAY_COUNT(pointsStat), 130, textY - SAVEREST_LINESPACE, 255, 255, 255, 255, true, 1);
@@ -5483,7 +5495,7 @@ void Interface_SaveResting_Draw(PlayState* play) {
             char strengthText[] = "Strength";
             SaveResting_DrawStringShadowed(play, &gfx, strengthText, ARRAY_COUNT(strengthText), 20, textY, SAVEREST_GETR(0), SAVEREST_GETG(0), SAVEREST_GETB(0), 255, false, 1);
 
-            char strengthStat[3] = {CHARNULL, CHARNULL, CHARNULL};
+            char strengthStat[] = {CHARNULL, CHARNULL, CHARNULL};
             s16 strength = wantedStats.strength;
             SaveResting_IntIntoArr(strengthStat, &strength);
             SaveResting_DrawStringShadowed(play, &gfx, strengthStat, ARRAY_COUNT(strengthStat), 130, textY, Interface_SaveResting_GetRWithStat(0, i, wantedStats.strength, stats->strength), Interface_SaveResting_GetGWithStat(0, i, wantedStats.strength, stats->strength), Interface_SaveResting_GetBWithStat(1, i, wantedStats.strength, stats->strength), 255, true, 1);
@@ -5491,7 +5503,7 @@ void Interface_SaveResting_Draw(PlayState* play) {
             char intelligenceText[] = "Intelligence";
             SaveResting_DrawStringShadowed(play, &gfx, intelligenceText, ARRAY_COUNT(intelligenceText), 20, textY + (SAVEREST_LINESPACE*1), SAVEREST_GETR(1), SAVEREST_GETG(1), SAVEREST_GETB(1), 255, false, 1);
 
-            char intelligenceStat[3] = {CHARNULL, CHARNULL, CHARNULL};
+            char intelligenceStat[] = {CHARNULL, CHARNULL, CHARNULL};
             s16 intelligence = wantedStats.intelligence;
             SaveResting_IntIntoArr(intelligenceStat, &intelligence);
             SaveResting_DrawStringShadowed(play, &gfx, intelligenceStat, ARRAY_COUNT(intelligenceStat), 130, textY + (SAVEREST_LINESPACE*1), Interface_SaveResting_GetRWithStat(1, i, wantedStats.intelligence, stats->intelligence), Interface_SaveResting_GetGWithStat(1, i, wantedStats.intelligence, stats->intelligence), Interface_SaveResting_GetBWithStat(1, i, wantedStats.intelligence, stats->intelligence), 255, true, 1);
@@ -5499,7 +5511,7 @@ void Interface_SaveResting_Draw(PlayState* play) {
             char enduranceText[] = "Endurance";
             SaveResting_DrawStringShadowed(play, &gfx, enduranceText, ARRAY_COUNT(enduranceText), 20, textY + (SAVEREST_LINESPACE*2), SAVEREST_GETR(2), SAVEREST_GETG(2), SAVEREST_GETB(2), 255, false, 1);
 
-            char enduranceStat[3] = {CHARNULL, CHARNULL, CHARNULL};
+            char enduranceStat[] = {CHARNULL, CHARNULL, CHARNULL};
             s16 endurance = wantedStats.endurance;
             SaveResting_IntIntoArr(enduranceStat, &endurance);
             SaveResting_DrawStringShadowed(play, &gfx, enduranceStat, ARRAY_COUNT(enduranceStat), 130, textY + (SAVEREST_LINESPACE*2), Interface_SaveResting_GetRWithStat(2, i, wantedStats.endurance, stats->endurance), Interface_SaveResting_GetGWithStat(2, i, wantedStats.endurance, stats->endurance), Interface_SaveResting_GetBWithStat(2, i, wantedStats.endurance, stats->endurance), 255, true, 1);
@@ -5507,7 +5519,7 @@ void Interface_SaveResting_Draw(PlayState* play) {
             char luckText[] = "Luck";
             SaveResting_DrawStringShadowed(play, &gfx, luckText, ARRAY_COUNT(luckText), 20, textY + (SAVEREST_LINESPACE*3), SAVEREST_GETR(3), SAVEREST_GETG(3), SAVEREST_GETB(3), 255, false, 1);
 
-            char luckStat[3] = {CHARNULL, CHARNULL, CHARNULL};
+            char luckStat[] = {CHARNULL, CHARNULL, CHARNULL};
             s16 luck = wantedStats.luck;
             SaveResting_IntIntoArr(luckStat, &luck);
             SaveResting_DrawStringShadowed(play, &gfx, luckStat, ARRAY_COUNT(luckStat), 130, textY + (SAVEREST_LINESPACE*3), Interface_SaveResting_GetRWithStat(3, i, wantedStats.luck, stats->luck), Interface_SaveResting_GetGWithStat(3, i, wantedStats.luck, stats->luck), Interface_SaveResting_GetBWithStat(3, i, wantedStats.luck, stats->luck), 255, true, 1);
@@ -5566,7 +5578,7 @@ void Interface_SaveResting_DrawDebug(PlayState* play, GraphicsContext* gfxCtx) {
     //GfxPrint_Printf(&printer, "STATE: %i", this->state);
 
     //GfxPrint_SetPos(&printer, 1, 4);
-    //GfxPrint_Printf(&printer, "sNumberOffset: %x", sNumberOffset);
+    //GfxPrint_Printf(&printer, "sButtonOffset: %x", sButtonOffset);
 
     //GfxPrint_SetPos(&printer, 1, 4);
     //GfxPrint_Printf(&printer, "sButtonOffset: %x", sButtonOffset);
@@ -5649,10 +5661,10 @@ void SaveResting_TryTakeLevel(u8 stat, u8* wantedLevel, u16* points, u16* soundT
 }
 
 void SaveResting_TryGiveLevel(u8* wantedLevel, u16* points, u16* soundToPlay) {
-    if(*points <= 0 || *wantedLevel >= 255) return;
+    if(*points <= 0 || *wantedLevel >= 100) return;
 
     *soundToPlay = NA_SE_SY_FSEL_CURSOR;
-    *wantedLevel = MIN(*wantedLevel + 1, 255);
+    *wantedLevel = MIN(*wantedLevel + 1, 100);
     *points = *points - 1;
 
 }
@@ -5665,11 +5677,9 @@ void Interface_SaveResting_TakeInput(PlayState* play) {
 
     if(!REST_ISRESTING(state)) return;
 
-    //if(CHECK_BTN_ALL(input->press.button, BTN_DLEFT))
-    //    sNumberOffset--;
+    //if(CHECK_BTN_ALL(input->press.button, BTN_DLEFT)) sButtonOffset--;
 
-    //if(CHECK_BTN_ALL(input->press.button, BTN_DRIGHT))
-    //    sNumberOffset++;
+    //if(CHECK_BTN_ALL(input->press.button, BTN_DRIGHT)) sButtonOffset++;
 
     if(input->rel.stick_y < 30 && input->rel.stick_y > -30 && input->rel.stick_x < 30 && input->rel.stick_x > -30)
         Interface_SaveResting_CursorDebounce = false;

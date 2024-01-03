@@ -147,10 +147,10 @@ void EnVm_Init(Actor* thisx, PlayState* play) {
     thisx->naviEnemyId = NAVI_ENEMY_BEAMOS;
 
     if (thisx->params == BEAMOS_LARGE) {
-        thisx->colChkInfo.health = 2;
+        thisx->colChkInfo.health = 20;
         Actor_SetScale(thisx, 0.014f);
     } else {
-        thisx->colChkInfo.health = 1;
+        thisx->colChkInfo.health = 10;
         Actor_SetScale(thisx, 0.01f);
     }
 
@@ -391,7 +391,7 @@ void EnVm_CheckHealth(EnVm* this, PlayState* play) {
     EnBom* bomb;
 
     if (Actor_GetCollidedExplosive(play, &this->colliderCylinder.base) != NULL) {
-        this->actor.colChkInfo.health--;
+        this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-10, 0);
         osSyncPrintf("hp down %d\n", this->actor.colChkInfo.health);
     } else {
         if (!(this->colliderQuad2.base.acFlags & AC_HIT) || this->unk_21C == 2) {

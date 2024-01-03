@@ -204,7 +204,7 @@ void BossFd_Init(Actor* thisx, PlayState* play) {
         }
     }
 
-    this->actor.colChkInfo.health = 24;
+    this->actor.colChkInfo.health = 240;
     this->skinSegments = 18;
     if (this->introState == BFD_CS_NONE) {
         this->actionFunc = BossFd_Wait;
@@ -1284,12 +1284,12 @@ void BossFd_CollisionCheck(BossFd* this, PlayState* play) {
     if (headCollider->info.bumperFlags & BUMP_HIT) {
         headCollider->info.bumperFlags &= ~BUMP_HIT;
         hurtbox = headCollider->info.acHitInfo;
-        this->actor.colChkInfo.health -= 2;
+        this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-20, 0);
         if (hurtbox->toucher.dmgFlags & DMG_ARROW_ICE) {
-            this->actor.colChkInfo.health -= 2;
+            this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-20, 0);
         }
-        if ((s8)this->actor.colChkInfo.health <= 2) {
-            this->actor.colChkInfo.health = 2;
+        if ((s8)this->actor.colChkInfo.health <= 20) {
+            this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-20, 0);
         }
         this->work[BFD_DAMAGE_FLASH_TIMER] = 10;
         this->work[BFD_INVINC_TIMER] = 20;

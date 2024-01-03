@@ -101,7 +101,7 @@ static ColliderJntSphInit sJntSphInit = {
     D_80AE1AA0,
 };
 
-static CollisionCheckInfoInit sColChkInfoInit = { 4, 25, 50, 40 };
+static CollisionCheckInfoInit sColChkInfoInit = { 40, 25, 50, 40 };
 
 static DamageTable sDamageTable = {
     /* Deku nut      */ DMG_ENTRY(0, 0x0),

@@ -115,7 +115,7 @@ void EnBa_Init(Actor* thisx, PlayState* play) {
         ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 48.0f);
         Actor_SetScale(&this->actor, 0.01f);
         EnBa_SetupIdle(this);
-        this->actor.colChkInfo.health = 4;
+        this->actor.colChkInfo.health = 40;
         this->actor.colChkInfo.mass = MASS_HEAVY;
         Collider_InitJntSph(play, &this->collider);
         Collider_SetJntSph(play, &this->collider, &this->actor, &sJntSphInit, this->colliderItems);
@@ -449,7 +449,7 @@ void EnBa_Update(Actor* thisx, PlayState* play) {
 
     if ((this->actor.params < EN_BA_DEAD_BLOB) && (this->collider.base.acFlags & AC_HIT)) {
         this->collider.base.acFlags &= ~AC_HIT;
-        this->actor.colChkInfo.health--;
+        this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-10, 0);
         if (this->actor.colChkInfo.health == 0) {
             func_809B75A0(this, play);
         } else {

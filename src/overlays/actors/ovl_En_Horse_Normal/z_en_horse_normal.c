@@ -124,7 +124,7 @@ static ColliderJntSphInit sJntSphInit = {
     sJntSphElementsInit,
 };
 
-static CollisionCheckInfoInit sColChkInfoInit = { 10, 35, 100, MASS_HEAVY };
+static CollisionCheckInfoInit sColChkInfoInit = { 100, 35, 100, MASS_HEAVY };
 
 // Unused
 static EnHorseNormalUnkStruct1 D_80A6D428[] = {

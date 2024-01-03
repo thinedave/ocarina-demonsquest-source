@@ -134,7 +134,7 @@ static ColliderJntSphInit sJntSphInit = {
     sJntSphElementsInit,
 };
 
-static CollisionCheckInfoInit sColChkInfoInit = { 2, 25, 25, MASS_IMMOVABLE };
+static CollisionCheckInfoInit sColChkInfoInit = { 20, 25, 25, MASS_IMMOVABLE };
 
 typedef enum {
     /* 0x0 */ DEKUBABA_DMGEFF_NONE,
@@ -247,7 +247,7 @@ void EnDekubaba_Init(Actor* thisx, PlayState* play) {
         }
 
         CollisionCheck_SetInfo(&this->actor.colChkInfo, &sBigDekuBabaDamageTable, &sColChkInfoInit);
-        this->actor.colChkInfo.health = 4;
+        this->actor.colChkInfo.health = 40;
         this->actor.naviEnemyId = NAVI_ENEMY_BIG_DEKU_BABA;
         this->actor.targetMode = 2;
     } else {
@@ -1049,7 +1049,7 @@ void EnDekubaba_UpdateDamage(EnDekubaba* this, PlayState* play) {
                     EnDekubaba_SetupHit(this, 2);
                 } else if (this->actionFunc == EnDekubaba_PullBack) {
                     if (phi_s0 <= 0) {
-                        phi_s0 = 1;
+                        phi_s0 = 10;
                     }
 
                     EnDekubaba_SetupHit(this, 1);
@@ -1085,7 +1085,7 @@ void EnDekubaba_UpdateDamage(EnDekubaba* this, PlayState* play) {
     } else if ((play->actorCtx.unk_02 != 0) && (this->collider.base.colType != COLTYPE_HARD) &&
                (this->actionFunc != EnDekubaba_StunnedVertical) && (this->actionFunc != EnDekubaba_Hit) &&
                (this->actor.colChkInfo.health != 0)) {
-        this->actor.colChkInfo.health--;
+        this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-10, 0);
         this->actor.dropFlag = 0x00;
         EnDekubaba_SetupHit(this, 1);
     } else {

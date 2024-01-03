@@ -31,7 +31,6 @@ u32 Player_StoredDoubleDamageTimer = 0;
 bool Player_HasPerfected = false;
 bool Player_CanPerfect = true;
 bool Player_WasShieldUp = false;
-bool Player_StoredDoubleDamage = false;
 s8 Player_SwordOutTimer = -3;
 
 // Some player animations are played at this reduced speed, for reasons yet unclear.
@@ -4093,14 +4092,9 @@ void Player_ChangeStability(PlayState* play, s8 amount) {
 
 }
 
-f32 Player_GetStaminaScale() {
-    return F_32LERP(1.0f, 0.1f, gSaveContext.save.info.playerData.levels.endurance/255);
-
-}
-
 void Player_ChangeStamina(PlayState* play, s8 amount) {
     if(amount < 0)
-        amount *= Player_GetStaminaScale();
+        amount *= F32_LERP(1.0f, 0.1f, (f32)(gSaveContext.save.info.playerData.levels.endurance)/100);
 
     play->stamina = play->stamina + amount;
 
@@ -4116,6 +4110,7 @@ void Player_ChangeStamina(PlayState* play, s8 amount) {
 
 }
 
+// General swing logic, runs for most player attacks
 void func_80837948(PlayState* play, Player* this, s32 arg2) {
     s32 pad;
     u32 dmgFlags;
@@ -4156,14 +4151,6 @@ void func_80837948(PlayState* play, Player* this, s32 arg2) {
     } else {
         dmgFlags = D_80854488[temp][0];
     }
-
-    if(Player_StoredDoubleDamage) {
-        Player_StoredDoubleDamage = false;
-        dmgFlags = dmgFlags * 2;
-
-    }
-
-    Player_ChangeStamina(play, -5);
 
     func_80837918(this, 0, dmgFlags);
     func_80837918(this, 1, dmgFlags);
@@ -4526,12 +4513,12 @@ s32 func_808382DC(Player* this, PlayState* play) {
 
                 if(Player_PerfectTime>0) {
                     Player_PlaySfx(this, NA_SE_IT_EXPLOSION_LIGHT);
-                    Player_StoredDoubleDamage = true;
+                    this->storedDoubleDamage = true;
                     Player_StoredDoubleDamageTimer = 20;
 
                 } else {
                     Player_ChangeStability(play, -20);
-                    Player_ChangeStamina(play, -20);
+                    Player_ChangeStamina(play, -40);
                     Player_CheckShieldDurability(this, play, this->actor.colChkInfo.damage);
 
                 }
@@ -4643,7 +4630,7 @@ void func_80838940(Player* this, LinkAnimationHeader* anim, f32 arg2, PlayState*
 }
 
 void func_808389E8(Player* this, LinkAnimationHeader* anim, f32 arg2, PlayState* play) {
-    Player_ChangeStamina(play, -20);
+    Player_ChangeStamina(play, -40);
     func_80838940(this, anim, arg2, play, NA_SE_VO_LI_SWORD_N);
 }
 
@@ -5923,11 +5910,11 @@ s32 Player_ActionChange_0(Player* this, PlayState* play) {
     return 0;
 }
 
-void func_8083BA90(PlayState* play, Player* this, s32 arg2, f32 xzSpeed, f32 yVelocity) {
+void func_8083BA90(PlayState* play, Player* this, s32 arg2, f32 xzSpeed, f32 yVelocity) { // jumpslash
     func_80837948(play, this, arg2);
     Player_SetupAction(play, this, Player_Action_80844AF4, 0);
 
-    Player_ChangeStamina(play, -40);
+    Player_ChangeStamina(play, -80);
     Player_ChangeStability(play, -10);
 
     this->stateFlags3 |= PLAYER_STATE3_1;
@@ -5963,9 +5950,9 @@ s32 func_8083BBA0(Player* this, PlayState* play) {
     return 0;
 }
 
-void func_8083BC04(Player* this, PlayState* play) {
+void func_8083BC04(Player* this, PlayState* play) { // roll
     Player_SetupAction(play, this, Player_Action_80844708, 0);
-    Player_ChangeStamina(play, -20);
+    Player_ChangeStamina(play, -30);
     LinkAnimation_PlayOnceSetSpeed(play, &this->skelAnime,
                                    GET_PLAYER_ANIM(PLAYER_ANIMGROUP_landing_roll, this->modelAnimType),
                                    1.25f * D_808535E8);
@@ -6009,7 +5996,6 @@ s32 Player_ActionChange_10(Player* this, PlayState* play) {
                 if (this->actor.category != ACTORCAT_PLAYER) {
                     if (sp2C < 0) {
                         func_808389E8(this, &gPlayerAnim_link_normal_jump, REG(69) / 100.0f, play);
-                        Player_ChangeStamina(play, -20);
                     } else {
                         func_8083BC04(this, play);
                     }
@@ -6024,7 +6010,7 @@ s32 Player_ActionChange_10(Player* this, PlayState* play) {
             }
         } else {
             func_8083BCD0(this, play, sp2C);
-            Player_ChangeStamina(play, -20);
+            Player_ChangeStamina(play, -30);
             return 1;
         }
     }
@@ -8459,9 +8445,9 @@ s32 func_8084285C(Player* this, f32 arg1, f32 arg2, f32 arg3) {
     return 0;
 }
 
-s32 func_808428D8(Player* this, PlayState* play) {
+s32 func_808428D8(Player* this, PlayState* play) { //crouchstab
     if (!Player_IsChildWithHylianShield(this) && (Player_GetMeleeWeaponHeld(this) != 0) && sUseHeldItem && play->stamina > 10) {
-        Player_ChangeStamina(play, -10);
+        Player_ChangeStamina(play, -40);
         Player_AnimPlayOnce(play, this, &gPlayerAnim_link_normal_defense_kiru);
         this->av1.actionVar1 = 1;
         this->meleeWeaponAnimation = PLAYER_MWA_STAB_1H;
@@ -11254,11 +11240,11 @@ void Player_UpdateCommon(Player* this, PlayState* play, Input* input) {
 
     }
 
-    if(Player_StoredDoubleDamage && Player_StoredDoubleDamageTimer > 0) {
+    if(this->storedDoubleDamage && Player_StoredDoubleDamageTimer > 0) {
         Player_StoredDoubleDamageTimer--;
 
-    } else if(Player_StoredDoubleDamage && Player_StoredDoubleDamageTimer <= 0) {
-        Player_StoredDoubleDamage = false;
+    } else if(this->storedDoubleDamage && Player_StoredDoubleDamageTimer <= 0) {
+        this->storedDoubleDamage = false;
         Player_PlaySfx(this, NA_SE_SY_ERROR);
 
     }
@@ -14137,10 +14123,10 @@ void Player_UpdateBunnyEars(Player* this) {
 
 s32 Player_ActionChange_7(Player* this, PlayState* play) {
     if (func_8083C6B8(play, this) == 0) {
-        if (func_8083BB20(this) != 0 && play->stamina > 20 && play->swordOut == true) {
+        if (func_8083BB20(this) != 0 && play->stamina >= 20 && play->swordOut == true) { // standard swing
             s32 sp24 = func_80837818(this);
 
-            Player_ChangeStamina(play, -20);
+            Player_ChangeStamina(play, -25);
             func_80837948(play, this, sp24);
 
             if (sp24 >= PLAYER_MWA_SPIN_ATTACK_1H) {

@@ -53,7 +53,7 @@ static ColliderCylinderInit sCylinderInit = {
     { 30, 83, 0, { 0 } },
 };
 
-static CollisionCheckInfoInit sColChkInfoInit = { 1, 80, 100, MASS_IMMOVABLE };
+static CollisionCheckInfoInit sColChkInfoInit = { 10, 80, 100, MASS_IMMOVABLE };
 
 void BgHidanFirewall_Init(Actor* thisx, PlayState* play) {
     BgHidanFirewall* this = (BgHidanFirewall*)thisx;

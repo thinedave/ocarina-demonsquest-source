@@ -314,7 +314,7 @@ void EnBb_Init(Actor* thisx, PlayState* play) {
     SkelAnime_Init(play, &this->skelAnime, &object_Bb_Skel_001A30, &object_Bb_Anim_000444, this->jointTable,
                    this->morphTable, 16);
     this->unk_254 = 0;
-    thisx->colChkInfo.health = 4;
+    thisx->colChkInfo.health = 40;
     Collider_InitJntSph(play, &this->collider);
     Collider_SetJntSph(play, &this->collider, thisx, &sJntSphInit, this->elements);
 
@@ -385,7 +385,7 @@ void EnBb_Init(Actor* thisx, PlayState* play) {
                 this->bobSize = (this->actionState & 0xF) * 20.0f;
                 thisx->colChkInfo.damageTable = &sDamageTableBlueGreen;
                 this->flameEnvColor.g = 255;
-                thisx->colChkInfo.health = 1;
+                thisx->colChkInfo.health = 10;
 
                 EnBb_InitGreen(this, play);
                 break;
@@ -756,7 +756,7 @@ void EnBb_SetupRed(PlayState* play, EnBb* this) {
         this->moveMode = BBMOVE_NORMAL;
         this->actor.bgCheckFlags &= ~BGCHECKFLAG_GROUND;
     } else {
-        this->actor.colChkInfo.health = 4;
+        this->actor.colChkInfo.health = 40;
         this->timer = 0;
         this->actionState = BBRED_WAIT;
         this->moveMode = BBMOVE_HIDDEN;

@@ -160,7 +160,7 @@ void EnFz_Init(Actor* thisx, PlayState* play) {
 
     Actor_ProcessInitChain(&this->actor, sInitChain);
     this->actor.colChkInfo.damageTable = &sDamageTable;
-    this->actor.colChkInfo.health = 6;
+    this->actor.colChkInfo.health = 60;
 
     Collider_InitCylinder(play, &this->collider1);
     Collider_SetCylinderType1(play, &this->collider1, &this->actor, &sCylinderInit1);
@@ -718,7 +718,7 @@ void EnFz_Draw(Actor* thisx, PlayState* play) {
     s32 pad;
     s32 index;
 
-    index = (6 - this->actor.colChkInfo.health) >> 1;
+    index = (60 - this->actor.colChkInfo.health) >> 1;
 
     OPEN_DISPS(play->state.gfxCtx, "../z_en_fz.c", 1167);
 

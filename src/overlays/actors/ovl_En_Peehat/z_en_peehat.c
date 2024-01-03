@@ -198,7 +198,7 @@ void EnPeehat_Init(Actor* thisx, PlayState* play) {
     this->unk_2D4 = 0;
     this->actor.world.rot.y = 0;
     this->actor.colChkInfo.mass = MASS_HEAVY;
-    this->actor.colChkInfo.health = 6;
+    this->actor.colChkInfo.health = 60;
     this->actor.colChkInfo.damageTable = &sDamageTable;
     this->actor.floorHeight = this->actor.world.pos.y;
     Collider_InitCylinder(play, &this->colCylinder);

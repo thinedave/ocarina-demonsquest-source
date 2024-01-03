@@ -351,7 +351,7 @@ void BossGanon_Init(Actor* thisx, PlayState* play2) {
         }
 
         sGanondorf = this;
-        thisx->colChkInfo.health = 40;
+        thisx->colChkInfo.health = 400;
         Actor_ProcessInitChain(thisx, sInitChain);
         ActorShape_Init(&thisx->shape, 0, NULL, 0);
         Actor_SetScale(thisx, 0.01f);
@@ -2206,7 +2206,7 @@ void BossGanon_Wait(BossGanon* this, PlayState* play) {
         } else if ((this->timers[0] == 0) && !(player->stateFlags1 & PLAYER_STATE1_13)) {
             this->timers[0] = (s16)Rand_ZeroFloat(30.0f) + 30;
 
-            if ((s8)this->actor.colChkInfo.health >= 20) {
+            if ((s8)this->actor.colChkInfo.health >= 200) {
                 BossGanon_SetupChargeLightBall(this, play);
             } else if (Rand_ZeroOne() >= 0.5f) {
                 if ((Rand_ZeroOne() >= 0.5f) || (this->actor.xzDistToPlayer > 350.0f)) {
@@ -2698,7 +2698,7 @@ void BossGanon_UpdateDamage(BossGanon* this, PlayState* play) {
         } else if ((this->actionFunc == BossGanon_Vulnerable) && (this->unk_1C2 >= 3)) {
             if (!(acHitInfo->toucher.dmgFlags & DMG_HOOKSHOT)) {
                 u8 hitWithSword = false;
-                u8 damage;
+                u16 damage;
                 Vec3f sp50;
                 u32 flags;
 
@@ -2718,8 +2718,8 @@ void BossGanon_UpdateDamage(BossGanon* this, PlayState* play) {
                     hitWithSword = true;
                 }
 
-                if (((s8)this->actor.colChkInfo.health >= 3) || hitWithSword) {
-                    this->actor.colChkInfo.health -= damage;
+                if (((s8)this->actor.colChkInfo.health >= 30) || hitWithSword) {
+                    this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-damage, 0);
                 }
 
                 for (i = 0; i < ARRAY_COUNT(sCape->strands); i++) {

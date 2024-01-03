@@ -13,7 +13,6 @@ static SaveRestingContext sSaveRestingContext = {
     0,                      // timer
     REST_STATE_INACTIVE,    // state
     0,                      // selection
-    {},                     // font
     {0,0,0,0,0}             // wantedLevels
 
 };
@@ -24,7 +23,7 @@ void Interface_SaveResting_Init(PlayState* play) {
 
     interfaceCtx->saveRestingCtx.wantedLevels = gSaveContext.save.info.playerData.levels;
 
-    Font_LoadOrderedFont(&interfaceCtx->saveRestingCtx.font);
+    //Font_LoadOrderedFont(&interfaceCtx->saveRestingCtx.font);
 
 }
 
@@ -115,7 +114,7 @@ void Interface_Init(PlayState* play) {
     osSyncPrintf("Register_Item[%x, %x, %x, %x, %x, %x]\n", dpadItems[0], dpadItems[1], dpadItems[2], dpadItems[3], dpadItems[4], dpadItems[5]);
 
     for(u8 i = 0; i <= 5; i++) {
-        DmaMgr_RequestSyncDebug(interfaceCtx->dpadItemSegment + (0x1000 * i), (uintptr_t)_icon_item_staticSegmentRomStart + (dpadItems[i] * 0x1000), 0x1000, __FILE__, __LINE__);
+        DmaMgr_RequestSyncDebug(interfaceCtx->dpadItemSegment + (ITEM_ICON_SIZE * i), (uintptr_t)_icon_item_staticSegmentRomStart + (dpadItems[i] * ITEM_ICON_SIZE), ITEM_ICON_SIZE, __FILE__, __LINE__);
 
     }
 

@@ -65,7 +65,7 @@ void BossTw_Destroy(Actor* thisx, PlayState* play);
 void BossTw_Update(Actor* thisx, PlayState* play);
 void BossTw_Draw(Actor* thisx, PlayState* play2);
 
-void BossTw_TwinrovaDamage(BossTw* this, PlayState* play, u8 damage);
+void BossTw_TwinrovaDamage(BossTw* this, PlayState* play, u16 damage);
 void BossTw_TwinrovaSetupFly(BossTw* this, PlayState* play);
 void BossTw_DrawEffects(PlayState* play);
 void BossTw_TwinrovaLaugh(BossTw* this, PlayState* play);
@@ -547,7 +547,7 @@ void BossTw_Init(Actor* thisx, PlayState* play2) {
         // Twinrova
         Collider_SetCylinder(play, &this->collider, &this->actor, &sCylinderInitTwinrova);
         this->actor.naviEnemyId = NAVI_ENEMY_TWINROVA;
-        this->actor.colChkInfo.health = 24;
+        this->actor.colChkInfo.health = 240;
         this->actor.update = BossTw_TwinrovaUpdate;
         this->actor.draw = BossTw_TwinrovaDraw;
         SkelAnime_InitFlex(play, &this->skelAnime, &gTwinrovaSkel, &gTwinrovaTPoseAnim, NULL, NULL, 0);
@@ -1312,7 +1312,7 @@ void BossTw_ShootBeam(BossTw* this, PlayState* play) {
             BossTw_SetupHitByBeam(otherTw, play);
             Actor_PlaySfx(&otherTw->actor, NA_SE_EN_TWINROBA_DAMAGE_VOICE);
             play->envCtx.lightBlend = 1.0f;
-            otherTw->actor.colChkInfo.health++;
+            otherTw->actor.colChkInfo.health += 10;
         }
     }
 }
@@ -1475,7 +1475,7 @@ void BossTw_SetupWait(BossTw* this, PlayState* play) {
 void BossTw_Wait(BossTw* this, PlayState* play) {
     if ((this->actor.params == TW_TWINROVA) && (sKoumePtr->actionFunc == BossTw_FlyTo) &&
         (sKotakePtr->actionFunc == BossTw_FlyTo) &&
-        ((sKoumePtr->actor.colChkInfo.health + sKotakePtr->actor.colChkInfo.health) >= 4)) {
+        ((sKoumePtr->actor.colChkInfo.health + sKotakePtr->actor.colChkInfo.health) >= 40)) {
 
         BossTw_TwinrovaSetupMergeCS(this, play);
         BossTw_SetupMergeCS(sKotakePtr, play);
@@ -3099,7 +3099,7 @@ void BossTw_TwinrovaUpdate(Actor* thisx, PlayState* play2) {
                 if (info->toucher.dmgFlags & (DMG_SLINGSHOT | DMG_ARROW)) {}
             }
         } else if (this->collider.base.acFlags & AC_HIT) {
-            u8 damage;
+            u16 damage;
             u8 swordDamage;
             ColliderInfo* info = this->collider.info.acHitInfo;
 
@@ -3114,7 +3114,7 @@ void BossTw_TwinrovaUpdate(Actor* thisx, PlayState* play2) {
             }
 
             if (!(info->toucher.dmgFlags & DMG_HOOKSHOT)) {
-                if (((s8)this->actor.colChkInfo.health < 3) && !swordDamage) {
+                if (((s8)this->actor.colChkInfo.health < 30) && !swordDamage) {
                     damage = 0;
                 }
 
@@ -5146,7 +5146,7 @@ void BossTw_TwinrovaChargeBlast(BossTw* this, PlayState* play) {
     Math_ApproachS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 5, 0x1000);
 
     if (Animation_OnFrame(&this->skelAnime, this->workf[ANIM_SW_TGT])) {
-        if ((s8)this->actor.colChkInfo.health < 10) {
+        if ((s8)this->actor.colChkInfo.health < 100) {
             sTwinrovaBlastType = Rand_ZeroFloat(1.99f);
         } else {
             if (++sFixedBlatSeq >= 4) {
@@ -5246,7 +5246,7 @@ void BossTw_TwinrovaDoneBlastShoot(BossTw* this, PlayState* play) {
     Math_ApproachS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 5, 0x1000);
 }
 
-void BossTw_TwinrovaDamage(BossTw* this, PlayState* play, u8 damage) {
+void BossTw_TwinrovaDamage(BossTw* this, PlayState* play, u16 damage) {
     if (this->actionFunc != BossTw_TwinrovaStun) {
         Animation_MorphToPlayOnce(&this->skelAnime, &gTwinrovaChargedAttackHitAnim, -15.0f);
         this->timers[0] = 150;

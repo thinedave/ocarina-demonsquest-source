@@ -140,7 +140,7 @@ void EnTp_Init(Actor* thisx, PlayState* play2) {
     this->actor.colChkInfo.damageTable = &sDamageTable;
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 0.14f);
     this->unk_150 = 0;
-    this->actor.colChkInfo.health = 1;
+    this->actor.colChkInfo.health = 10;
     now = this;
     this->alpha = 255;
     Collider_InitJntSph(play, &this->collider);

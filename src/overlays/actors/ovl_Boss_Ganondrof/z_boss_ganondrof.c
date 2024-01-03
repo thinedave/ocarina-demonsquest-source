@@ -283,7 +283,7 @@ void BossGanondrof_Init(Actor* thisx, PlayState* play) {
     SkelAnime_Init(play, &this->skelAnime, &gPhantomGanonSkel, &gPhantomGanonRideAnim, NULL, NULL, 0);
     if (this->actor.params < GND_FAKE_BOSS) {
         this->actor.params = GND_REAL_BOSS;
-        this->actor.colChkInfo.health = 30;
+        this->actor.colChkInfo.health = 300;
         this->lightNode = LightContext_InsertLight(play, &play->lightCtx, &this->lightInfo);
         Lights_PointNoGlowSetInfo(&this->lightInfo, this->actor.world.pos.x, this->actor.world.pos.y,
                                   this->actor.world.pos.z, 255, 255, 255, 255);
@@ -497,7 +497,7 @@ void BossGanondrof_Neutral(BossGanondrof* this, PlayState* play) {
             if (this->timers[0] == 0) {
                 this->timers[0] = (s16)(Rand_ZeroOne() * 64.0f) + 30;
                 rand01 = Rand_ZeroOne();
-                if (thisx->colChkInfo.health < 5) {
+                if (thisx->colChkInfo.health < 50) {
                     if (rand01 < 0.25f) {
                         BossGanondrof_SetupThrow(this, play);
                     } else if (rand01 >= 0.8f) {
@@ -1252,8 +1252,8 @@ void BossGanondrof_CollisionCheck(BossGanondrof* this, PlayState* play) {
                         }
                         dmg = CollisionCheck_GetSwordDamage(dmgFlags);
                         (dmg == 0) ? (dmg = 2) : (canKill = true);
-                        if (((s8)this->actor.colChkInfo.health > 2) || canKill) {
-                            this->actor.colChkInfo.health -= dmg;
+                        if (((s8)this->actor.colChkInfo.health > 20) || canKill) {
+                            this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-dmg, 0);
                         }
 
                         if ((s8)this->actor.colChkInfo.health <= 0) {
@@ -1274,7 +1274,7 @@ void BossGanondrof_CollisionCheck(BossGanondrof* this, PlayState* play) {
                 }
             } else if (acHit && (hurtbox->toucher.dmgFlags & DMG_RANGED)) {
                 this->work[GND_INVINC_TIMER] = 10;
-                this->actor.colChkInfo.health -= 2;
+                this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-20, 0);
                 horse->hitTimer = 20;
                 Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_DAMAGE);
             }

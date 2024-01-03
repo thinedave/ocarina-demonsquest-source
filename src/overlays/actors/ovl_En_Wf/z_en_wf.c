@@ -217,7 +217,7 @@ void EnWf_Init(Actor* thisx, PlayState* play) {
     ActorShape_Init(&thisx->shape, 0.0f, ActorShadow_DrawCircle, 0.0f);
     thisx->focus.pos = thisx->world.pos;
     thisx->colChkInfo.mass = MASS_HEAVY;
-    thisx->colChkInfo.health = 8;
+    thisx->colChkInfo.health = 80;
     thisx->colChkInfo.cylRadius = 50;
     thisx->colChkInfo.cylHeight = 100;
     this->switchFlag = (thisx->params >> 8) & 0xFF;

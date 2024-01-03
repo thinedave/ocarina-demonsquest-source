@@ -517,7 +517,7 @@ void func_809BDC08(EnBigokuta* this, PlayState* play) {
     } else {
         this->unk_198 = 80;
     }
-    if (this->actor.colChkInfo.health == 1) {
+    if (this->actor.colChkInfo.health <= 10) {
         phi_v1 = (phi_v1 + 0x130) * 1.1f;
     } else {
         phi_v1 += 0x130;

@@ -109,7 +109,7 @@ void EnTorch2_Init(Actor* thisx, PlayState* play2) {
     this->shieldQuad.base.atFlags = AT_ON | AT_TYPE_ENEMY;
     this->shieldQuad.base.acFlags = AC_ON | AC_HARD | AC_TYPE_PLAYER;
     this->actor.colChkInfo.damageTable = &sDamageTable;
-    this->actor.colChkInfo.health = gSaveContext.save.info.playerData.healthCapacity >> 3;
+    this->actor.colChkInfo.health = (gSaveContext.save.info.playerData.healthCapacity >> 3) * 10;
     this->actor.colChkInfo.cylRadius = 60;
     this->actor.colChkInfo.cylHeight = 100;
     play->func_11D54(this, play);

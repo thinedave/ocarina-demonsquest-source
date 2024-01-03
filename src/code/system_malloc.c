@@ -4,7 +4,7 @@
 #define LOG_SEVERITY_ERROR 2
 #define LOG_SEVERITY_VERBOSE 3
 
-s32 gSystemArenaLogSeverity = LOG_SEVERITY_NOLOG;
+s32 gSystemArenaLogSeverity = LOG_SEVERITY_ERROR;
 Arena gSystemArena;
 
 void SystemArena_CheckPointer(void* ptr, u32 size, const char* name, const char* action) {

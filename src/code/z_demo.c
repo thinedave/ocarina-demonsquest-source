@@ -549,7 +549,7 @@ void CutsceneCmd_SetTime(PlayState* play, CutsceneContext* csCtx, CsCmdTime* cmd
 bool findInUnskippables(void* value) {
     void* csUnskippables[] = {
         SEGMENTED_TO_VIRTUAL(gHyruleFieldZeldaSongOfTimeCs),
-        //SEGMENTED_TO_VIRTUAL(gHyruleFieldTitleScreenCs),
+        SEGMENTED_TO_VIRTUAL(spot00_sceneCutsceneData_00A920),
         //add more eventually
 
     };

@@ -2806,25 +2806,25 @@ Actor* Actor_Spawn(ActorContext* actorCtx, PlayState* play, s16 actorId, f32 pos
 
     if (HREG(20) != 0) {
         // "Actor class addition [%d:%s]"
-        osSyncPrintf("アクタークラス追加 [%d:%s]\n", actorId, name);
+        osSyncPrintf("Actor class addition [%d:%s]\n", actorId, name);
     }
 
     if (actorCtx->total > ACTOR_NUMBER_MAX) {
         // "Ａｃｔｏｒ set number exceeded"
-        osSyncPrintf(VT_COL(YELLOW, BLACK) "Ａｃｔｏｒセット数オーバー\n" VT_RST);
+        osSyncPrintf(VT_COL(YELLOW, BLACK) "Actor set number exceeded\n" VT_RST);
         return NULL;
     }
 
     if (overlayEntry->vramStart == NULL) {
         if (HREG(20) != 0) {
-            osSyncPrintf("オーバーレイではありません\n"); // "Not an overlay"
+            osSyncPrintf("Not an overlay\n"); // "Not an overlay"
         }
 
         actorInit = overlayEntry->initInfo;
     } else {
         if (overlayEntry->loadedRamAddr != NULL) {
             if (HREG(20) != 0) {
-                osSyncPrintf("既にロードされています\n"); // "Already loaded"
+                osSyncPrintf("Already loaded\n"); // "Already loaded"
             }
         } else {
             if (overlayEntry->allocType & ACTOROVL_ALLOC_ABSOLUTE) {
@@ -2834,10 +2834,10 @@ Actor* Actor_Spawn(ActorContext* actorCtx, PlayState* play, s16 actorId, f32 pos
                 if (actorCtx->absoluteSpace == NULL) {
                     // "AMF: absolute magic field"
                     actorCtx->absoluteSpace =
-                        ZeldaArena_MallocRDebug(ACTOROVL_ABSOLUTE_SPACE_SIZE, "AMF:絶対魔法領域", 0);
+                        ZeldaArena_MallocRDebug(ACTOROVL_ABSOLUTE_SPACE_SIZE, "AMF: absolute magic field", 0);
                     if (HREG(20) != 0) {
                         // "Absolute magic field reservation - %d bytes reserved"
-                        osSyncPrintf("絶対魔法領域確保 %d バイト確保\n", ACTOROVL_ABSOLUTE_SPACE_SIZE);
+                        osSyncPrintf("Absolute magic field reservation - %d bytes reserved\n", ACTOROVL_ABSOLUTE_SPACE_SIZE);
                     }
                 }
 
@@ -2850,7 +2850,7 @@ Actor* Actor_Spawn(ActorContext* actorCtx, PlayState* play, s16 actorId, f32 pos
 
             if (overlayEntry->loadedRamAddr == NULL) {
                 // "Cannot reserve actor program memory"
-                osSyncPrintf(VT_COL(RED, WHITE) "Ａｃｔｏｒプログラムメモリが確保できません\n" VT_RST);
+                osSyncPrintf(VT_COL(RED, WHITE) "Cannot reserve actor program memory\n" VT_RST);
                 return NULL;
             }
 
@@ -2880,7 +2880,7 @@ Actor* Actor_Spawn(ActorContext* actorCtx, PlayState* play, s16 actorId, f32 pos
     if ((objectSlot < 0) ||
         ((actorInit->category == ACTORCAT_ENEMY) && Flags_GetClear(play, play->roomCtx.curRoom.num))) {
         // "No data bank!! <data bank＝%d> (profilep->bank=%d)"
-        osSyncPrintf(VT_COL(RED, WHITE) "データバンク無し！！<データバンク＝%d>(profilep->bank=%d)\n" VT_RST,
+        osSyncPrintf(VT_COL(RED, WHITE) "No data bank!! <data bank=%d> (profilep->bank=%d)\n" VT_RST,
                      objectSlot, actorInit->objectId);
         Actor_FreeOverlay(overlayEntry);
         return NULL;
@@ -2888,9 +2888,11 @@ Actor* Actor_Spawn(ActorContext* actorCtx, PlayState* play, s16 actorId, f32 pos
 
     actor = ZeldaArena_MallocDebug(actorInit->instanceSize, name, 1);
 
+    osSyncPrintf("Actor_%s size: %d bytes\n", name, actorInit->instanceSize);
+
     if (actor == NULL) {
         // "Actor class cannot be reserved! %s <size＝%d bytes>"
-        osSyncPrintf(VT_COL(RED, WHITE) "Ａｃｔｏｒクラス確保できません！ %s <サイズ＝%dバイト>\n", VT_RST, name,
+        osSyncPrintf(VT_COL(RED, WHITE) "Actor class cannot be reserved (no memory)! %s <size=%d bytes>\n", VT_RST, name,
                      actorInit->instanceSize);
         Actor_FreeOverlay(overlayEntry);
         return NULL;
@@ -4287,11 +4289,11 @@ u8 func_800355E4(PlayState* play, Collider* collider) {
     }
 }
 
-u8 Actor_ApplyDamage(Actor* actor) {
+u16 Actor_ApplyDamage(Actor* actor) {
     if (actor->colChkInfo.damage >= actor->colChkInfo.health) {
         actor->colChkInfo.health = 0;
     } else {
-        actor->colChkInfo.health -= actor->colChkInfo.damage;
+        actor->colChkInfo.health = MAX(actor->colChkInfo.damage-10, 0);
     }
 
     return actor->colChkInfo.health;

@@ -354,7 +354,7 @@ void BossGoma_Init(Actor* thisx, PlayState* play) {
     this->actor.world.pos.y = -300.0f; // ceiling
     this->actor.gravity = 0.0f;
     BossGoma_SetupEncounter(this, play);
-    this->actor.colChkInfo.health = 10;
+    this->actor.colChkInfo.health = 100;
     this->actor.colChkInfo.mass = MASS_IMMOVABLE;
     Collider_InitJntSph(play, &this->collider);
     Collider_SetJntSph(play, &this->collider, &this->actor, &sColliderJntSphInit, this->colliderItems);
@@ -1820,7 +1820,7 @@ void BossGoma_UpdateHit(BossGoma* this, PlayState* play) {
                 Actor_PlaySfx(&this->actor, NA_SE_EN_GOMA_DAM2);
             } else if (this->actionFunc == BossGoma_FloorStunned &&
                        (damage = CollisionCheck_GetSwordDamage(acHitInfo->toucher.dmgFlags)) != 0) {
-                this->actor.colChkInfo.health -= damage;
+                this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-damage, 0);
 
                 if ((s8)this->actor.colChkInfo.health > 0) {
                     Actor_PlaySfx(&this->actor, NA_SE_EN_GOMA_DAM1);

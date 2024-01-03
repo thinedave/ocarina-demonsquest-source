@@ -62,7 +62,7 @@ static ColliderCylinderInit sCylinderInit1 = {
     { 32, 50, -24, { 0, 0, 0 } },
 };
 
-static CollisionCheckInfoInit2 sColChkInfoInit = { 1, 0, 0, 0, MASS_IMMOVABLE };
+static CollisionCheckInfoInit2 sColChkInfoInit = { 10, 0, 0, 0, MASS_IMMOVABLE };
 
 static ColliderCylinderInit sCylinderInit2 = {
     {

@@ -322,12 +322,12 @@ void EnZf_Init(Actor* thisx, PlayState* play) {
     Collider_SetQuad(play, &this->swordCollider, thisx, &sSwordQuadInit);
 
     if (thisx->params == ENZF_TYPE_DINOLFOS) {
-        thisx->colChkInfo.health = 12;
+        thisx->colChkInfo.health = 120;
         thisx->naviEnemyId = NAVI_ENEMY_DINOLFOS;
         SkelAnime_Init(play, &this->skelAnime, &gZfDinolfosSkel, &gZfCryingAnim, this->jointTable, this->morphTable,
                        ENZF_LIMB_MAX);
     } else { // Lizalfos
-        thisx->colChkInfo.health = 6;
+        thisx->colChkInfo.health = 60;
         thisx->naviEnemyId = NAVI_ENEMY_LIZALFOS;
         SkelAnime_Init(play, &this->skelAnime, &gZfLizalfosSkel, &gZfCryingAnim, this->jointTable, this->morphTable,
                        ENZF_LIMB_MAX);
@@ -1921,14 +1921,14 @@ void EnZf_SetupDie(EnZf* this) {
         if (this->actor.prev != NULL) {
             ((EnZf*)this->actor.prev)->unk_3F4 = 90;
 
-            if (this->actor.prev->colChkInfo.health < 3) {
-                this->actor.prev->colChkInfo.health = 3;
+            if (this->actor.prev->colChkInfo.health < 30) {
+                this->actor.prev->colChkInfo.health = 30;
             }
         } else {
             ((EnZf*)this->actor.next)->unk_3F4 = 90;
 
-            if (this->actor.next->colChkInfo.health < 3) {
-                this->actor.next->colChkInfo.health = 3;
+            if (this->actor.next->colChkInfo.health < 30) {
+                this->actor.next->colChkInfo.health = 30;
             }
         }
     }
@@ -2024,8 +2024,8 @@ void EnZf_UpdateDamage(EnZf* this, PlayState* play) {
                     Item_DropCollectibleRandom(play, &this->actor, &this->actor.world.pos, dropParams);
                     Enemy_StartFinishingBlow(play, &this->actor);
                 } else {
-                    if ((D_80B4A1B4 != -1) && ((this->actor.colChkInfo.health + this->actor.colChkInfo.damage) >= 4) &&
-                        (this->actor.colChkInfo.health < 4)) {
+                    if ((D_80B4A1B4 != -1) && ((this->actor.colChkInfo.health + this->actor.colChkInfo.damage) >= 40) &&
+                        (this->actor.colChkInfo.health < 40)) {
                         this->damageEffect = ENZF_DMGEFF_PROJECTILE;
                     }
 

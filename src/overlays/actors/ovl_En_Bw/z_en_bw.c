@@ -136,7 +136,7 @@ void EnBw_Init(Actor* thisx, PlayState* play) {
                    this->morphTable, TORCH_SLUG_LIMB_MAX);
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 40.0f);
     this->actor.colChkInfo.damageTable = &sDamageTable;
-    this->actor.colChkInfo.health = 6;
+    this->actor.colChkInfo.health = 60;
     this->actor.colChkInfo.mass = MASS_HEAVY;
     this->actor.focus.pos = this->actor.world.pos;
     func_809CE9A8(this);

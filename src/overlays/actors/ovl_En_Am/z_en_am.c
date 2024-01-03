@@ -218,7 +218,7 @@ void EnAm_Init(Actor* thisx, PlayState* play) {
     Collider_SetCylinder(play, &this->hurtCollider, &this->dyna.actor, &sHurtCylinderInit);
 
     if (this->dyna.actor.params == ARMOS_STATUE) {
-        this->dyna.actor.colChkInfo.health = 1;
+        this->dyna.actor.colChkInfo.health = 10;
         Collider_SetCylinder(play, &this->blockCollider, &this->dyna.actor, &sHurtCylinderInit);
         this->hurtCollider.base.ocFlags1 = (OC1_ON | OC1_NO_PUSH | OC1_TYPE_1 | OC1_TYPE_2);
         this->blockCollider.base.ocFlags1 = (OC1_ON | OC1_NO_PUSH | OC1_TYPE_PLAYER);
@@ -230,7 +230,7 @@ void EnAm_Init(Actor* thisx, PlayState* play) {
         Collider_SetCylinder(play, &this->blockCollider, &this->dyna.actor, &sBlockCylinderInit);
         Collider_InitQuad(play, &this->hitCollider);
         Collider_SetQuad(play, &this->hitCollider, &this->dyna.actor, &sQuadInit);
-        this->dyna.actor.colChkInfo.health = 1;
+        this->dyna.actor.colChkInfo.health = 10;
         this->dyna.actor.colChkInfo.damageTable = &sDamageTable;
         EnAm_SetupSleep(this);
         this->unk_258 = 0;

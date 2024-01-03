@@ -167,7 +167,7 @@ void EnRr_Init(Actor* thisx, PlayState* play2) {
 
     Actor_ProcessInitChain(&this->actor, sInitChain);
     this->actor.colChkInfo.damageTable = &sDamageTable;
-    this->actor.colChkInfo.health = 4;
+    this->actor.colChkInfo.health = 40;
     Collider_InitCylinder(play, &this->collider1);
     Collider_SetCylinderType1(play, &this->collider1, &this->actor, &sCylinderInit1);
     Collider_InitCylinder(play, &this->collider2);

@@ -10,8 +10,8 @@
 /**
  * Header Child Day (Default)
 */
-#define LENGTH_SAVETEST_ROOM_0_HEADER00_OBJECTLIST 1
-#define LENGTH_SAVETEST_ROOM_0_HEADER00_ACTORLIST 1
+#define LENGTH_SAVETEST_ROOM_0_HEADER00_OBJECTLIST 3
+#define LENGTH_SAVETEST_ROOM_0_HEADER00_ACTORLIST 3
 SceneCmd savetest_room_0_header00[] = {
     SCENE_CMD_ECHO_SETTINGS(0x00),
     SCENE_CMD_ROOM_BEHAVIOR(0x00, 0x00, false, false),
@@ -25,9 +25,27 @@ SceneCmd savetest_room_0_header00[] = {
 
 s16 savetest_room_0_header00_objectList[LENGTH_SAVETEST_ROOM_0_HEADER00_OBJECTLIST] = {
     OBJECT_WARP1,
+    OBJECT_DEKUBABA,
+    OBJECT_DEKUNUTS,
 };
 
 ActorEntry savetest_room_0_header00_actorList[LENGTH_SAVETEST_ROOM_0_HEADER00_ACTORLIST] = {
+    // Deku Baba
+    {
+        /* Actor ID   */ ACTOR_EN_DEKUBABA,
+        /* Position   */ { 0, 0, -210 },
+        /* Rotation   */ { DEG_TO_BINANG(0.000), DEG_TO_BINANG(0.000), DEG_TO_BINANG(0.000) },
+        /* Parameters */ 0x0000
+    },
+
+    // Deku Scrub
+    {
+        /* Actor ID   */ ACTOR_EN_DEKUNUTS,
+        /* Position   */ { 160, 0, -210 },
+        /* Rotation   */ { DEG_TO_BINANG(0.000), DEG_TO_BINANG(0.000), DEG_TO_BINANG(0.000) },
+        /* Parameters */ 0x0000
+    },
+
     // Custom Actor
     {
         /* Actor ID   */ ACTOR_SAVESPOT,
@@ -49,11 +67,11 @@ RoomShapeDListsEntry savetest_room_0_shapeDListEntry[1] = {
 };
 
 Gfx savetest_room_0_entry_0_opaque[] = {
-	gsSPDisplayList(savetest_dl_Ground_mesh_layer_Opaque),
+	gsSPDisplayList(savetest_dl_savetest_room_0_entry_0_opaque_mesh_mesh_layer_Opaque),
 	gsSPEndDisplayList(),
 };
 
-Vtx savetest_dl_Ground_mesh_layer_Opaque_vtx_cull[8] = {
+Vtx savetest_dl_savetest_room_0_entry_0_opaque_mesh_mesh_layer_Opaque_vtx_cull[8] = {
 	{{ {-300, 0, 300}, 0, {0, 0}, {0, 0, 0, 0} }},
 	{{ {-300, 0, 300}, 0, {0, 0}, {0, 0, 0, 0} }},
 	{{ {-300, 0, -300}, 0, {0, 0}, {0, 0, 0, 0} }},
@@ -64,20 +82,20 @@ Vtx savetest_dl_Ground_mesh_layer_Opaque_vtx_cull[8] = {
 	{{ {300, 0, -300}, 0, {0, 0}, {0, 0, 0, 0} }},
 };
 
-Vtx savetest_dl_Ground_mesh_layer_Opaque_vtx_0[4] = {
+Vtx savetest_dl_savetest_room_0_entry_0_opaque_mesh_mesh_layer_Opaque_vtx_0[4] = {
 	{{ {-300, 0, 300}, 0, {-16, 1008}, {0, 127, 0, 255} }},
 	{{ {300, 0, 300}, 0, {1008, 1008}, {0, 127, 0, 255} }},
 	{{ {300, 0, -300}, 0, {1008, -16}, {0, 127, 0, 255} }},
 	{{ {-300, 0, -300}, 0, {-16, -16}, {0, 127, 0, 255} }},
 };
 
-Gfx savetest_dl_Ground_mesh_layer_Opaque_tri_0[] = {
-	gsSPVertex(savetest_dl_Ground_mesh_layer_Opaque_vtx_0 + 0, 4, 0),
+Gfx savetest_dl_savetest_room_0_entry_0_opaque_mesh_mesh_layer_Opaque_tri_0[] = {
+	gsSPVertex(savetest_dl_savetest_room_0_entry_0_opaque_mesh_mesh_layer_Opaque_vtx_0 + 0, 4, 0),
 	gsSP2Triangles(0, 1, 2, 0, 0, 2, 3, 0),
 	gsSPEndDisplayList(),
 };
 
-Gfx mat_savetest_dl_f3dlite_material_layerOpaque[] = {
+Gfx mat_savetest_dl_f3dlite_material_001_layerOpaque[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, 1, COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED),
 	gsSPLoadGeometryMode(G_ZBUFFER | G_SHADE | G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADING_SMOOTH),
@@ -88,13 +106,13 @@ Gfx mat_savetest_dl_f3dlite_material_layerOpaque[] = {
 	gsSPEndDisplayList(),
 };
 
-Gfx savetest_dl_Ground_mesh_layer_Opaque[] = {
+Gfx savetest_dl_savetest_room_0_entry_0_opaque_mesh_mesh_layer_Opaque[] = {
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPVertex(savetest_dl_Ground_mesh_layer_Opaque_vtx_cull + 0, 8, 0),
+	gsSPVertex(savetest_dl_savetest_room_0_entry_0_opaque_mesh_mesh_layer_Opaque_vtx_cull + 0, 8, 0),
 	gsSPSetGeometryMode(G_LIGHTING),
 	gsSPCullDisplayList(0, 7),
-	gsSPDisplayList(mat_savetest_dl_f3dlite_material_layerOpaque),
-	gsSPDisplayList(savetest_dl_Ground_mesh_layer_Opaque_tri_0),
+	gsSPDisplayList(mat_savetest_dl_f3dlite_material_001_layerOpaque),
+	gsSPDisplayList(savetest_dl_savetest_room_0_entry_0_opaque_mesh_mesh_layer_Opaque_tri_0),
 	gsSPEndDisplayList(),
 };
 

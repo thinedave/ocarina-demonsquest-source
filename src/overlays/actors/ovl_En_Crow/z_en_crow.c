@@ -57,7 +57,7 @@ static ColliderJntSphInit sJntSphInit = {
     sJntSphElementsInit,
 };
 
-static CollisionCheckInfoInit sColChkInfoInit = { 1, 15, 30, 30 };
+static CollisionCheckInfoInit sColChkInfoInit = { 10, 15, 30, 30 };
 
 static DamageTable sDamageTable = {
     /* Deku nut      */ DMG_ENTRY(0, 0x1),
@@ -401,7 +401,7 @@ void EnCrow_Respawn(EnCrow* this, PlayState* play) {
         if (Math_StepToF(&this->actor.scale.x, target, target * 0.1f)) {
             this->actor.flags |= ACTOR_FLAG_0;
             this->actor.flags &= ~ACTOR_FLAG_4;
-            this->actor.colChkInfo.health = 1;
+            this->actor.colChkInfo.health = 10;
             EnCrow_SetupFlyIdle(this);
         }
         this->actor.scale.z = this->actor.scale.y = this->actor.scale.x;

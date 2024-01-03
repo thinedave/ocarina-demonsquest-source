@@ -119,7 +119,7 @@ void EnReeba_Init(Actor* thisx, PlayState* play) {
     SkelAnime_Init(play, &this->skelanime, &object_reeba_Skel_001EE8, &object_reeba_Anim_0001E4, this->jointTable,
                    this->morphTable, 18);
     this->actor.colChkInfo.mass = MASS_HEAVY;
-    this->actor.colChkInfo.health = 4;
+    this->actor.colChkInfo.health = 40;
     Collider_InitCylinder(play, &this->collider);
     Collider_SetCylinder(play, &this->collider, &this->actor, &sCylinderInit);
     this->type = this->actor.params;
@@ -131,7 +131,7 @@ void EnReeba_Init(Actor* thisx, PlayState* play) {
         this->scale *= 1.5f;
         // "Reeba Boss Appears %f"
         osSyncPrintf(VT_FGCOL(YELLOW) "☆☆☆☆☆ リーバぼす登場 ☆☆☆☆☆ %f\n" VT_RST, this->scale);
-        this->actor.colChkInfo.health = 20;
+        this->actor.colChkInfo.health = 200;
         this->collider.info.toucher.effect = 4;
         this->collider.info.toucher.damage = 16;
         Actor_ChangeCategory(play, &play->actorCtx, &this->actor, ACTORCAT_ENEMY);

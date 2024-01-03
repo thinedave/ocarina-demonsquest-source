@@ -344,7 +344,7 @@ void BossMo_Init(Actor* thisx, PlayState* play2) {
         this->actor.world.pos.y = MO_WATER_LEVEL(play) + 50.0f;
         this->fwork[MO_TENT_SWING_SIZE_X] = 5.0f;
         this->drawActor = true;
-        this->actor.colChkInfo.health = 20;
+        this->actor.colChkInfo.health = 200;
         this->actor.colChkInfo.mass = 0;
         this->actor.params = 0;
         Actor_SetScale(&this->actor, 0.01f);
@@ -1755,7 +1755,7 @@ void BossMo_CoreCollisionCheck(BossMo* this, PlayState* play) {
         // "hit 2 !!"
         osSyncPrintf("Core_Damage_check 当り 2 ！！\n");
         if ((this->work[MO_TENT_ACTION_STATE] != MO_CORE_UNDERWATER) && (this->work[MO_TENT_INVINC_TIMER] == 0)) {
-            u8 damage = CollisionCheck_GetSwordDamage(hurtbox->toucher.dmgFlags);
+            u16 damage = CollisionCheck_GetSwordDamage(hurtbox->toucher.dmgFlags);
 
             if ((damage != 0) && (this->work[MO_TENT_ACTION_STATE] < MO_CORE_ATTACK)) {
                 // "sword hit !!"
@@ -1768,7 +1768,7 @@ void BossMo_CoreCollisionCheck(BossMo* this, PlayState* play) {
                 this->actor.world.rot.y = this->actor.yawTowardsPlayer + 0x8000;
                 this->work[MO_CORE_DMG_FLASH_TIMER] = 15;
                 Actor_PlaySfx(&this->actor, NA_SE_EN_MOFER_CORE_DAMAGE);
-                this->actor.colChkInfo.health -= damage;
+                this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-damage, 0);
                 this->hitCount++;
                 if ((s8)this->actor.colChkInfo.health <= 0) {
                     if (((sMorphaTent1->subCamId == SUB_CAM_ID_DONE) && (sMorphaTent2 == NULL)) ||
@@ -1789,7 +1789,7 @@ void BossMo_CoreCollisionCheck(BossMo* this, PlayState* play) {
                             player->csAction = PLAYER_CSACTION_NONE;
                         }
                     } else {
-                        this->actor.colChkInfo.health = 1;
+                        this->actor.colChkInfo.health = 100;
                     }
                 }
                 this->work[MO_TENT_INVINC_TIMER] = 10;

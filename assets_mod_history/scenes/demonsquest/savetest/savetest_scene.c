@@ -42,46 +42,46 @@ Spawn savetest_scene_header00_entranceList[] = {
 };
 
 EnvLightSettings savetest_scene_header00_lightSettings[4] = {
-    // Dawn Lighting
+    // Custom No. 1 Lighting
     {
         {    70,    45,    57 },   // Ambient Color
         {    73,    73,    73 },   // Diffuse0 Direction
         {   180,   154,   138 },   // Diffuse0 Color
         {   -73,   -73,   -73 },   // Diffuse1 Direction
-        {    20,    20,    60 },   // Diffuse1 Color
+        {    79,    79,   133 },   // Diffuse1 Color
         {   140,   120,   100 },   // Fog Color
         ((1 << 10) | 993),         // Blend Rate & Fog Near
         12800,                     // Fog Far
     },
-    // Day Lighting
+    // Custom No. 2 Lighting
     {
         {   105,    90,    90 },   // Ambient Color
         {    73,    73,    73 },   // Diffuse0 Direction
         {   255,   255,   240 },   // Diffuse0 Color
         {   -73,   -73,   -73 },   // Diffuse1 Direction
-        {    50,    50,    90 },   // Diffuse1 Color
+        {    79,    79,   133 },   // Diffuse1 Color
         {   100,   100,   120 },   // Fog Color
         ((1 << 10) | 996),         // Blend Rate & Fog Near
         12800,                     // Fog Far
     },
-    // Dusk Lighting
+    // Custom No. 3 Lighting
     {
         {   120,    90,     0 },   // Ambient Color
         {    73,    73,    73 },   // Diffuse0 Direction
         {   250,   135,    50 },   // Diffuse0 Color
         {   -73,   -73,   -73 },   // Diffuse1 Direction
-        {    30,    30,    60 },   // Diffuse1 Color
+        {    79,    79,   133 },   // Diffuse1 Color
         {   120,    70,    50 },   // Fog Color
         ((1 << 10) | 995),         // Blend Rate & Fog Near
         12800,                     // Fog Far
     },
-    // Night Lighting
+    // Custom No. 4 Lighting
     {
         {    40,    70,   100 },   // Ambient Color
         {    73,    73,    73 },   // Diffuse0 Direction
         {    20,    20,    35 },   // Diffuse0 Color
         {   -73,   -73,   -73 },   // Diffuse1 Direction
-        {    50,    50,   100 },   // Diffuse1 Color
+        {    79,    79,   133 },   // Diffuse1 Color
         {     0,     0,    30 },   // Fog Color
         ((1 << 10) | 992),         // Blend Rate & Fog Near
         12800,                     // Fog Far
@@ -103,8 +103,8 @@ SurfaceType savetest_polygonTypes[] = {
 };
 
 CollisionPoly savetest_polygons[] = {
-	{ 0x0000, 0x0000, 0x0001, 0x0002, COLPOLY_SNORMAL(0.0), COLPOLY_SNORMAL(1.0), COLPOLY_SNORMAL(-1.6292068494294654e-07), 0x0000 },
-	{ 0x0000, 0x0000, 0x0002, 0x0003, COLPOLY_SNORMAL(0.0), COLPOLY_SNORMAL(1.0), COLPOLY_SNORMAL(-1.6292068494294654e-07), 0x0000 },
+	{ 0x0000, 0x0000, 0x0001, 0x0002, COLPOLY_SNORMAL(0.0), COLPOLY_SNORMAL(1.0), COLPOLY_SNORMAL(-1.9714923382707639e-07), 0x0000 },
+	{ 0x0000, 0x0000, 0x0002, 0x0003, COLPOLY_SNORMAL(0.0), COLPOLY_SNORMAL(1.0), COLPOLY_SNORMAL(-1.9714923382707639e-07), 0x0000 },
 };
 
 Vec3s savetest_vertices[4] = {

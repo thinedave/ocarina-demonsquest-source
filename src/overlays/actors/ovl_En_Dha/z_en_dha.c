@@ -162,7 +162,7 @@ void EnDha_Init(Actor* thisx, PlayState* play) {
     this->actor.focus.pos = this->actor.world.pos;
     this->actor.focus.pos.y += 50.0f;
     this->actor.colChkInfo.mass = MASS_HEAVY;
-    this->actor.colChkInfo.health = 8;
+    this->actor.colChkInfo.health = 80;
     this->limbAngleX[0] = -0x4000;
     Collider_InitJntSph(play, &this->collider);
     Collider_SetJntSph(play, &this->collider, &this->actor, &sJntSphInit, this->colliderItem);
@@ -386,7 +386,7 @@ void EnDha_UpdateHealth(EnDha* this, PlayState* play) {
             Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 8);
             if (Actor_ApplyDamage(&this->actor) == 0) {
                 EnDha_SetupDeath(this);
-                this->actor.colChkInfo.health = 8;
+                this->actor.colChkInfo.health = 80;
                 Item_DropCollectibleRandom(play, &this->actor, &this->actor.world.pos, 0xE0);
             } else {
                 Actor_PlaySfx(&this->actor, NA_SE_EN_DEADHAND_DAMAGE);

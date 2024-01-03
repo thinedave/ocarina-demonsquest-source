@@ -493,7 +493,7 @@ s32 func_800354B4(PlayState* play, Actor* actor, f32 range, s16 arg3, s16 arg4, 
 void func_8003555C(PlayState* play, Vec3f* pos, Vec3f* velocity, Vec3f* accel);
 void func_800355B8(PlayState* play, Vec3f* pos);
 u8 func_800355E4(PlayState* play, Collider* collider);
-u8 Actor_ApplyDamage(Actor* actor);
+u16 Actor_ApplyDamage(Actor* actor);
 void Actor_SetDropFlag(Actor* actor, ColliderInfo* colInfo, s32 freezeFlag);
 void Actor_SetDropFlagJntSph(Actor* actor, ColliderJntSph* jntSph, s32 freezeFlag);
 void func_80035844(Vec3f* arg0, Vec3f* arg1, Vec3s* arg2, s32 arg3);

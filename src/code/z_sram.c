@@ -176,15 +176,6 @@ void Sram_InitNewSave(void) {
     gSaveContext.save.info.sceneFlags[SCENE_WATER_TEMPLE].swch = 0x40000000;
 }
 
-static const SavePlayerLevels sDebugSaveLevels = {
-    12, // points
-    255,  // strength
-    42,  // intelligence
-    37,  // endurance
-    4,  // luck
-
-};
-
 static SavePlayerData sDebugSavePlayerData = {
     { 'Z', 'E', 'L', 'D', 'A', 'Z' },                   // newf
     0,                                                  // deaths
@@ -221,7 +212,13 @@ static SavePlayerData sDebugSavePlayerData = {
     0,                                                  // unk_38
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },       // unk_3C
     SCENE_HYRULE_FIELD,                                 // savedSceneId
-    sDebugSaveLevels,                                   // levels
+    {
+        1000, // points
+        2,  // strength
+        12,  // intelligence
+        5,  // endurance
+        0,  // luck
+    },
 };
 
 static ItemEquips sDebugSaveEquips = {

@@ -49,7 +49,7 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u32 dmgFlags; // Toucher damage type flags.
     /* 0x04 */ u8 effect; // Damage Effect (Knockback, Fire, etc.)
-    /* 0x05 */ u8 damage; // Damage or Stun Timer
+    /* 0x05 */ u16 damage; // Damage or Stun Timer
 } ColliderTouch; // size = 0x08
 
 typedef struct {
@@ -343,7 +343,11 @@ typedef enum {
 #define OCLINE_NONE 0 // Did not have an OcLine collision
 #define OCLINE_HIT (1 << 0) // Had an OcLine collision
 
-#define DMG_ENTRY(damage, effect) ((damage) | ((effect) << 4))
+// Vanilla damage entries to automatically scale damage for the new system.
+#define DMG_ENTRY(damage, effect) ((damage*10) | ((effect) << 4))
+
+// Use this for Demon's Quest damage entries.
+#define DMG_ENTRY_DQ(damage, effect) ((damage) | ((effect) << 4))
 
 #define DMG_DEKU_NUT     (1 << 0)
 #define DMG_DEKU_STICK   (1 << 1)

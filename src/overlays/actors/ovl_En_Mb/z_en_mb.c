@@ -276,7 +276,7 @@ void EnMb_Init(Actor* thisx, PlayState* play) {
         case ENMB_TYPE_SPEAR_GUARD:
             SkelAnime_InitFlex(play, &this->skelAnime, &gEnMbSpearSkel, &gEnMbSpearStandStillAnim, this->jointTable,
                                this->morphTable, 28);
-            this->actor.colChkInfo.health = 2;
+            this->actor.colChkInfo.health = 20;
             this->actor.colChkInfo.mass = MASS_HEAVY;
             this->maxHomeDist = 1000.0f;
             this->playerDetectionRange = 1750.0f;
@@ -286,7 +286,7 @@ void EnMb_Init(Actor* thisx, PlayState* play) {
             SkelAnime_InitFlex(play, &this->skelAnime, &gEnMbClubSkel, &gEnMbClubStandStillClubDownAnim,
                                this->jointTable, this->morphTable, 28);
 
-            this->actor.colChkInfo.health = 6;
+            this->actor.colChkInfo.health = 60;
             this->actor.colChkInfo.mass = MASS_IMMOVABLE;
             this->actor.colChkInfo.damageTable = &sClubMoblinDamageTable;
             Actor_SetScale(&this->actor, 0.02f);
@@ -319,7 +319,7 @@ void EnMb_Init(Actor* thisx, PlayState* play) {
             this->path = (thisx->params & 0xFF00) >> 8;
             this->actor.params = ENMB_TYPE_SPEAR_PATROL;
             this->waypoint = 0;
-            this->actor.colChkInfo.health = 1;
+            this->actor.colChkInfo.health = 10;
             this->actor.colChkInfo.mass = MASS_HEAVY;
             this->maxHomeDist = 350.0f;
             this->playerDetectionRange = 1750.0f;

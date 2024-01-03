@@ -1226,7 +1226,7 @@ void BossDodongo_SpawnFire(BossDodongo* this, PlayState* play, s16 params) {
 void BossDodongo_UpdateDamage(BossDodongo* this, PlayState* play) {
     s32 pad;
     ColliderInfo* item;
-    u8 swordDamage;
+    u16 swordDamage;
     s32 damage;
     s16 i;
 

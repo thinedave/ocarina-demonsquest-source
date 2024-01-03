@@ -253,7 +253,7 @@ void EnClearTag_Init(Actor* thisx, PlayState* play) {
         this->actor.flags |= ACTOR_FLAG_0;
         this->actor.targetMode = 5;
         Collider_SetCylinder(play, &this->collider, &this->actor, &sArwingCylinderInit);
-        this->actor.colChkInfo.health = 3;
+        this->actor.colChkInfo.health = 30;
 
         // Update the Arwing to play the intro cutscene.
         if (this->actor.params == CLEAR_TAG_CUTSCENE_ARWING) {
@@ -354,7 +354,7 @@ void EnClearTag_Update(Actor* thisx, PlayState* play2) {
                     this->acceleration.z = Rand_CenteredFloat(15.0f);
 
                     Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_THUNDER_GND);
-                    this->actor.colChkInfo.health--;
+                    this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-10, 0);
                     if ((s8)this->actor.colChkInfo.health <= 0) {
                         this->state = CLEAR_TAG_STATE_CRASHING;
                         this->actor.velocity.y = 0.0f;

@@ -220,13 +220,13 @@ void EnIk_InitImpl(Actor* thisx, PlayState* play) {
     thisx->colChkInfo.damageTable = &sDamageTable;
     thisx->colChkInfo.mass = MASS_HEAVY;
     this->isBreakingProp = false;
-    thisx->colChkInfo.health = 30;
+    thisx->colChkInfo.health = 300;
     thisx->gravity = -1.0f;
     this->switchFlag = IK_GET_SWITCH_FLAG(thisx);
     thisx->params = IK_GET_ARMOR_TYPE(thisx);
 
     if (thisx->params == IK_TYPE_NABOORU) {
-        thisx->colChkInfo.health += 20;
+        thisx->colChkInfo.health += 200;
         thisx->naviEnemyId = NAVI_ENEMY_IRON_KNUCKLE_NABOORU;
     } else {
         Actor_SetScale(thisx, 0.012f);
@@ -910,18 +910,18 @@ void EnIk_UpdateDamage(EnIk* this, PlayState* play) {
         Actor_ApplyDamage(&this->actor);
 
         if (this->actor.params != IK_TYPE_NABOORU) {
-            if ((prevHealth > 10) && (this->actor.colChkInfo.health <= 10)) {
+            if ((prevHealth > 10) && (this->actor.colChkInfo.health <= 100)) {
                 this->armorStatusFlag = ARMOR_BROKEN;
                 BodyBreak_Alloc(&this->bodyBreak, 3, play);
             }
-        } else if (this->actor.colChkInfo.health <= 10) {
+        } else if (this->actor.colChkInfo.health <= 100) {
             Actor_ChangeCategory(play, &play->actorCtx, &this->actor, ACTORCAT_BOSS);
             SfxSource_PlaySfxAtFixedWorldPos(play, &this->actor.world.pos, 20, NA_SE_EN_LAST_DAMAGE);
             if (this->switchFlag != 0xFF) {
                 Flags_SetSwitch(play, this->switchFlag);
             }
             return;
-        } else if (prevHealth == 50) {
+        } else if (prevHealth == 500) {
             Actor_ChangeCategory(play, &play->actorCtx, &this->actor, ACTORCAT_ENEMY);
         }
 
@@ -940,7 +940,7 @@ void EnIk_UpdateDamage(EnIk* this, PlayState* play) {
         }
 
         if ((this->actor.params != IK_TYPE_NABOORU) && (this->armorStatusFlag != 0)) {
-            if ((prevHealth > 10) && (this->actor.colChkInfo.health <= 10)) {
+            if ((prevHealth > 100) && (this->actor.colChkInfo.health <= 100)) {
                 Actor_PlaySfx(&this->actor, NA_SE_EN_IRONNACK_ARMOR_OFF_DEMO);
             } else {
                 Actor_PlaySfx(&this->actor, NA_SE_EN_IRONNACK_DAMAGE);
@@ -965,7 +965,7 @@ void EnIk_UpdateEnemy(Actor* thisx, PlayState* play) {
     this->drawArmorFlag = this->armorStatusFlag;
     EnIk_UpdateDamage(this, play);
 
-    if ((this->actor.params == IK_TYPE_NABOORU) && (this->actor.colChkInfo.health <= 10)) {
+    if ((this->actor.params == IK_TYPE_NABOORU) && (this->actor.colChkInfo.health <= 100)) {
         EnIk_StartDefeatCutscene(&this->actor, play);
     } else {
         this->actionFunc(this, play);
