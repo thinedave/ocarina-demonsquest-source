@@ -277,7 +277,11 @@ void Play_Init(GameState* thisx) {
     }
 
     SystemArena_Display();
-    GameState_Realloc(&this->state, 0x1D4790);
+    if (ExpansionPak_Found()) {
+        GameState_Realloc(&this->state, 0x200000); // 8MB 
+    } else {
+        GameState_Realloc(&this->state, 0x1D4790); // 4MB 
+    } 
     KaleidoManager_Init(this);
     View_Init(&this->view, gfxCtx);
     Audio_SetExtraFilter(0);

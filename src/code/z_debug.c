@@ -108,51 +108,6 @@ void Regs_Init(void) {
     }
 }
 
-// Function is stubbed. Name is assumed by similarities in signature to `DebugCamera_ScreenTextColored` and usage.
-void DebugCamera_ScreenText(u8 x, u8 y, const char* text) {
-}
-
-void DebugCamera_ScreenTextColored(u8 x, u8 y, u8 colorIndex, const char* text) {
-    DebugCamTextBufferEntry* entry = &sDebugCamTextBuffer[sDebugCamTextEntryCount];
-    char* textDest;
-    s16 charCount;
-
-    if (sDebugCamTextEntryCount < ARRAY_COUNT(sDebugCamTextBuffer)) {
-        entry->x = x;
-        entry->y = y;
-        entry->colorIndex = colorIndex;
-
-        // Copy text into the entry, truncating if needed
-        charCount = 0;
-        textDest = entry->text;
-
-        while ((*textDest++ = *text++) != '\0') {
-            if (charCount++ > (ARRAY_COUNT(entry->text) - 1)) {
-                break;
-            }
-        }
-
-        *textDest = '\0';
-
-        sDebugCamTextEntryCount++;
-    }
-}
-
-void DebugCamera_DrawScreenText(GfxPrint* printer) {
-    s32 i;
-    Color_RGBA8* color;
-    DebugCamTextBufferEntry* entry;
-
-    for (i = 0; i < sDebugCamTextEntryCount; i++) {
-        entry = &sDebugCamTextBuffer[i];
-        color = &sDebugCamTextColors[entry->colorIndex];
-
-        GfxPrint_SetColor(printer, color->r, color->g, color->b, color->a);
-        GfxPrint_SetPos(printer, entry->x, entry->y);
-        GfxPrint_Printf(printer, "%s", entry->text);
-    }
-}
-
 /**
  * Updates the state of the Reg Editor according to user input.
  * Also contains a controller rumble test that can be interfaced with via related REGs.
@@ -286,10 +241,6 @@ void Debug_DrawText(GraphicsContext* gfxCtx) {
     gfx = Graph_GfxPlusOne(POLY_OPA_DISP);
     gSPDisplayList(OVERLAY_DISP++, gfx);
     GfxPrint_Open(&printer, gfx);
-
-    if ((OREG(0) == 1) || (OREG(0) == 8)) {
-        DebugCamera_DrawScreenText(&printer);
-    }
 
     if (gRegEditor->regPage != 0) {
         Regs_DrawEditor(&printer);

@@ -178,7 +178,6 @@ void GameState_Draw(GameState* gameState, GraphicsContext* gfxCtx) {
     if (R_ENABLE_ARENA_DBG < 0) {
         s32 pad;
 
-        DebugArena_Display();
         SystemArena_Display();
         // "%08x bytes left until the death of Hyrule (game_alloc)"
         osSyncPrintf("ハイラル滅亡まであと %08x バイト(game_alloc)\n", THA_GetRemaining(&gameState->tha));
@@ -438,11 +437,11 @@ void GameState_Init(GameState* gameState, GameStateFunc init, GraphicsContext* g
 
     Fault_AddClient(&sGameFaultClient, GameState_FaultPrint, NULL, NULL);
 
-    osSyncPrintf("game コンストラクタ終了\n"); // "game constructor end"
+    osSyncPrintf("game constructor end\n"); // "game constructor end"
 }
 
 void GameState_Destroy(GameState* gameState) {
-    osSyncPrintf("game デストラクタ開始\n"); // "game destructor start"
+    osSyncPrintf("game destructor start\n"); // "game destructor start"
     AudioMgr_StopAllSfx();
     func_800F3054();
     osRecvMesg(&gameState->gfxCtx->queue, NULL, OS_MESG_BLOCK);
@@ -463,7 +462,7 @@ void GameState_Destroy(GameState* gameState) {
     SystemArena_Display();
     Fault_RemoveClient(&sGameFaultClient);
 
-    osSyncPrintf("game デストラクタ終了\n"); // "game destructor end"
+    osSyncPrintf("game destructor end\n"); // "game destructor end"
 }
 
 GameStateFunc GameState_GetInit(GameState* gameState) {
@@ -510,4 +509,11 @@ void* GameState_AllocEndAlign16(GameState* gameState, size_t size) {
 
 s32 GameState_GetArenaSize(GameState* gameState) {
     return THA_GetRemaining(&gameState->tha);
+}
+
+u8 ExpansionPak_Found() {
+    if (osMemSize >= 0x800000) {
+        return 1;
+    }
+    return 0;
 }

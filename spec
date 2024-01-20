@@ -378,7 +378,6 @@ beginseg
     include "build/src/code/z_fbdemo_circle.o"
     include "build/src/code/z_fbdemo_fade.o"
     include "build/src/code/shrink_window.o"
-    include "build/src/code/db_camera.o"
     include "build/src/code/code_800BB0A0.o"
     include "build/src/code/mempak.o"
     include "build/src/code/z_kaleido_manager.o"
@@ -407,7 +406,6 @@ beginseg
     include "build/src/code/sys_rumble.o"
     include "build/src/code/code_800D31A0.o"
     include "build/src/code/irqmgr.o"
-    include "build/src/code/debug_malloc.o"
     include "build/src/code/fault.o"
     include "build/src/code/fault_drawer.o"
 #ifndef NON_MATCHING
@@ -547,6 +545,12 @@ beginseg
     name "ovl_hmsplash"
     include "build/src/overlays/gamestates/ovl_hmsplash/z_hmsplash.o"
     include "build/src/overlays/gamestates/ovl_hmsplash/ovl_hmsplash_reloc.o"
+endseg
+
+beginseg
+    name "ovl_mempak"
+    include "build/src/overlays/gamestates/ovl_mempak/z_mempak.o"
+    include "build/src/overlays/gamestates/ovl_mempak/ovl_mempak_reloc.o"
 endseg
 
 beginseg
@@ -6421,6 +6425,13 @@ beginseg
     name "hmsplash_static"
     romalign 0x1000
     include "build/assets/textures/hmsplash_static/hmsplash_static.o"
+    number 1
+endseg
+
+beginseg
+    name "mempak_static"
+    romalign 0x1000
+    include "build/assets/textures/mempak_static/mempak_static.o"
     number 1
 endseg
 

@@ -241,7 +241,7 @@ NORETURN void DmaMgr_Error(DmaRequest* req, const char* file, const char* errorN
     osSyncPrintf("%c", BEL);
     osSyncPrintf(VT_FGCOL(RED));
     // "DMA Fatal Error"
-    osSyncPrintf("DMA致命的エラー(%s)\nROM:%X RAM:%X SIZE:%X %s\n",
+    osSyncPrintf("DMA Fatal Error(%s)\nROM:%X RAM:%X SIZE:%X %s\n",
                  errorDesc != NULL ? errorDesc : (errorName != NULL ? errorName : "???"), vrom, ram, size,
                  file != NULL ? file : "???");
 
@@ -341,9 +341,10 @@ void DmaMgr_ProcessRequest(DmaRequest* req) {
                 if (iter->vromEnd < vrom + size) {
                     // Error, vrom + size ends up in a different file than it started in
 
+                    osSyncPrintf("Segment Alignment Error: DMA transfers cannot cross segment boundaries\n");
                     // "DMA transfers cannot cross segment boundaries"
                     DmaMgr_Error(req, filename, "Segment Alignment Error",
-                                 "セグメント境界をまたがってＤＭＡ転送することはできません");
+                                 "DMA transfers cannot cross segment boundaries");
                 }
 
                 DmaMgr_DmaRomToRam(iter->romStart + (vrom - iter->vromStart), ram, size);
@@ -361,17 +362,19 @@ void DmaMgr_ProcessRequest(DmaRequest* req) {
                 if (vrom != iter->vromStart) {
                     // Error, requested vrom is not the start of a file
 
+                    osSyncPrintf("Can't Transfer Segment: DMA transfer cannot be performed from the middle of a compressed segment\n");
                     // "DMA transfer cannot be performed from the middle of a compressed segment"
                     DmaMgr_Error(req, filename, "Can't Transfer Segment",
-                                 "圧縮されたセグメントの途中からはＤＭＡ転送することはできません");
+                                 "DMA transfer cannot be performed from the middle of a compressed segment");
                 }
 
                 if (size != iter->vromEnd - iter->vromStart) {
                     // Error, only part of the file was requested
 
+                    osSyncPrintf("Can't Transfer Segment: It is not possible to DMA only part of a compressed segment\n");
                     // "It is not possible to DMA only part of a compressed segment"
                     DmaMgr_Error(req, filename, "Can't Transfer Segment",
-                                 "圧縮されたセグメントの一部だけをＤＭＡ転送することはできません");
+                                 "It is not possible to DMA only part of a compressed segment");
                 }
 
                 // Reduce the thread priority and decompress the file, the decompression routine handles the DMA
@@ -397,7 +400,8 @@ void DmaMgr_ProcessRequest(DmaRequest* req) {
             // Error, rom is compressed so DMA may only be requested within the filesystem bounds
 
             // "Corresponding data does not exist"
-            DmaMgr_Error(req, NULL, "DATA DON'T EXIST", "該当するデータが存在しません");
+            osSyncPrintf("DATA DON'T EXIST: Corresponding data does not exist\n");
+            DmaMgr_Error(req, NULL, "DATA DON'T EXIST", "Corresponding data does not exist");
             return;
         } else {
             // ROM is uncompressed, allow arbitrary DMA even if the region is not marked in the filesystem
@@ -460,10 +464,24 @@ s32 DmaMgr_SendRequest(DmaRequest* req, void* ram, uintptr_t vrom, size_t size, 
                        OSMesg msg) {
     static s32 sDmaMgrQueueFullLogged = 0;
 
-    if ((1 && (ram == NULL)) || (osMemSize < OS_K0_TO_PHYSICAL(ram) + size) || (vrom & 1) || (vrom > 0x4000000) ||
-        (size == 0) || (size & 1)) {
-        //! @bug `req` is passed to `DmaMgr_Error` without rom, ram and size being set
-        DmaMgr_Error(req, NULL, "ILLIGAL DMA-FUNCTION CALL", "パラメータ異常です");
+    if (ram == NULL) {
+        // we never set ram for some reason. if this happens, were fucked
+        DmaMgr_Error(req, NULL, "ILLIGAL DMA-FUNCTION CALL", "ram == NULL");
+    } else if (osMemSize < OS_K0_TO_PHYSICAL(ram) + size) {
+        // we dont have enough ram
+        DmaMgr_Error(req, NULL, "ILLIGAL DMA-FUNCTION CALL", "osMemSize < OS_K0_TO_PHYSICAL(ram) + size");
+    } else if (vrom & 1) {
+        // wtf
+        DmaMgr_Error(req, NULL, "ILLIGAL DMA-FUNCTION CALL", "vrom & 1");
+    } else if (vrom > 0x4000000) {
+        // vrom is over 4mb even though we should be using all 8mb
+        DmaMgr_Error(req, NULL, "ILLIGAL DMA-FUNCTION CALL", "vrom > 0x4000000");
+    } else if (size == 0) {
+        // size is 0...somehow
+        DmaMgr_Error(req, NULL, "ILLIGAL DMA-FUNCTION CALL", "size == 0");
+    } else if (size & 1) {
+        // wtf
+        DmaMgr_Error(req, NULL, "ILLIGAL DMA-FUNCTION CALL", "size & 1");
     }
 
     req->vromAddr = vrom;

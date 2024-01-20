@@ -4380,7 +4380,7 @@ void Interface_Draw(PlayState* play) {
 
     Player* player = GET_PLAYER(play);
 
-    if(LINK_AGE_IN_YEARS == YEARS_ADULT && gSaveContext.hudVisibilityMode == CAM_HUD_VISIBILITY_ALL) {
+    if(LINK_AGE_IN_YEARS == YEARS_ADULT) {
         gSPSegment(OVERLAY_DISP++, 0x08, interfaceCtx->dpadItemSegment);
 
         //DPad
@@ -5086,6 +5086,8 @@ void Interface_SaveResting_Start(PlayState* play) {
     this->targetAlpha = 255;
     this->alphaStep = 70;
     this->state = REST_STATE_ENTER_FADEIN;
+    this->wantedLevels = gSaveContext.save.info.playerData.levels;
+
     player->stateFlags1 |= PLAYER_STATE1_0;
 
 }
@@ -5351,7 +5353,6 @@ s32 sButtonOffset = -0x12;
 void SaveResting_DrawString(PlayState* play, Gfx** gfxP, char* text, u16 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale) {
     Gfx* gfx = *gfxP;
 
-    SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
     Font* font = &play->msgCtx.font;
     u16 textPos = x;
     u16 codePointIndex = 0;
@@ -5361,8 +5362,7 @@ void SaveResting_DrawString(PlayState* play, Gfx** gfxP, char* text, u16 textLen
     gDPSetPrimColor(gfx++, 0, 0, r, g, b, a);
 
     for(s16 i = (rightJustified ? textLength : 0); (rightJustified ? (i >= 0) : (i < textLength)); (rightJustified ? i-- : i++)) {
-        if(text[i] == CHARNULL) continue;
-        if(text[i] == '\0') continue;
+        if(text[i] == CHARNULL || text[i] == '\0') continue;
         if(text[i] == ' ') {
             u16 diff = (u16)(sFontWidthsParameter[0] * (CHAR_KERNING * (2-scale)));
             textPos = (rightJustified ? (textPos - diff) : (textPos + diff));
@@ -5373,12 +5373,16 @@ void SaveResting_DrawString(PlayState* play, Gfx** gfxP, char* text, u16 textLen
         Font_LoadChar(font, text[i] - ' ', codePointIndex);
         codePointIndex = codePointIndex + FONT_CHAR_TEX_SIZE;
 
-        Interface_DrawCharTexture(&gfx, font->fontBuf + (text[i] - RESTING_DETERMINE_CHAROFFSET(text[i])) * FONT_CHAR_TEX_SIZE, textPos, y+1, scale);
+        //osSyncPrintf("%c", text[i]);
+
+        Interface_DrawCharTexture(&gfx, font->fontBuf + (text[i] - RESTING_DETERMINE_CHAROFFSET(text[i])) * FONT_CHAR_TEX_SIZE, textPos, y, scale);
 
         u16 diff = (u16)(sFontWidthsParameter[text[(rightJustified ? MAX(i-1, 0) : i)] - ' '] * (CHAR_KERNING * (2-scale)));
         textPos = (rightJustified ? (textPos - diff) : (textPos + diff));
 
     }
+
+    //osSyncPrintf("\n");
 
     *gfxP = gfx;
 

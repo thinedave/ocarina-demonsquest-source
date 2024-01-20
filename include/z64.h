@@ -821,6 +821,13 @@ typedef struct {
     s16 logoAlpha;
 } HMSplashState;
 
+typedef struct {
+    GameState state;
+    View view;
+    u8* staticSegment;
+    u8 exit;
+} MemPakNoticeState;
+
 #define UPDATE_RATE_60 1
 #define UPDATE_RATE_30 2
 #define UPDATE_RATE_20 3

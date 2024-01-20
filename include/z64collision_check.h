@@ -344,10 +344,7 @@ typedef enum {
 #define OCLINE_HIT (1 << 0) // Had an OcLine collision
 
 // Vanilla damage entries to automatically scale damage for the new system.
-#define DMG_ENTRY(damage, effect) ((damage*10) | ((effect) << 4))
-
-// Use this for Demon's Quest damage entries.
-#define DMG_ENTRY_DQ(damage, effect) ((damage) | ((effect) << 4))
+#define DMG_ENTRY(damage, effect) ((damage) | ((effect) << 4))
 
 #define DMG_DEKU_NUT     (1 << 0)
 #define DMG_DEKU_STICK   (1 << 1)

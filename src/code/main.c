@@ -50,6 +50,7 @@ void Main(void* arg) {
     PreNmiBuff_Init(gAppNmiBufferPtr);
     Fault_Init();
     SysCfb_Init(0);
+
     systemHeapStart = (uintptr_t)gSystemHeap;
     fb = (uintptr_t)SysCfb_GetFbPtr(0);
     gSystemHeapSize = fb - systemHeapStart;
@@ -64,7 +65,6 @@ void Main(void* arg) {
         debugHeapStart = SystemArena_MallocDebug(debugHeapSize, "../main.c", 565);
     }
     osSyncPrintf("debug_InitArena(%08x, %08x)\n", debugHeapStart, debugHeapSize);
-    DebugArena_Init(debugHeapStart, debugHeapSize);
     Regs_Init();
 
     R_ENABLE_ARENA_DBG = 0;

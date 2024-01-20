@@ -12,6 +12,14 @@ const StartupMode STARTUP_MODE = MAP_SELECT;
 
 void Setup_InitImpl(SetupState* this) {
     osSyncPrintf("Zelda common data initalization\n"); // "Zelda common data initalization"
+
+    if(osMemSize <= 0x400000) {
+        this->state.running = false;
+        SET_NEXT_GAMESTATE(&this->state, MemPakNotice_Init, MemPakNoticeState);
+        return;
+
+    }
+
     SaveContext_Init();
 
     switch(STARTUP_MODE) {

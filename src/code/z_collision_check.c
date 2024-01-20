@@ -2985,8 +2985,11 @@ void CollisionCheck_ApplyDamage(PlayState* play, CollisionCheckContext* colChkCt
     }
 
     Player* player = GET_PLAYER(play);
+    Actor* attacker = collider->ac;
 
-    if(collider->ac != NULL && collider->ac->id == ACTOR_PLAYER) {
+    if(attacker != NULL && (attacker->id == ACTOR_PLAYER || attacker->id == ACTOR_EN_ARROW || attacker->id == ACTOR_ARROW_LIGHT)) {
+        damage *= 10;
+
         if(player->storedDoubleDamage) {
             player->storedDoubleDamage = false;
             damage *= 2;
@@ -2999,7 +3002,16 @@ void CollisionCheck_ApplyDamage(PlayState* play, CollisionCheckContext* colChkCt
 
         damage *= F32_LERP(1.0f, 2.0f, (f32)(statToScale)/100);
 
-        osSyncPrintf("PLAYER ATTACK ! %d DMG\n", damage);
+        osSyncPrintf("%.2f DMG\n", damage);
+
+        //handle luck
+        u8 chance = F32_LERP(100.0f, 2.0f, (f32)(gSaveContext.save.info.playerData.levels.luck)/100);
+        
+        Rand_Seed((u32)osGetTime());
+        if(Rand_Next() % chance == 0) {
+            Actor_Spawn(&play->actorCtx, play, ACTOR_EN_M_FIRE1, player->actor.world.pos.x, player->actor.world.pos.y, player->actor.world.pos.z, 0, 0, 0, 0);
+
+        }
 
     }
 
