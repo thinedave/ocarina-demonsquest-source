@@ -25,6 +25,3 @@
 /soundfonts/*.xml
 # Sample Bank Descriptor XML
 /samples/Banks.xml
-
-# Do not gitignore the above under mod/
-!mod/**
