@@ -18,6 +18,9 @@ def handle_file_noncode(file_name):
 
     print("Copying non-code asset '" + file_name + "' to file '" + new_dir + "'")
 
+    dir_without_file = os.path.dirname(new_dir)
+    os.makedirs(dir_without_file, exist_ok=True)
+
     copyfile(file_name, new_dir)
 
 def handle_file(file_name):
@@ -57,7 +60,6 @@ def handle_file(file_name):
     f.close()
 
     dir_without_file = os.path.dirname(new_dir)
-
     os.makedirs(dir_without_file, exist_ok=True)
 
     new_file = open(new_dir, "a")

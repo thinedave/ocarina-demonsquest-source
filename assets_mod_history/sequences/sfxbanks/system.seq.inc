@@ -79,7 +79,7 @@ end
 
 .layer layer_dd_error
 instr FONT00_INSTR_64DD_ERROR
-notedv PITCH_C4, 0x900, 120
+notedv PITCH_C4, 0x360, 120
 end
 
 .channel system_menu_open

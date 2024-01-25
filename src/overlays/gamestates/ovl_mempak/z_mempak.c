@@ -88,9 +88,6 @@ void MemPakNotice_Destroy(GameState* thisx) {
     MemPakNoticeState* this = (MemPakNoticeState*)thisx;
 
 }
-
-//f32 memPakSpooky = 1.3f;
-
 void MemPakNotice_Init(GameState* thisx) {
     MemPakNoticeState* this = (MemPakNoticeState*)thisx;
 
@@ -114,11 +111,8 @@ void MemPakNotice_Init(GameState* thisx) {
     this->state.destroy = MemPakNotice_Destroy;
     this->exit = false;
 
-    //Audio_PlaySfxTransposed(&gSfxDefaultPos, NA_SE_SY_ERROR, 4);
-    Audio_PlaySfxTransposed(&gSfxDefaultPos, NA_SE_EV_GOD_LIGHTBALL_2, -31);
-
-    //Audio_PlaySfxGeneral(NA_SE_SY_ERROR, &gSfxDefaultPos, 4,
-    //    &memPakSpooky, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+    Audio_PlaySfxGeneral(NA_SE_SY_DD_ERROR, &gSfxDefaultPos, 4,
+        &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
 
 }
 
