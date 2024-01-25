@@ -40,13 +40,22 @@ tools/*dSYM/
 graphs/
 
 # Assets
-*.png
-*.jpg
-*.mdli
-*.anmi
-*.obj
-*.mtl
-*.fbx
+# *.png
+# *.jpg
+# *.mdli
+# *.anmi
+# *.obj
+# *.mtl
+# *.fbx
+
+assets/text/
+assets/code/
+assets/misc/
+assets/objects/
+assets/overlays/
+assets/scenes/
+assets/textures/
+
 !*_custom*
 .extracted-assets.json
 
@@ -55,7 +64,3 @@ graphs/
 
 # Per-user configuration
 .python-version
-
-# Mod assets
-!assets_mod/*
-!assets_mod_history/*
