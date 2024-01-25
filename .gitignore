@@ -55,3 +55,7 @@ graphs/
 
 # Per-user configuration
 .python-version
+
+# Mod assets
+!assets_mod/*
+!assets_mod_history/*
