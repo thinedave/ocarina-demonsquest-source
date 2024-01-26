@@ -10,7 +10,7 @@
  *
  * WARNING: entries must align with the table defined for the system bank in sequence 0
  */
-DEFINE_SFX(NA_SE_SY_DD_ERROR, 0xC0, 0, 0, 0)
+
 /* 0x4800 */ DEFINE_SFX(NA_SE_SY_WIN_OPEN, 0xC0, 0, 0, 0)
 /* 0x4801 */ DEFINE_SFX(NA_SE_SY_WIN_CLOSE, 0xC0, 0, 0, 0)
 /* 0x4802 */ DEFINE_SFX(NA_SE_SY_CORRECT_CHIME, 0xB0, 0, 0, SFX_FLAG_5)
@@ -83,3 +83,4 @@ DEFINE_SFX(NA_SE_SY_DD_ERROR, 0xC0, 0, 0, 0)
 /* 0x4845 */ DEFINE_SFX(NA_SE_SY_CARROT_RECOVER, 0x30, 0, 0, 0)
 /* 0x4846 */ DEFINE_SFX(NA_SE_EV_FAIVE_LUPY_COUNT, 0x30, 0, 0, 0)
 /* 0x4847 */ DEFINE_SFX(NA_SE_SY_DUMMY_71, 0x30, 0, 0, 0)
+DEFINE_SFX(NA_SE_SY_DD_ERROR, 0xC0, 0, 0, 0)

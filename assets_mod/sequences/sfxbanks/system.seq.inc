@@ -1,5 +1,4 @@
 .table table_system
-entry system_dd_error
 entry system_menu_open
 entry system_menu_close
 entry system_puzzle_solved
@@ -72,15 +71,7 @@ entry system_silver_rupee
 entry system_carrot_recovered
 entry system_metronome
 entry system_z_shift_threat
-
-.channel system_dd_error
-ldlayer 0, layer_dd_error
-end
-
-.layer layer_dd_error
-instr FONT00_INSTR_64DD_ERROR
-notedv PITCH_C4, 0x900, 120
-end
+entry system_disk_error
 
 .channel system_menu_open
 instr FONTANY_INSTR_SAWTOOTH
@@ -1125,3 +1116,13 @@ portamento 0x83, 32, 127
 notedv PITCH_C4, 0x8, 80
 notedv PITCH_C5, 0xC, 80
 end
+
+.channel system_disk_error
+ldlayer 0, layer_disk_error
+end
+
+.layer layer_disk_error
+instr FONT00_INSTR_DISK_ERROR
+notedv PITCH_C4, 0xD60, 120
+end
+
