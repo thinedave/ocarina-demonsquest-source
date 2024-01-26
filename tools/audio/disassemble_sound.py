@@ -379,6 +379,63 @@ def populateTunings(fonts):
 
     return tunings
 
+class Instrument:
+    def __init__(self):
+        self.name = ""
+        self.enum = ""
+        self.decay = 0
+        self.loaded = 0
+        self.lowRange = 0
+        self.highRange = 127
+        self.keyLowPitch = -1.0 #Marks to match sound sample
+        self.keyMedPitch = -1.0
+        self.keyHighPitch = -1.0
+        self.keyLowSample = None
+        self.keyMedSample = None
+        self.keyHighSample = None
+        self.envelope = None
+        self.addr = -1
+        self.idx = -1
+
+        self.keyLowOffset = -1
+        self.keyMedOffset = -1
+        self.keyHighOffset = -1
+        self.envelopeOffset = -1
+        self.keyLowName = ''
+        self.keyMedName = ''
+        self.keyHighName = ''
+        self.envName = ''
+
+class Percussion:
+    def __init__(self):
+        self.name = ''
+        self.enum = ''
+        self.decay = 200
+        self.pan = 64
+        self.loaded = 0
+        self.pitch = 1.0
+        self.sample = None
+        self.envelope = None
+        self.addr = -1
+        self.idx = -1
+
+        self.sampleName = ''
+        self.envName = ''
+        self.headerOffset = -1
+        self.envelopeOffset = -1
+
+class SoundEffect:
+    def __init__(self):
+        self.name = ''
+        self.enum = ''
+        self.pitch = 1.0
+        self.sample = None
+        self.addr = -1
+        self.idx = -1
+
+        self.headerOffset = -1 #Offset of sample info in font
+        self.sampleName = ''
+
 def main(args):
     version = args.version
     code_data = args.code.read()
@@ -411,7 +468,6 @@ def main(args):
 
     soundfont_defs = read_soundfont_xmls(os.path.join(args.assetxml, "soundfonts"))
     samplebanks, sampleNames = read_samplebank_xml(os.path.join(args.assetxml, "samples"), version)
-    real_samplebanks = dict(samplebanks)
 
     bank_defs = parse_raw_def_data(bankdef_data, samplebanks)
     fonts = parse_soundfonts(fontdef_data, font_data, soundfont_defs)
@@ -475,16 +531,12 @@ def main(args):
             sample = rawSamples[bank][address]
             sampleName = sampleNames[sample.bank][sample.offsetInBank]
 
-            aifc_filename = os.path.join(
-                args.aifcout, samplebanks[bank],
-                f"{str(idx).zfill(width)}_{sampleName}.aifc"
-            )
+            aifcdir = os.path.join(args.aifcout, samplebanks[bank])
+            aifc_filename = os.path.join(aifcdir, f"{str(idx).zfill(width)}_{sampleName}.aifc")
             write_aifc(bank_data, bank_defs, sample, aifc_filename, tunings)
 
-            aiff_filename = os.path.join(
-                args.aiffout, samplebanks[bank],
-                f"{str(idx).zfill(width)}_{sampleName}.aiff"
-            )
+            aiffdir = os.path.join(args.aiffout, samplebanks[bank])
+            aiff_filename = os.path.join(aiffdir, f"{str(idx).zfill(width)}_{sampleName}.aiff")
             write_aiff(sample, aifc_filename, aiff_filename)
 
     if usedRawData:
@@ -496,18 +548,69 @@ def main(args):
             filename = os.path.join(args.aiffout, bank.name, f"{offset:0>8x}_Unused.bin")
             open(filename, "wb").write(samplebank_gaps[offset])
 
-    # Export soundfonts
+    # Export soundfonts, this is what hasn't been working.
     os.makedirs(args.fontinc, exist_ok=True)
     os.makedirs(args.fontout, exist_ok=True)
-    for font in fonts:
-        filename = os.path.join(args.fontout, f"{font.name}.xml")
-        if font.name[:1].isnumeric():
-            idx = font.name.find('_')
-            if idx >= 0:
-                font.name = font.name[idx + 1:]
 
-        write_soundfont(font, filename, real_samplebanks, sampleNames, tunings)
-        write_soundfont_define(font, len(fonts), os.path.join(args.fontinc, f"{font.idx}.inc"))
+    numFonts = 0
+    for file in os.listdir(os.path.join(args.assetxml, "soundfonts")):
+        numFonts += 1
+
+    for i in range(numFonts): ## temporary, later get this number from somewhere else (dave- you shouldn't have to worry about this, it's for adding additional music soundfonts. the temporary solution will work.)
+        if (i >= len(fonts) or os.path.exists(os.path.join(args.fontout, f"{fonts[i].name}.xml"))): ## parse custom/modified soundfonts
+            for file in os.listdir(args.fontout):
+                if file.endswith(".xml"):
+                    if file.startswith(str(i)): ## find the already existing xml for the custom soundfont
+                        print(file)
+                        xml = XmlTree.parse(os.path.join(args.fontout, file))
+                        root = xml.getroot()
+                        customFont = Soundfont()
+                        ## get the medium and cachepolicy of the custom soundfont
+                        customFont.medium = toMedium(root.attrib['Medium'])
+                        print("medium:", customFont.medium)
+                        customFont.cachePolicy = toCachePolicy(root.attrib['CachePolicy'])
+                        print("cachepolicy:", customFont.cachePolicy)
+                        customFont.idx = i
+                        print("index:", customFont.idx)
+                        customFont.name = "custom soundfont"
+
+                        ## get information of instruments
+                        instruments = root.find('.//Instruments')
+                        for child in instruments:
+                                if (child.attrib.get('Name') != None):
+                                    customInstrument = Instrument()
+                                    customInstrument.name = child.attrib.get('Name')
+                                    customInstrument.enum = child.attrib.get('Enum')
+                                    customInstrument.idx = child.attrib.get('Index')
+                                    customFont.instruments.append(customInstrument)
+
+                        instruments = root.find('.//Drums')
+                        for child in instruments:
+                                if (child.attrib.get('Name') != None):
+                                    customPercussion = Percussion()
+                                    customPercussion.name = child.attrib.get('Name')
+                                    customPercussion.enum = child.attrib.get('Enum')
+                                    customPercussion.idx = child.attrib.get('Index')
+                                    customFont.percussion.append(customPercussion)
+
+                        instruments = root.find('.//SoundEffects')
+                        for child in instruments:
+                                if (child.attrib.get('Name') != None):
+                                    customSfx = SoundEffect()
+                                    customSfx.name = child.attrib.get('Name')
+                                    customSfx.enum = child.attrib.get('Enum')
+                                    customSfx.idx = child.attrib.get('Index')
+                                    customFont.soundEffects.append(customSfx)
+
+                        write_soundfont_define(customFont, len(fonts), os.path.join(args.fontinc, f"{customFont.idx}.inc"))
+        else:
+            filename = os.path.join(args.fontout, f"{fonts[i].name}.xml")
+            if fonts[i].name[:1].isnumeric():
+                idx = fonts[i].name.find('_')
+                if idx >= 0:
+                    fonts[i].name = fonts[i].name[idx + 1:]
+            write_soundfont(fonts[i], filename, samplebanks, sampleNames, tunings)
+            write_soundfont_define(fonts[i], len(fonts), os.path.join(args.fontinc, f"{fonts[i].idx}.inc"))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(add_help=False)

@@ -194,6 +194,11 @@
 			<MediumKey Sample="Rupee.aifc" Pitch="0.23740343749523163"/>
 			<HighKey/>
 		</Instrument>
+		<Instrument Name="Disk_Drive_Error" Index="92" Enum="DISK_ERROR" Decay="-5" Envelope="Env_MaxVol">
+			<LowKey/>
+			<MediumKey Sample="Disk_Drive_Error.aifc" Pitch="1.37812500"/>
+			<HighKey/>
+		</Instrument>
 		<Instrument Name="Ocarina 1" Index="52" Enum="OCARINA_0" Decay="-21" Envelope="Env_00002a40">
 			<LowKey/>
 			<MediumKey Sample="Ocarina.aifc" Pitch="0.6299610137939453"/>
@@ -458,11 +463,6 @@
 		<Instrument Name="Flute" Index="82" Enum="FLUTE" Decay="-5" Envelope="Env_00002a30">
 			<LowKey/>
 			<MediumKey Sample="Flute.aifc" Pitch="0.3337100148200989"/>
-			<HighKey/>
-		</Instrument>
-		<Instrument Name="Disk Drive Error" Index="100" Enum="64DD_ERROR" Decay="-5" Envelope="Env_MaxVol">
-			<LowKey/>
-			<MediumKey Sample="Disk_Drive_Error.aifc" Pitch="0.34453125"/>
 			<HighKey/>
 		</Instrument>
 	</Instruments>
@@ -929,5 +929,6 @@
 		<Sample Name="SampleHeader000029d0" File="Dramatic_Swoosh.aifc" Bank="0_Sound_Effects"/>
 		<Sample Name="SampleHeader000029f0" File="Broken_Pottery.aifc" Bank="0_Sound_Effects"/>
 		<Sample Name="SampleHeader00002a10" File="Shattered_Glass.aifc" Bank="0_Sound_Effects"/>
+		<Sample Name="SampleHeader00002a10" File="Disk_Drive_Error.aifc" Bank="0_Sound_Effects"/>
 	</Samples>
 </Soundfont>
