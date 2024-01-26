@@ -518,11 +518,6 @@ void Play_Update(PlayState* this) {
         ZeldaArena_Display();
     }
 
-    if (CHECK_BTN_ALL(this->state.input[0].cur.button, BTN_L)) {
-        Audio_PlaySfxGeneral(NA_SE_SY_DD_ERROR, &gSfxDefaultPos, 4,
-        &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-    }
-
     if ((R_HREG_MODE == HREG_MODE_PRINT_OBJECT_TABLE) && (R_PRINT_OBJECT_TABLE_TRIGGER < 0)) {
         R_PRINT_OBJECT_TABLE_TRIGGER = 0;
         osSyncPrintf("object_exchange_rom_address %u\n", gObjectTableSize);
