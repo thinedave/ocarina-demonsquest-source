@@ -1123,6 +1123,6 @@ end
 
 .layer layer_disk_error
 instr FONT00_INSTR_DISK_ERROR
-notedv PITCH_C4, 0xD60, 120
+notedv PITCH_C4, 0x900, 120
 end
 

@@ -462,7 +462,7 @@
 		</Instrument>
 		<Instrument Name="Disk Drive Error" Index="100" Enum="64DD_ERROR" Decay="-5" Envelope="Env_MaxVol">
 			<LowKey/>
-			<MediumKey Sample="Disk_Drive_Error.aifc" Pitch="0.34453125"/>
+			<MediumKey Sample="Disk_Drive_Error.aifc" Pitch="0.1"/>
 			<HighKey/>
 		</Instrument>
 	</Instruments>

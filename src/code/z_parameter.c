@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "global.h"
 #include "terminal.h"
 #include "assets/textures/parameter_static/parameter_static.h"
@@ -5491,41 +5493,36 @@ void Interface_SaveResting_Draw(PlayState* play) {
             char pointsText[] = "Points";
             SaveResting_DrawStringShadowed(play, &gfx, pointsText, ARRAY_COUNT(pointsText), 20, textY - SAVEREST_LINESPACE, 255, 255, 255, 255, false, 1);
 
-            char pointsStat[] = {CHARNULL, CHARNULL, CHARNULL, CHARNULL, CHARNULL, CHARNULL};
-            s16 points = wantedStats.points;
-            SaveResting_IntIntoArr(pointsStat, &points);
+            char pointsStat[] = {CHARNULL, CHARNULL, CHARNULL};
+            sprintf(pointsStat, "%d", wantedStats.points);
             SaveResting_DrawStringShadowed(play, &gfx, pointsStat, ARRAY_COUNT(pointsStat), 130, textY - SAVEREST_LINESPACE, 255, 255, 255, 255, true, 1);
 
             char strengthText[] = "Strength";
             SaveResting_DrawStringShadowed(play, &gfx, strengthText, ARRAY_COUNT(strengthText), 20, textY, SAVEREST_GETR(0), SAVEREST_GETG(0), SAVEREST_GETB(0), 255, false, 1);
 
             char strengthStat[] = {CHARNULL, CHARNULL, CHARNULL};
-            s16 strength = wantedStats.strength;
-            SaveResting_IntIntoArr(strengthStat, &strength);
+            sprintf(strengthStat, "%d", wantedStats.strength);
             SaveResting_DrawStringShadowed(play, &gfx, strengthStat, ARRAY_COUNT(strengthStat), 130, textY, Interface_SaveResting_GetRWithStat(0, i, wantedStats.strength, stats->strength), Interface_SaveResting_GetGWithStat(0, i, wantedStats.strength, stats->strength), Interface_SaveResting_GetBWithStat(1, i, wantedStats.strength, stats->strength), 255, true, 1);
         
             char intelligenceText[] = "Intelligence";
             SaveResting_DrawStringShadowed(play, &gfx, intelligenceText, ARRAY_COUNT(intelligenceText), 20, textY + (SAVEREST_LINESPACE*1), SAVEREST_GETR(1), SAVEREST_GETG(1), SAVEREST_GETB(1), 255, false, 1);
 
             char intelligenceStat[] = {CHARNULL, CHARNULL, CHARNULL};
-            s16 intelligence = wantedStats.intelligence;
-            SaveResting_IntIntoArr(intelligenceStat, &intelligence);
+            sprintf(intelligenceStat, "%d", wantedStats.intelligence);
             SaveResting_DrawStringShadowed(play, &gfx, intelligenceStat, ARRAY_COUNT(intelligenceStat), 130, textY + (SAVEREST_LINESPACE*1), Interface_SaveResting_GetRWithStat(1, i, wantedStats.intelligence, stats->intelligence), Interface_SaveResting_GetGWithStat(1, i, wantedStats.intelligence, stats->intelligence), Interface_SaveResting_GetBWithStat(1, i, wantedStats.intelligence, stats->intelligence), 255, true, 1);
 
             char enduranceText[] = "Endurance";
             SaveResting_DrawStringShadowed(play, &gfx, enduranceText, ARRAY_COUNT(enduranceText), 20, textY + (SAVEREST_LINESPACE*2), SAVEREST_GETR(2), SAVEREST_GETG(2), SAVEREST_GETB(2), 255, false, 1);
 
             char enduranceStat[] = {CHARNULL, CHARNULL, CHARNULL};
-            s16 endurance = wantedStats.endurance;
-            SaveResting_IntIntoArr(enduranceStat, &endurance);
+            sprintf(enduranceStat, "%d", wantedStats.endurance);
             SaveResting_DrawStringShadowed(play, &gfx, enduranceStat, ARRAY_COUNT(enduranceStat), 130, textY + (SAVEREST_LINESPACE*2), Interface_SaveResting_GetRWithStat(2, i, wantedStats.endurance, stats->endurance), Interface_SaveResting_GetGWithStat(2, i, wantedStats.endurance, stats->endurance), Interface_SaveResting_GetBWithStat(2, i, wantedStats.endurance, stats->endurance), 255, true, 1);
 
             char luckText[] = "Luck";
             SaveResting_DrawStringShadowed(play, &gfx, luckText, ARRAY_COUNT(luckText), 20, textY + (SAVEREST_LINESPACE*3), SAVEREST_GETR(3), SAVEREST_GETG(3), SAVEREST_GETB(3), 255, false, 1);
 
             char luckStat[] = {CHARNULL, CHARNULL, CHARNULL};
-            s16 luck = wantedStats.luck;
-            SaveResting_IntIntoArr(luckStat, &luck);
+            sprintf(luckStat, "%d", wantedStats.luck);
             SaveResting_DrawStringShadowed(play, &gfx, luckStat, ARRAY_COUNT(luckStat), 130, textY + (SAVEREST_LINESPACE*3), Interface_SaveResting_GetRWithStat(3, i, wantedStats.luck, stats->luck), Interface_SaveResting_GetGWithStat(3, i, wantedStats.luck, stats->luck), Interface_SaveResting_GetBWithStat(3, i, wantedStats.luck, stats->luck), 255, true, 1);
             
             char confirmText[] = "Confirm";
