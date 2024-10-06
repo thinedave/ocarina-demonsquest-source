@@ -64,3 +64,5 @@ assets/textures/
 
 # Per-user configuration
 .python-version
+
+*:Zone.Identifier
