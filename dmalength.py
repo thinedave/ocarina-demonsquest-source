@@ -25,6 +25,6 @@ def main(elf_path):
 if __name__ == "__main__":
     root = os.path.dirname(os.path.realpath(__file__))
     root = os.path.abspath(os.path.join(root, os.pardir))
-    elf_path = os.path.join(root, "demonsquest-source/zelda_ocarina_mq_dbg.elf")
+    elf_path = os.path.join(root, "ocarina-demonsquest-source/zelda_ocarina_mq_dbg.elf")
     dma_start, dma_len = main(elf_path)
     print(f"0x{dma_start:06X},{dma_len}")
