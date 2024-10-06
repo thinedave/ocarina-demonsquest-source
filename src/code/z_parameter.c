@@ -5446,6 +5446,14 @@ void SaveResting_IntIntoArr(char* arr, s16* num) {
 
 }
 
+// FUCK FUTURE-PROOFING. FUCK RECURSION. FUCK ITERATION. FUCK FLOATING POINTS. SPEEEEEEEEEEEED
+u8 Interface_SaveResting_DetermineTextLength(u16 x) {
+    if(x < 10) return 1;
+    if(x < 100) return 2;
+    return 3;
+
+}
+
 void Interface_SaveResting_Draw(PlayState* play) {
     SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
     GraphicsContext* gfxCtx = play->state.gfxCtx;
@@ -5502,28 +5510,28 @@ void Interface_SaveResting_Draw(PlayState* play) {
 
             char strengthStat[] = {CHARNULL, CHARNULL, CHARNULL};
             sprintf(strengthStat, "%d", wantedStats.strength);
-            SaveResting_DrawStringShadowed(play, &gfx, strengthStat, 3, 130, textY, Interface_SaveResting_GetRWithStat(0, i, wantedStats.strength, stats->strength), Interface_SaveResting_GetGWithStat(0, i, wantedStats.strength, stats->strength), Interface_SaveResting_GetBWithStat(1, i, wantedStats.strength, stats->strength), 255, true, 1);
+            SaveResting_DrawStringShadowed(play, &gfx, strengthStat, Interface_SaveResting_DetermineTextLength(wantedStats.strength), 130, textY, Interface_SaveResting_GetRWithStat(0, i, wantedStats.strength, stats->strength), Interface_SaveResting_GetGWithStat(0, i, wantedStats.strength, stats->strength), Interface_SaveResting_GetBWithStat(1, i, wantedStats.strength, stats->strength), 255, true, 1);
         
             char intelligenceText[] = "Intelligence";
             SaveResting_DrawStringShadowed(play, &gfx, intelligenceText, 12, 20, textY + (SAVEREST_LINESPACE*1), SAVEREST_GETR(1), SAVEREST_GETG(1), SAVEREST_GETB(1), 255, false, 1);
 
             char intelligenceStat[] = {CHARNULL, CHARNULL, CHARNULL};
             sprintf(intelligenceStat, "%d", wantedStats.intelligence);
-            SaveResting_DrawStringShadowed(play, &gfx, intelligenceStat, 3, 130, textY + (SAVEREST_LINESPACE*1), Interface_SaveResting_GetRWithStat(1, i, wantedStats.intelligence, stats->intelligence), Interface_SaveResting_GetGWithStat(1, i, wantedStats.intelligence, stats->intelligence), Interface_SaveResting_GetBWithStat(1, i, wantedStats.intelligence, stats->intelligence), 255, true, 1);
+            SaveResting_DrawStringShadowed(play, &gfx, intelligenceStat, Interface_SaveResting_DetermineTextLength(wantedStats.intelligence), 130, textY + (SAVEREST_LINESPACE*1), Interface_SaveResting_GetRWithStat(1, i, wantedStats.intelligence, stats->intelligence), Interface_SaveResting_GetGWithStat(1, i, wantedStats.intelligence, stats->intelligence), Interface_SaveResting_GetBWithStat(1, i, wantedStats.intelligence, stats->intelligence), 255, true, 1);
 
             char enduranceText[] = "Endurance";
             SaveResting_DrawStringShadowed(play, &gfx, enduranceText, 9, 20, textY + (SAVEREST_LINESPACE*2), SAVEREST_GETR(2), SAVEREST_GETG(2), SAVEREST_GETB(2), 255, false, 1);
 
             char enduranceStat[] = {CHARNULL, CHARNULL, CHARNULL};
             sprintf(enduranceStat, "%d", wantedStats.endurance);
-            SaveResting_DrawStringShadowed(play, &gfx, enduranceStat, 3, 130, textY + (SAVEREST_LINESPACE*2), Interface_SaveResting_GetRWithStat(2, i, wantedStats.endurance, stats->endurance), Interface_SaveResting_GetGWithStat(2, i, wantedStats.endurance, stats->endurance), Interface_SaveResting_GetBWithStat(2, i, wantedStats.endurance, stats->endurance), 255, true, 1);
+            SaveResting_DrawStringShadowed(play, &gfx, enduranceStat, Interface_SaveResting_DetermineTextLength(wantedStats.endurance), 130, textY + (SAVEREST_LINESPACE*2), Interface_SaveResting_GetRWithStat(2, i, wantedStats.endurance, stats->endurance), Interface_SaveResting_GetGWithStat(2, i, wantedStats.endurance, stats->endurance), Interface_SaveResting_GetBWithStat(2, i, wantedStats.endurance, stats->endurance), 255, true, 1);
 
             char luckText[] = "Luck";
             SaveResting_DrawStringShadowed(play, &gfx, luckText, 4, 20, textY + (SAVEREST_LINESPACE*3), SAVEREST_GETR(3), SAVEREST_GETG(3), SAVEREST_GETB(3), 255, false, 1);
 
             char luckStat[] = {CHARNULL, CHARNULL, CHARNULL};
             sprintf(luckStat, "%d", wantedStats.luck);
-            SaveResting_DrawStringShadowed(play, &gfx, luckStat, 3, 130, textY + (SAVEREST_LINESPACE*3), Interface_SaveResting_GetRWithStat(3, i, wantedStats.luck, stats->luck), Interface_SaveResting_GetGWithStat(3, i, wantedStats.luck, stats->luck), Interface_SaveResting_GetBWithStat(3, i, wantedStats.luck, stats->luck), 255, true, 1);
+            SaveResting_DrawStringShadowed(play, &gfx, luckStat, Interface_SaveResting_DetermineTextLength(wantedStats.luck), 130, textY + (SAVEREST_LINESPACE*3), Interface_SaveResting_GetRWithStat(3, i, wantedStats.luck, stats->luck), Interface_SaveResting_GetGWithStat(3, i, wantedStats.luck, stats->luck), Interface_SaveResting_GetBWithStat(3, i, wantedStats.luck, stats->luck), 255, true, 1);
             
             char confirmText[] = "Confirm";
             SaveResting_DrawStringShadowed(play, &gfx, confirmText, 7, 20, textY + (SAVEREST_LINESPACE*4.5), SAVEREST_GETR(4), SAVEREST_GETG(4), SAVEREST_GETB(4), 255, false, 1);
