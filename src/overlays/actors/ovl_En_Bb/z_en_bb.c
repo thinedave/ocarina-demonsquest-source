@@ -310,6 +310,8 @@ void EnBb_Init(Actor* thisx, PlayState* play) {
     s32 pad;
     EnBb* this = (EnBb*)thisx;
 
+    this->actor.xpValue = 30;
+
     Actor_ProcessInitChain(thisx, sInitChain);
     SkelAnime_Init(play, &this->skelAnime, &object_Bb_Skel_001A30, &object_Bb_Anim_000444, this->jointTable,
                    this->morphTable, 16);

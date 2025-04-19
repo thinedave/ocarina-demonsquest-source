@@ -26,42 +26,8 @@ void Font_LoadMessageBoxIcon(Font* font, u16 icon) {
                             FONT_CHAR_TEX_SIZE, "../z_kanfont.c", 100);
 }
 
-/**
- * Loads a full set of character textures based on their ordering in the message with text id 0xFFFC into
- * the font buffer.
- */
-void Font_LoadOrderedFont(Font* font) {
-    u8* fontBuf;
-    uintptr_t fontStatic;
-    s32 len;
-    s32 jj;
-    s32 codePointIndex;
-    s32 fontBufIndex;
-    u32 offset;
+void Font_LoadAll(Font* font) {
+    DmaMgr_RequestSyncDebug(&font->charTexBuf,
+                            (uintptr_t)_nes_font_staticSegmentRomStart, (uintptr_t)_nes_font_staticSegmentRomEnd - (uintptr_t)_nes_font_staticSegmentRomStart, __FILE__, __LINE__);
 
-    font->msgOffset = _message_0xFFFC_nes - (const char*)_nes_message_data_staticSegmentStart;
-    len = font->msgLength = _message_0xFFFD_nes - _message_0xFFFC_nes;
-
-    DmaMgr_RequestSyncDebug(font->msgBuf, (uintptr_t)_nes_message_data_staticSegmentRomStart + font->msgOffset, len,
-                            "../z_kanfont.c", 122);
-    osSyncPrintf("msg_data=%x,  msg_data0=%x   jj=%x\n", font->msgOffset, font->msgLength, jj = len);
-
-    len = jj;
-    for (fontBufIndex = 0, codePointIndex = 0; font->msgBuf[codePointIndex] != MESSAGE_END; codePointIndex++) {
-        if (codePointIndex > len) {
-            osSyncPrintf("ＥＲＲＯＲ！！  エラー！！！  error───！！！！\n");
-            return;
-        }
-
-        if (font->msgBuf[codePointIndex] != MESSAGE_NEWLINE) {
-            fontBuf = font->fontBuf + fontBufIndex * 8;
-            fontStatic = (uintptr_t)_nes_font_staticSegmentRomStart;
-
-            osSyncPrintf("nes_mes_buf[%d]=%d\n", codePointIndex, font->msgBuf[codePointIndex]);
-
-            offset = (font->msgBuf[codePointIndex] - ' ') * FONT_CHAR_TEX_SIZE;
-            DmaMgr_RequestSyncDebug(fontBuf, fontStatic + offset, FONT_CHAR_TEX_SIZE, "../z_kanfont.c", 134);
-            fontBufIndex += FONT_CHAR_TEX_SIZE / 8;
-        }
-    }
 }

@@ -30,18 +30,20 @@ u16 gSramSlotOffsets[] = {
 static char sZeldaMagic[] = { '\0', '\0', '\0', '\x98', '\x09', '\x10', '\x21', 'Z', 'E', 'L', 'D', 'A' };
 
 static const SavePlayerLevels sNewSaveLevels = {
-    0, // points
+    10, // points
     2,  // strength
     12,  // intelligence
     5,  // endurance
     0,  // luck
+    0, // xp
+    1, // level
 
 };
 
 static SavePlayerData sNewSavePlayerData = {
     { '\0', '\0', '\0', '\0', '\0', '\0' },             // newf
     0,                                                  // deaths
-    { 0x3E, 0x3E, 0x3E, 0x3E, 0x3E, 0x3E, 0x3E, 0x3E }, // playerName
+    { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }, // playerName
     0,                                                  // n64ddFlag
     25,                                                 // shieldDurabilityDeku
     50,                                                 // shieldDurabilityHylian
@@ -179,24 +181,24 @@ void Sram_InitNewSave(void) {
 static SavePlayerData sDebugSavePlayerData = {
     { 'Z', 'E', 'L', 'D', 'A', 'Z' },                   // newf
     0,                                                  // deaths
-    { 0x15, 0x12, 0x17, 0x14, 0x3E, 0x3E, 0x3E, 0x3E }, // playerName ( "LINK" )
+    { 'L', 'I', 'N', 'K', ' ', ' ', ' ', ' ' }, // playerName ( "LINK" )
     0,                                                  // n64ddFlag
     25,                                                 // shieldDurabilityDeku
     50,                                                 // shieldDurabilityHylian
     75,                                                 // shieldDurabilityMirror
-    0x20,                                               // heartsBlocked
-    0xE0,                                               // permHeathCapacity
-    0xE0,                                               // healthCapacity
-    0xB0,                                               // health
+    0x00,                                               // heartsBlocked
+    0x140,                                               // permHeathCapacity
+    0x140,                                               // healthCapacity
+    0x140,                                               // health
     0,                                                  // magicLevel
-    MAGIC_NORMAL_METER,                                 // magic
+    MAGIC_DOUBLE_METER,                                 // magic
     150,                                                // rupees
     8,                                                  // swordHealth
     0,                                                  // naviTimer
     true,                                               // isMagicAcquired
     0,                                                  // unk_1F
-    false,                                              // isDoubleMagicAcquired
-    false,                                              // isDoubleDefenseAcquired
+    true,                                              // isDoubleMagicAcquired
+    true,                                              // isDoubleDefenseAcquired
     0,                                                  // bgsFlag
     0,                                                  // ocarinaGameRoundNum
     {
@@ -214,18 +216,19 @@ static SavePlayerData sDebugSavePlayerData = {
     SCENE_HYRULE_FIELD,                                 // savedSceneId
     {
         1000, // points
-        2,  // strength
-        12,  // intelligence
-        5,  // endurance
-        0,  // luck
+        10,  // strength
+        10,  // intelligence
+        10,  // endurance
+        10,  // luck
+        0,
     },
 };
 
 static ItemEquips sDebugSaveEquips = {
-    { ITEM_SWORD_MASTER, ITEM_BOW, ITEM_BOMB, ITEM_OCARINA_FAIRY }, // buttonItems
-    { SLOT_BOW, SLOT_BOMB, SLOT_OCARINA },                          // cButtonSlots
+    { ITEM_SWORD_KOKIRI, ITEM_SLINGSHOT, ITEM_BOMB, ITEM_OCARINA_OF_TIME }, // buttonItems
+    { SLOT_SLINGSHOT, SLOT_BOMB, SLOT_OCARINA },                          // cButtonSlots
     // equipment
-    (EQUIP_VALUE_SWORD_MASTER << (EQUIP_TYPE_SWORD * 4)) | (EQUIP_VALUE_SHIELD_HYLIAN << (EQUIP_TYPE_SHIELD * 4)) |
+    (EQUIP_VALUE_SWORD_KOKIRI << (EQUIP_TYPE_SWORD * 4)) | (EQUIP_VALUE_SHIELD_HYLIAN << (EQUIP_TYPE_SHIELD * 4)) |
         (EQUIP_VALUE_TUNIC_KOKIRI << (EQUIP_TYPE_TUNIC * 4)) | (EQUIP_VALUE_BOOTS_KOKIRI << (EQUIP_TYPE_BOOTS * 4)),
 };
 
@@ -239,9 +242,9 @@ static Inventory sDebugSaveInventory = {
         ITEM_ARROW_FIRE,          // SLOT_ARROW_FIRE
         ITEM_DINS_FIRE,           // SLOT_DINS_FIRE
         ITEM_SLINGSHOT,           // SLOT_SLINGSHOT
-        ITEM_OCARINA_FAIRY,       // SLOT_OCARINA
+        ITEM_OCARINA_OF_TIME,       // SLOT_OCARINA
         ITEM_BOMBCHU,             // SLOT_BOMBCHU
-        ITEM_HOOKSHOT,            // SLOT_HOOKSHOT
+        ITEM_LONGSHOT,            // SLOT_HOOKSHOT
         ITEM_ARROW_ICE,           // SLOT_ARROW_ICE
         ITEM_FARORES_WIND,        // SLOT_FARORES_WIND
         ITEM_BOOMERANG,           // SLOT_BOOMERANG
@@ -318,7 +321,7 @@ void Sram_InitDebugSave(void) {
     gSaveContext.save.info.playerData = sDebugSavePlayerData;
     gSaveContext.save.info.demonsCurse = true;
     gSaveContext.save.info.dead = false;
-    gSaveContext.save.info.heartsBlocked = 0x30;
+    gSaveContext.save.info.heartsBlocked = 0x00;
     gSaveContext.save.info.equips = sDebugSaveEquips;
     gSaveContext.save.info.inventory = sDebugSaveInventory;
 
@@ -939,6 +942,7 @@ void Sram_InitSram(GameState* gameState, SramContext* sramCtx) {
     gSaveContext.audioSetting = sramCtx->readBuff[SRAM_HEADER_SOUND] & 3;
     gSaveContext.zTargetSetting = sramCtx->readBuff[SRAM_HEADER_ZTARGET] & 1;
     gSaveContext.language = sramCtx->readBuff[SRAM_HEADER_LANGUAGE];
+    gSaveContext.wiiVcMode = false;
 
     if (gSaveContext.language >= LANGUAGE_MAX) {
         gSaveContext.language = LANGUAGE_ENG;

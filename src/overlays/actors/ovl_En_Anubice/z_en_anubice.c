@@ -127,6 +127,8 @@ void EnAnubice_AimFireball(EnAnubice* this, PlayState* play) {
 void EnAnubice_Init(Actor* thisx, PlayState* play) {
     EnAnubice* this = (EnAnubice*)thisx;
 
+    this->actor.xpValue = 100;
+
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 20.0f);
     SkelAnime_Init(play, &this->skelAnime, &gAnubiceSkel, &gAnubiceIdleAnim, this->jointTable, this->morphTable,
                    ANUBICE_LIMB_MAX);

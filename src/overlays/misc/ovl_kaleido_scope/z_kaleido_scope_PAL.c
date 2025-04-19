@@ -402,7 +402,7 @@ void KaleidoScope_SetupPlayerPreRender(PlayState* play) {
 }
 
 void KaleidoScope_ProcessPlayerPreRender(void) {
-    Sleep_Msec(50);
+    //Sleep_Msec(50);
     //PreRender_ApplyFilters(&sPlayerPreRender);
     PreRender_Destroy(&sPlayerPreRender);
 }
@@ -1562,18 +1562,18 @@ void func_808237B4(PlayState* play, Input* input) {
 
     if (!cond) {
         mode = pauseCtx->mode;
-        pauseCtx->eye.x += D_8082ABAC[mode];
-        pauseCtx->eye.z += D_8082ABCC[mode];
+        pauseCtx->eye.x += D_8082ABAC[mode] * 2.0f;
+        pauseCtx->eye.z += D_8082ABCC[mode] * 2.0f;
 
         if (pauseCtx->unk_1EA < 32) {
-            WREG(16) -= WREG(25) / WREG(6);
-            WREG(17) -= WREG(26) / WREG(6);
+            WREG(16) -= WREG(25) / (WREG(6) * 0.5);
+            WREG(17) -= WREG(26) / (WREG(6) * 0.5);
         } else {
-            WREG(16) += WREG(25) / WREG(6);
-            WREG(17) += WREG(26) / WREG(6);
+            WREG(16) += WREG(25) / (WREG(6) * 0.5);
+            WREG(17) += WREG(26) / (WREG(6) * 0.5);
         }
 
-        pauseCtx->unk_1EA += 4;
+        pauseCtx->unk_1EA += 4 * 2;
 
         if (pauseCtx->unk_1EA == 64) {
             pauseCtx->unk_1EA = 0;
@@ -2490,9 +2490,9 @@ void KaleidoScope_GrayOutTextureRGBA32(u32* texture, u16 pixelCount) {
 void KaleidoScope_UpdateOpening(PlayState* play) {
     PauseContext* pauseCtx = &play->pauseCtx;
 
-    pauseCtx->eye.x += D_8082ABAC[pauseCtx->mode] * ZREG(46);
-    pauseCtx->eye.z += D_8082ABCC[pauseCtx->mode] * ZREG(46);
-    pauseCtx->unk_1EA += 4 * ZREG(46);
+    pauseCtx->eye.x += D_8082ABAC[pauseCtx->mode] * 2;
+    pauseCtx->eye.z += D_8082ABCC[pauseCtx->mode] * 2;
+    pauseCtx->unk_1EA += 4 * 2;
 
     if (pauseCtx->unk_1EA == (64 * ZREG(47))) {
         // Finished opening
@@ -3617,6 +3617,12 @@ void KaleidoScope_Update(PlayState* play) {
 
                 }
 
+                gSaveContext.save.info.playerData.health = 0x30;
+                if(gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked<=0x20) {
+                    gSaveContext.save.info.playerData.health = 0x20;
+
+                }
+
                 Play_SaveSceneFlags(play);
                 gSaveContext.save.info.playerData.savedSceneId = play->sceneId;
                 Sram_WriteSave(&play->sramCtx); // save
@@ -3647,12 +3653,6 @@ void KaleidoScope_Update(PlayState* play) {
                             Play_TriggerRespawn(play);
                             gSaveContext.respawnFlag = -2;
                             gSaveContext.nextTransitionType = TRANS_TYPE_FADE_BLACK;
-
-                            gSaveContext.save.info.playerData.health = 0x30;
-                            if(gSaveContext.save.info.playerData.healthCapacity-gSaveContext.save.info.heartsBlocked<=0x20) {
-                                gSaveContext.save.info.playerData.health = 0x20;
-
-                            }
 
                             SEQCMD_RESET_AUDIO_HEAP(0, 10);
                             gSaveContext.healthAccumulator = 0;

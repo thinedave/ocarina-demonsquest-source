@@ -1770,7 +1770,7 @@ void BossMo_CoreCollisionCheck(BossMo* this, PlayState* play) {
                 Actor_PlaySfx(&this->actor, NA_SE_EN_MOFER_CORE_DAMAGE);
                 this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-damage, 0);
                 this->hitCount++;
-                if ((s8)this->actor.colChkInfo.health <= 0) {
+                if ((s16)this->actor.colChkInfo.health <= 0) {
                     if (((sMorphaTent1->subCamId == SUB_CAM_ID_DONE) && (sMorphaTent2 == NULL)) ||
                         ((sMorphaTent1->subCamId == SUB_CAM_ID_DONE) && (sMorphaTent2 != NULL) &&
                          (sMorphaTent2->subCamId == SUB_CAM_ID_DONE))) {

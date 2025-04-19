@@ -106,6 +106,8 @@ static InitChainEntry sInitChain[] = {
 void EnNy_Init(Actor* thisx, PlayState* play) {
     EnNy* this = (EnNy*)thisx;
 
+    this->actor.xpValue = 45;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     this->actor.colChkInfo.damageTable = &sDamageTable;
     this->actor.colChkInfo.health = 20;

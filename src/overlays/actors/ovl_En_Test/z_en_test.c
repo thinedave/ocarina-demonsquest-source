@@ -59,6 +59,18 @@ void EnTest_Recoil(EnTest* this, PlayState* play);
 void func_808633E8(EnTest* this, PlayState* play);
 void func_80862FA8(EnTest* this, PlayState* play);
 
+void EnTest_SetupThrust(EnTest* this, PlayState* play);
+void EnTest_Thrust(EnTest* this, PlayState* play);
+
+void EnTest_SetupSpinAttack(EnTest* this, PlayState* play);
+void EnTest_SpinAttack(EnTest* this, PlayState* play);
+
+void EnTest_SetupSlashLeft(EnTest* this, PlayState* play);
+void EnTest_SlashLeft(EnTest* this, PlayState* play);
+
+void EnTest_SetupSlashRightLeft(EnTest* this, PlayState* play);
+void EnTest_SlashRightLeft(EnTest* this, PlayState* play);
+
 s32 EnTest_ReactToProjectile(PlayState* play, EnTest* this);
 
 static u8 sJointCopyFlags[] = {
@@ -257,6 +269,8 @@ void EnTest_Init(Actor* thisx, PlayState* play) {
     EffectBlureInit1 slashBlure;
     EnTest* this = (EnTest*)thisx;
 
+    this->actor.xpValue = 100;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
 
     SkelAnime_Init(play, &this->skelAnime, &gStalfosSkel, &gStalfosMiddleGuardAnim, this->jointTable, this->morphTable,
@@ -358,6 +372,149 @@ void EnTest_ChooseRandomAction(EnTest* this, PlayState* play) {
     }
 }
 
+void EnTest_SetupSlashLeft(EnTest* this, PlayState* play) {
+    Animation_PlayOnce(&this->skelAnime, &SlashLeftSlashleftAnim);
+    Audio_StopSfxByPosAndId(&this->actor.projectedPos, NA_SE_EN_STAL_WARAU);
+    this->swordCollider.base.atFlags &= ~AT_BOUNCED;
+    this->actor.speed = 0.0f;
+    EnTest_SetupAction(this, EnTest_SlashLeft);
+    this->swordCollider.info.toucher.damage = 16;
+    this->unk_7DE = 0;
+
+}
+
+void EnTest_SlashLeft(EnTest* this, PlayState* play) {
+    u8 curFrame = this->skelAnime.curFrame;
+
+    if(curFrame == 8.0f) Actor_PlaySfx(&this->actor, NA_SE_EN_STAL_SAKEBI);
+
+    if(curFrame >= 8.0f && curFrame <= 12.0f) this->swordState = 1;
+    else this->swordState = 0;
+
+    if(SkelAnime_Update(&this->skelAnime)) {
+        EnTest_SetupIdle(this);
+        this->timer = (Rand_ZeroOne() * 5.0f) + 5.0f;
+
+    }
+
+}
+
+void EnTest_SetupSlashRightLeft(EnTest* this, PlayState* play) {
+    Animation_PlayOnce(&this->skelAnime, &gStalfosSkelSlashrightleftAnim);
+    Audio_StopSfxByPosAndId(&this->actor.projectedPos, NA_SE_EN_STAL_WARAU);
+    this->swordCollider.base.atFlags &= ~AT_BOUNCED;
+    this->actor.speed = 0.0f;
+    EnTest_SetupAction(this, EnTest_SlashRightLeft);
+    this->swordCollider.info.toucher.damage = 16;
+    this->unk_7DE = 0;
+
+}
+
+void EnTest_SlashRightLeft(EnTest* this, PlayState* play) {
+    u8 curFrame = this->skelAnime.curFrame;
+
+    if(curFrame == 8.0f || curFrame == 16.0f) Actor_PlaySfx(&this->actor, NA_SE_EN_STAL_SAKEBI);
+
+    if((curFrame >= 8.0f && curFrame <= 12.0f) || (curFrame >= 16.0f && curFrame <= 21.0f)) this->swordState = 1;
+    else this->swordState = 0;
+
+    if(SkelAnime_Update(&this->skelAnime)) {
+        EnTest_SetupIdle(this);
+        this->timer = (Rand_ZeroOne() * 5.0f) + 5.0f;
+
+    }
+
+}
+
+void EnTest_SetupThrust(EnTest* this, PlayState* play) {
+    Animation_PlayOnce(&this->skelAnime, &gStalfosSkel_001Action_004Anim);
+    Audio_StopSfxByPosAndId(&this->actor.projectedPos, NA_SE_EN_STAL_WARAU);
+    this->swordCollider.base.atFlags &= ~AT_BOUNCED;
+    this->actor.speed = 0.0f;
+    EnTest_SetupAction(this, EnTest_Thrust);
+    this->swordCollider.info.toucher.damage = 16;
+    this->unk_7DE = 0;
+
+}
+
+void EnTest_Thrust(EnTest* this, PlayState* play) {
+    u8 curFrame = this->skelAnime.curFrame;
+
+    if(curFrame == 5.0f) Actor_PlaySfx(&this->actor, NA_SE_EN_STAL_SAKEBI);
+
+    if(curFrame >= 4.0f && curFrame <= 11.0f) this->swordState = 1;
+    else this->swordState = 0;
+
+    if(SkelAnime_Update(&this->skelAnime)) {
+        EnTest_SetupIdle(this);
+        this->timer = (Rand_ZeroOne() * 5.0f) + 5.0f;
+
+    }
+
+}
+
+void EnTest_SetupSpinAttack(EnTest* this, PlayState* play) {
+    Animation_PlayOnce(&this->skelAnime, &gStalfosSkel_001SpinattackAnim);
+    Audio_StopSfxByPosAndId(&this->actor.projectedPos, NA_SE_EN_STAL_WARAU);
+    this->swordCollider.base.atFlags &= ~AT_BOUNCED;
+    this->actor.speed = 0.0f;
+    EnTest_SetupAction(this, EnTest_SpinAttack);
+    this->swordCollider.info.toucher.damage = 26;
+    this->unk_7DE = 0;
+
+}
+
+void EnTest_SpinAttack(EnTest* this, PlayState* play) {
+    u8 curFrame = this->skelAnime.curFrame;
+
+    if(curFrame == 6.0f) Actor_PlaySfx(&this->actor, NA_SE_EN_STAL_SAKEBI);
+
+    if(curFrame >= 6.0f && curFrame <= 15.0f) this->swordState = 1;
+    else this->swordState = 0;
+
+    if(SkelAnime_Update(&this->skelAnime) || curFrame >= 23.0f) { // i screwed up the animation length but i aint fixing it
+        EnTest_SetupIdle(this);
+        this->timer = (Rand_ZeroOne() * 5.0f) + 5.0f;
+
+    }
+
+}
+
+void EnTest_ChooseRand(EnTest* this, PlayState* play) {
+    Rand_Seed((u32)osGetTime());
+
+    switch((u8)(Rand_ZeroOne() * 6.0f)) {
+        case 0:
+            EnTest_SetupJumpslash(this);
+            break;
+        case 1:
+            EnTest_SetupSlashRightLeft(this, play);
+            break;
+        case 2:
+            EnTest_SetupSpinAttack(this, play);
+            break;
+        case 3:
+            EnTest_SetupSlashDown(this);
+            break;
+        case 4:
+            EnTest_SetupSlashUp(this);
+            break;
+        case 5:
+            EnTest_SetupSlashLeft(this, play);
+            break;
+        case 6:
+            EnTest_SetupThrust(this, play);
+            break;
+        default:
+            EnTest_SetupSlashDown(this);
+            break;
+
+    }
+
+}
+
+//gStalfosSkel_001Thrust_003Anim // Thrust
+//gStalfosSkel_001SpinattackAnim // Spin Attack
 void EnTest_ChooseAction(EnTest* this, PlayState* play) {
     s32 pad;
     Player* player = GET_PLAYER(play);
@@ -406,20 +563,21 @@ void EnTest_ChooseAction(EnTest* this, PlayState* play) {
                 if (Rand_ZeroOne() > 0.2f) {
                     if (player->stateFlags1 & PLAYER_STATE1_4) {
                         if (this->actor.isTargeted) {
-                            EnTest_SetupSlashDown(this);
+                            EnTest_ChooseRand(this, play);
+
                         } else {
                             func_808627C4(this, play);
                         }
                     } else {
-                        EnTest_SetupSlashDown(this);
+                        EnTest_ChooseRand(this, play);
                     }
                 }
             } else {
-                EnTest_ChooseRandomAction(this, play);
+                EnTest_ChooseRand(this, play);
             }
         }
     } else {
-        EnTest_ChooseRandomAction(this, play);
+        EnTest_ChooseRand(this, play);
     }
 }
 

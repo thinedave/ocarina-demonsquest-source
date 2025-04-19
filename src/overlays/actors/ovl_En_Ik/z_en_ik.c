@@ -220,7 +220,7 @@ void EnIk_InitImpl(Actor* thisx, PlayState* play) {
     thisx->colChkInfo.damageTable = &sDamageTable;
     thisx->colChkInfo.mass = MASS_HEAVY;
     this->isBreakingProp = false;
-    thisx->colChkInfo.health = 300;
+    thisx->colChkInfo.health = 400;
     thisx->gravity = -1.0f;
     this->switchFlag = IK_GET_SWITCH_FLAG(thisx);
     thisx->params = IK_GET_ARMOR_TYPE(thisx);
@@ -461,12 +461,12 @@ void EnIk_SetupVerticalAttack(EnIk* this) {
 }
 
 void EnIk_DecideSpin(EnIk* this) {
-    f32 frames = Animation_GetLastFrame(&gIronKnuckleSpinAttackAnimObject_ik_anim_003dbcAnim);
+    f32 frames = Animation_GetLastFrame(&gIronKnuckleSpinattackAnim);
 
     this->unk_2FF = 1;
     this->unk_2F8 = 6;
     this->actor.speed = 0.0f;
-    Animation_Change(&this->skelAnime, &gIronKnuckleSpinAttackAnimObject_ik_anim_003dbcAnim, 1.0f, 0.0f, frames, ANIMMODE_ONCE, -4.0f);
+    Animation_Change(&this->skelAnime, &gIronKnuckleSpinattackAnim, 1.0f, 0.0f, frames, ANIMMODE_ONCE, -4.0f);
     EnIk_SetupAction(this, EnIk_SpinAction);
 
 }
@@ -477,23 +477,13 @@ void EnIk_SpinAction(EnIk* this, PlayState* play) {
 
     if (this->skelAnime.curFrame == 2.0f) {
         Actor_PlaySfx(&this->actor, NA_SE_EN_IRONNACK_DASH);
-    } else if (this->skelAnime.curFrame == 12.0f) {
+    } else if (this->skelAnime.curFrame == 14.0f) {
         Actor_PlaySfx(&this->actor, NA_SE_EN_IRONNACK_SWING_AXE);
-    } else if (this->skelAnime.curFrame == 14.0f || this->skelAnime.curFrame == 24.0f) {
+    } else if (this->skelAnime.curFrame == 17.0f || this->skelAnime.curFrame == 25.0f) {
         Actor_PlaySfx(&this->actor, NA_SE_IT_SWORD_SWING_HARD);
-    } else if (this->skelAnime.curFrame == 36.0f) {
-        //sp2C.x = this->actor.world.pos.x + Math_SinS(this->actor.shape.rot.y + 0x6A4) * 70.0f;
-        //sp2C.z = this->actor.world.pos.z + Math_CosS(this->actor.shape.rot.y + 0x6A4) * 70.0f;
-        //sp2C.y = this->actor.world.pos.y;
-        //Actor_PlaySfx(&this->actor, NA_SE_EN_IRONNACK_HIT_GND);
-        //Camera_RequestQuake(&play->mainCamera, 2, 25, 10);
-        //Rumble_Request(this->actor.xzDistToPlayer, 255, 20, 150);
-        //CollisionCheck_SpawnShieldParticles(play, &sp2C);
-        //EnIk_SpawnDust(play, &sp2C);
-
     }
 
-    if ((this->skelAnime.curFrame > 12.0f) && (this->skelAnime.curFrame < 29.0f)) {
+    if ((this->skelAnime.curFrame >= 14.0f) && (this->skelAnime.curFrame <= 31.0f)) {
         this->unk_2FE = 1; //damage state
         Math_SmoothStepToS(&this->actor.world.rot.y, this->actor.yawTowardsPlayer, 3, 0x5DC, 0);
         //this->actor.world.rot.y = this->actor.yawTowardsPlayer;
@@ -508,6 +498,7 @@ void EnIk_SpinAction(EnIk* this, PlayState* play) {
             this->actor.shape.rot.y = this->actor.world.rot.y;
         }*/
         this->unk_2FE = 0;
+        Math_StepToF(&this->actor.speed, 0.0f, 5.0f);
     }
 
     /*if (this->unk_2FE == 1) {
@@ -587,10 +578,10 @@ void EnIk_SlamAction(EnIk* this, PlayState* play) {
     }
 
     if (this->unk_2FE == 1) {
-        if (this->actor.xzDistToPlayer < 175.0f && player->invincibilityTimer < 1) {
-            play->damagePlayer(play, -150);
+        if (this->actor.xzDistToPlayer < 150.0f && player->invincibilityTimer < 1) {
+            play->damagePlayer(play, -45);
             player->invincibilityTimer = 20;
-            func_8002F6D4(play, &this->actor, 20.0f, this->actor.yawTowardsPlayer, 2.0f, 0x30);
+            func_8002F6D4(play, &this->actor, 20.0f, this->actor.yawTowardsPlayer, 2.0f, 0);
             Actor_PlaySfx(&player->actor, NA_SE_PL_BODY_HIT);
             this->unk_2FE = 0;
 
@@ -869,7 +860,7 @@ void EnIk_Die(EnIk* this, PlayState* play) {
 void EnIk_UpdateDamage(EnIk* this, PlayState* play) {
     f32 frames;
     s16 pad;
-    u8 prevHealth;
+    u16 prevHealth;
     s32 damageEffect;
     Vec3f sparksPos;
 
@@ -981,7 +972,7 @@ void EnIk_UpdateEnemy(Actor* thisx, PlayState* play) {
                         player->invincibilityTimer = 0;
                     } else {
                         player->invincibilityTimer = 0;
-                        play->damagePlayer(play, -64);
+                        play->damagePlayer(play, -32);
                         this->unk_2FE = 0;
                     }
                 }
@@ -1703,6 +1694,8 @@ void EnIk_StartDefeatCutscene(Actor* thisx, PlayState* play) {
 void EnIk_Init(Actor* thisx, PlayState* play) {
     EnIk* this = (EnIk*)thisx;
     s32 upperParams = IK_GET_UPPER_PARAMS(&this->actor);
+
+    this->actor.xpValue = 300;
 
     if (((IK_GET_ARMOR_TYPE(&this->actor) == IK_TYPE_NABOORU) && GET_EVENTCHKINF(EVENTCHKINF_3C)) ||
         (upperParams != 0 && Flags_GetSwitch(play, upperParams >> 8))) {

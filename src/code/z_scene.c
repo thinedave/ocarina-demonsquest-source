@@ -52,7 +52,7 @@ void Object_InitContext(PlayState* play, ObjectContext* objectCtx) {
     s32 i;
 
     if (ExpansionPak_Found()) {
-        spaceSize = 1075200; // 8MB
+        spaceSize = 1413120; // 8MB
     } else {
         if (play2->sceneId == SCENE_HYRULE_FIELD) { // 4MB
             spaceSize = 1024000;
@@ -170,7 +170,7 @@ void* func_800982FC(ObjectContext* objectCtx, s32 slot, s16 objectId) {
     ASSERT(nextPtr < objectCtx->spaceEnd, "nextptr < this->endSegment", "../z_scene.c", 381);
 
     // "Object exchange free size=%08x"
-    osSyncPrintf("オブジェクト入れ替え空きサイズ=%08x\n", (uintptr_t)objectCtx->spaceEnd - (uintptr_t)nextPtr);
+    osSyncPrintf("Object exchange free size=%08x\n", (uintptr_t)objectCtx->spaceEnd - (uintptr_t)nextPtr);
 
     return nextPtr;
 }

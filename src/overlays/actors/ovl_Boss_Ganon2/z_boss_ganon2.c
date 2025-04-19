@@ -1910,7 +1910,7 @@ void func_80902524(BossGanon2* this, PlayState* play) {
                     Audio_StopSfxById(NA_SE_EN_MGANON_UNARI);
                     this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-20, 0);
                     temp_v0_4 = this->actor.colChkInfo.health;
-                    if (temp_v0_4 < 0x15 && this->unk_334 == 0) {
+                    if (temp_v0_4 < 210 && this->unk_334 == 0) {
                         func_80900818(this, play);
                     } else {
                         if (temp_v0_4 <= 0) {
@@ -1944,7 +1944,7 @@ void func_80902524(BossGanon2* this, PlayState* play) {
             }
             this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-phi_v1_2, 0);
             temp_v0_4 = this->actor.colChkInfo.health;
-            if ((temp_v0_4 < 0x15) && (this->unk_334 == 0)) {
+            if ((temp_v0_4 < 210) && (this->unk_334 == 0)) {
                 func_80900818(this, play);
             } else if ((temp_v0_4 <= 0) && (phi_v1_2 >= 20)) {
                 func_80901020(this, play);

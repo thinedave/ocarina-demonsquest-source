@@ -2987,25 +2987,28 @@ void CollisionCheck_ApplyDamage(PlayState* play, CollisionCheckContext* colChkCt
     Player* player = GET_PLAYER(play);
     Actor* attacker = collider->ac;
 
-    if(attacker != NULL && (attacker->id == ACTOR_PLAYER || attacker->id == ACTOR_EN_ARROW || attacker->id == ACTOR_ARROW_LIGHT)) {
+    if(attacker != NULL && (attacker->id == ACTOR_PLAYER || attacker->id == ACTOR_EN_ARROW || attacker->id == ACTOR_ARROW_FIRE || attacker->id == ACTOR_ARROW_ICE || attacker->id == ACTOR_ARROW_LIGHT)) {
         damage *= 10;
-
+        
         if(player->storedDoubleDamage) {
             player->storedDoubleDamage = false;
             damage *= 2;
 
         }
 
-        u8 statToScale = (info->acHitInfo->toucher.dmgFlags & (DMG_MAGIC_FIRE | DMG_MAGIC_ICE | DMG_MAGIC_LIGHT)) ? gSaveContext.save.info.playerData.levels.intelligence : gSaveContext.save.info.playerData.levels.strength;
+        u8 statToScale = 0;
+        if(attacker->id == ACTOR_PLAYER)
+            statToScale = gSaveContext.save.info.playerData.levels.strength;
+        else if(info->acHitInfo->toucher.dmgFlags & (DMG_MAGIC_FIRE | DMG_MAGIC_ICE | DMG_MAGIC_LIGHT | DMG_ARROW_FIRE | DMG_ARROW_ICE | DMG_ARROW_LIGHT))
+            statToScale = gSaveContext.save.info.playerData.levels.intelligence;
 
-        osSyncPrintf("statToScale: %i\n", statToScale);
+        f32 lerped = F32_LERP(1.0f, 2.0f, CLAMP_MIN((f32)(statToScale), 1)/100);
 
-        damage *= F32_LERP(1.0f, 2.0f, (f32)(statToScale)/100);
 
-        osSyncPrintf("%.2f DMG\n", damage);
+        damage *= F32_LERP(1.0f, 2.0f, CLAMP_MIN((f32)(statToScale), 1)/100);
 
         //handle luck
-        u8 chance = F32_LERP(100.0f, 2.0f, (f32)(gSaveContext.save.info.playerData.levels.luck)/100);
+        u8 chance = F32_LERP(100.0f, 2.0f, CLAMP_MIN((f32)(gSaveContext.save.info.playerData.levels.luck), 0)/100);
         
         Rand_Seed((u32)osGetTime());
         if(Rand_Next() % chance == 0) {
@@ -3017,6 +3020,7 @@ void CollisionCheck_ApplyDamage(PlayState* play, CollisionCheckContext* colChkCt
 
     if (!(collider->acFlags & AC_HARD)) {
         collider->actor->colChkInfo.damage += damage;
+        
     }
 }
 

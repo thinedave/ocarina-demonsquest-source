@@ -177,6 +177,8 @@ typedef struct {
     u8 intelligence;
     u8 endurance;
     u8 luck;
+    u16 xp;
+    u16 level;
 
 } SavePlayerLevels;
 
@@ -186,11 +188,11 @@ typedef struct {
     /* 0x06  0x0022 */ u16 deaths;
     /* 0x08  0x0024 */ char playerName[8];
     /* 0x10  0x002C */ s16 n64ddFlag;
-    u8  shieldDurabilityDeku;
-    u8  shieldDurabilityHylian;
-    u8  shieldDurabilityMirror;
-    u8 UNUSED_heartsBlocked;
-    u8 permHealthCapacity;
+    /*       0x002E */ u8 shieldDurabilityDeku;
+    /*       0x002F */ u8 shieldDurabilityHylian;
+    /*       0x0030 */ u8 shieldDurabilityMirror;
+    /*       0x0031 */ u8 shieldHasBroken;
+    /*       0x0032 */ u8 permHealthCapacity;
     /* 0x12  0x002E */ s16 healthCapacity; // "max_life"
     /* 0x14  0x0030 */ s16 health; // "now_life"
     /* 0x16  0x0032 */ s8 magicLevel; // 0 for no magic/new load, 1 for magic, 2 for double magic
@@ -319,6 +321,7 @@ typedef struct {
     /* 0x1422 */ s16 sunsSongState; // controls the effects of suns song
     /* 0x1424 */ s16 healthAccumulator;
     u8 saveReturnFlag;
+    bool wiiVcMode;
 } SaveContext; // size = 0x1428
 
 typedef enum {

@@ -3007,11 +3007,12 @@ void Poise_DrawMeter(PlayState* play, u16 meterY) {
 }
 
 s16 curStamina;
+static u8 staminaTimer = 40;
 
 void Stamina_DrawMeter(PlayState* play) {
     InterfaceContext* interfaceCtx = &play->interfaceCtx;
     Player* player = GET_PLAYER(play);
-    u8 stamina = play->stamina;
+    s16 stamina = play->stamina;
     u16 meterY;
 
     if (gSaveContext.save.info.playerData.healthCapacity > 0xA0) {
@@ -3022,60 +3023,127 @@ void Stamina_DrawMeter(PlayState* play) {
 
     Math_SmoothStepToS(&curStamina, stamina, 1, 3, 0);
 
+    if(curStamina < 100) staminaTimer = 20;
+    else if(staminaTimer > 0) staminaTimer--;
+
+    if(staminaTimer == 0 || IS_PAUSED(&play->pauseCtx) || interfaceCtx->magicAlpha == 0) return;
+
+    //if(CHECK_BTN_ALL(play->state.input[0].cur.button, BTN_DUP)) curStamina++;
+    //if(CHECK_BTN_ALL(play->state.input[0].cur.button, BTN_DDOWN)) curStamina--;
+
     OPEN_DISPS(play->state.gfxCtx, "../z_parameter.c", __LINE__);
+
+    gSPSegment(OVERLAY_DISP++, 0x02, interfaceCtx->parameterSegment);
 
     Gfx_SetupDL_39Overlay(play->state.gfxCtx);
 
-    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, sMagicBorderR, sMagicBorderG, sMagicBorderB, interfaceCtx->magicAlpha);
-    gDPSetEnvColor(OVERLAY_DISP++, 100, 50, 50, 255);
+    //if(!gSaveContext.wiiVcMode) {
+        u16 rectWidth = 16;
+        u16 rectHeight = 16;
 
-    OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterEndTex, 8, 16, R_MAGIC_METER_X, meterY, 8, 10,
-                                  1 << 10, 1.6 * (1 << 10));
+        Vec3f screenPos;
+        Vec3f playerPos = player->actor.world.pos;
 
-    OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterMidTex, 24, 16, R_MAGIC_METER_X + 8, meterY,
-                                  100, 10, 1 << 10,1.6 * (1 << 10));
+        playerPos.y += 45.0f;
 
-    gDPLoadTextureBlock(OVERLAY_DISP++, gMagicMeterEndTex, G_IM_FMT_IA, G_IM_SIZ_8b, 8, 16, 0,
-                        G_TX_MIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 3, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+        Play_GetScreenPos(play, &playerPos, &screenPos);
 
-    gSPTextureRectangle(OVERLAY_DISP++, (R_MAGIC_METER_X + 100 + 8) << 2, meterY << 2,
-                        (R_MAGIC_METER_X + 100 + 16) << 2, (meterY + 10) << 2,
-                        G_TX_RENDERTILE, 256, 0, 1 << 10, 1.6 * (1 << 10));
+        u16 rectLeft = (u16)screenPos.x + 20;
+        u16 rectTop = (u16)screenPos.y;
 
-    gDPPipeSync(OVERLAY_DISP++);
-    gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE, PRIMITIVE,
-                      ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE);
-    gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
+        //Draw stamina wheel shadow
 
-    // Fill the whole meter with the normal magic color
-    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 234, 210, 89,
-                    interfaceCtx->magicAlpha);
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 0, 0, 0, 255);
+        gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
 
-    gDPLoadMultiBlock_4b(OVERLAY_DISP++, gMagicMeterFillTex, 0x0000, G_TX_RENDERTILE, G_IM_FMT_I, 16, 16, 0,
-                         G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
-                         G_TX_NOLOD, G_TX_NOLOD);
+        OVERLAY_DISP = Gfx_TextureI8(OVERLAY_DISP, gInterfaceStaminaWheelTex, 16, 16, rectLeft, rectTop, rectWidth, rectHeight, (1 << 10), (1 << 10));
 
-    gSPTextureRectangle(OVERLAY_DISP++, (R_MAGIC_METER_X+8) << 2, (meterY + 2) << 2,
-                        ((R_MAGIC_METER_X+8) + curStamina) << 2, (meterY + 6) << 2, G_TX_RENDERTILE, 0,
-                        0, 1 << 10, 1.6 * (1 << 10));
-
-    gDPPipeSync(OVERLAY_DISP++);
-    /*(gDPSetOtherMode(OVERLAY_DISP++,
-                    G_AD_DISABLE | G_CD_DISABLE | G_CK_NONE | G_TC_FILT | G_TF_POINT | G_TT_NONE | G_TL_TILE |
-                        G_TD_CLAMP | G_TP_NONE | G_CYC_1CYCLE | G_PM_NPRIMITIVE,
-                    G_RM_OPA_SURF | G_RM_OPA_SURF2);
-    gDPSetCombineMode(OVERLAY_DISP++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);*/
-    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 188, 169, 73, interfaceCtx->magicAlpha);
-
-    u8 segmentX = 20;
-
-    //for(u8 i = 1; i < 5; i++) {
+        //Draw stamina wheel background
         gDPPipeSync(OVERLAY_DISP++);
-        gSPTextureRectangle(OVERLAY_DISP++, ((R_MAGIC_METER_X+8) + segmentX) << 2, (meterY + 2) << 2, (((R_MAGIC_METER_X+8) + segmentX) + 1) << 2, (meterY + 6) << 2, G_TX_RENDERTILE, 0, 0, 1 << 10, 1.6 * (1 << 10));
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 11, 11, 11, 180);
+        gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
 
-    //    segmentX += 20;
+        OVERLAY_DISP = Gfx_TextureI8(OVERLAY_DISP, gInterfaceStaminaWheelTex, 16, 16, rectLeft, rectTop, rectWidth, rectHeight, (1 << 10), (1 << 10));
 
-    //}
+        //Draw stamina wheel foreground
+        u8 clamped = CLAMP(curStamina, 0, 100);
+        f32 lerp = (f32)(clamped) * 0.01f;
+        u16 rotAngle = (u16)F32_LERP(1, 256, lerp);
+        rotAngle = CLAMP(rotAngle, 1, 256);
+
+        gDPPipeSync(OVERLAY_DISP++);
+        gDPSetCycleType(OVERLAY_DISP++, G_CYC_2CYCLE);
+        //gDPSetRenderMode(OVERLAY_DISP++, G_RM_PASS, G_RM_ZB_OVL_SURF2 | G_RM_TEX_EDGE2);
+        gDPSetCombineLERP(OVERLAY_DISP++, TEXEL1, 0, PRIMITIVE, 0, 0, 0, 0, TEXEL0, 0, 0, 0, COMBINED, 0, 0, 0, TEXEL0);
+
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 99, 255, 38, 255);
+
+        gDPSetAlphaCompare(OVERLAY_DISP++, G_AC_THRESHOLD); 
+        gDPSetBlendColor(OVERLAY_DISP++, 255, 255, 255, (s16)(rotAngle * 255.0f) % 256);
+
+        gDPLoadMultiBlock(OVERLAY_DISP++, gInterfaceStaminaWheelMaskTex, 0x0000, G_TX_RENDERTILE, G_IM_FMT_I, G_IM_SIZ_8b, 16, 16, 0,
+                            G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                            G_TX_NOLOD);
+
+        gDPLoadMultiBlock(OVERLAY_DISP++, gInterfaceStaminaWheelTex, 0x0100, 1, G_IM_FMT_I, G_IM_SIZ_8b, 16, 16, 0,
+                            G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                            G_TX_NOLOD);
+
+        gSPTextureRectangle(OVERLAY_DISP++, rectLeft << 2, rectTop << 2, (rectLeft + rectWidth) << 2,
+                            (rectTop + rectHeight) << 2, G_TX_RENDERTILE, 0, 0, (1 << 10), (1 << 10));
+
+        gDPSetAlphaCompare(OVERLAY_DISP++, G_AC_NONE);
+        gDPSetBlendColor(OVERLAY_DISP++, 0, 0, 0, 0);
+        gDPSetCycleType(OVERLAY_DISP++, G_CYC_1CYCLE);
+
+    /*} else {
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, sMagicBorderR, sMagicBorderG, sMagicBorderB, interfaceCtx->magicAlpha);
+        gDPSetEnvColor(OVERLAY_DISP++, 100, 50, 50, 255);
+
+        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterEndTex, 8, 16, R_MAGIC_METER_X, meterY, 8, 10,
+                                      1 << 10, 1.6 * (1 << 10));
+
+        OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gMagicMeterMidTex, 24, 16, R_MAGIC_METER_X + 8, meterY,
+                                      100, 10, 1 << 10,1.6 * (1 << 10));
+
+        gDPLoadTextureBlock(OVERLAY_DISP++, gMagicMeterEndTex, G_IM_FMT_IA, G_IM_SIZ_8b, 8, 16, 0,
+                            G_TX_MIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 3, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+        gSPTextureRectangle(OVERLAY_DISP++, (R_MAGIC_METER_X + 100 + 8) << 2, meterY << 2,
+                            (R_MAGIC_METER_X + 100 + 16) << 2, (meterY + 10) << 2,
+                            G_TX_RENDERTILE, 256, 0, 1 << 10, 1.6 * (1 << 10));
+
+        gDPPipeSync(OVERLAY_DISP++);
+        gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE, PRIMITIVE,
+                          ENVIRONMENT, TEXEL0, ENVIRONMENT, 0, 0, 0, PRIMITIVE);
+        gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 255);
+
+        // Fill the whole meter with the normal magic color
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 234, 210, 89,
+                        interfaceCtx->magicAlpha);
+
+        gDPLoadMultiBlock_4b(OVERLAY_DISP++, gMagicMeterFillTex, 0x0000, G_TX_RENDERTILE, G_IM_FMT_I, 16, 16, 0,
+                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                             G_TX_NOLOD, G_TX_NOLOD);
+
+        gSPTextureRectangle(OVERLAY_DISP++, (R_MAGIC_METER_X+8) << 2, (meterY + 2) << 2,
+                            ((R_MAGIC_METER_X+8) + curStamina) << 2, (meterY + 6) << 2, G_TX_RENDERTILE, 0,
+                            0, 1 << 10, 1.6 * (1 << 10));
+
+        gDPPipeSync(OVERLAY_DISP++);
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 188, 169, 73, interfaceCtx->magicAlpha);
+
+        u8 segmentX = 20;
+
+        //for(u8 i = 1; i < 5; i++) {
+            gDPPipeSync(OVERLAY_DISP++);
+            gSPTextureRectangle(OVERLAY_DISP++, ((R_MAGIC_METER_X+8) + segmentX) << 2, (meterY + 2) << 2, (((R_MAGIC_METER_X+8) + segmentX) + 1) << 2, (meterY + 6) << 2, G_TX_RENDERTILE, 0, 0, 1 << 10, 1.6 * (1 << 10));
+
+        //    segmentX += 20;
+
+        //}
+
+    }*/
     
     CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", __LINE__);
     
@@ -3533,6 +3601,12 @@ void func_8008A994(InterfaceContext* interfaceCtx) {
 
 u8 Interface_DPadPage = 0;
 bool Interface_DPadPressed = false;
+static u16 sOcarinaAlpha = 0;
+
+void Player_Action_8084E3C4(Player* this, PlayState* play);
+void Player_AnimPlayOnceAdjusted(PlayState* play, Player* this, LinkAnimationHeader* anim);
+void func_80835EA4(PlayState* play, s32 arg1);
+void func_80835DE4(PlayState* play, Player* this, PlayerActionFunc actionFunc, s32 flags);
 
 void Interface_Draw(PlayState* play) {
     static s16 magicArrowEffectsR[] = { 255, 100, 255 };
@@ -3683,7 +3757,7 @@ void Interface_Draw(PlayState* play) {
         Magic_DrawMeter(play);
         Durability_DrawMeter(play);
         Minimap_Draw(play);
-        Stamina_DrawMeter(play);
+        //Stamina_DrawMeter(play);
 
         if ((R_PAUSE_BG_PRERENDER_STATE != PAUSE_BG_PRERENDER_PROCESS) &&
             (R_PAUSE_BG_PRERENDER_STATE != PAUSE_BG_PRERENDER_READY)) {
@@ -4382,7 +4456,11 @@ void Interface_Draw(PlayState* play) {
 
     Player* player = GET_PLAYER(play);
 
-    if(LINK_AGE_IN_YEARS == YEARS_ADULT) {
+    u8 ocarina = 0;
+    if(INV_CONTENT(ITEM_OCARINA_FAIRY) == ITEM_OCARINA_FAIRY) ocarina = 1;
+    else if(INV_CONTENT(ITEM_OCARINA_FAIRY) == ITEM_OCARINA_OF_TIME) ocarina = 2;
+
+    if(interfaceCtx->magicAlpha > 0 && (LINK_AGE_IN_YEARS == YEARS_ADULT || ocarina > 0)) {
         gSPSegment(OVERLAY_DISP++, 0x08, interfaceCtx->dpadItemSegment);
 
         //DPad
@@ -4393,27 +4471,35 @@ void Interface_Draw(PlayState* play) {
         OVERLAY_DISP = Gfx_TextureIA8(OVERLAY_DISP, gInterfaceDpadTex, 24, 24, 270, 78, 24, 24, 1 << 10, 1 << 10);
 
         /*
-        ITEM_TUNIC_KOKIRI, //0x0000
-        ITEM_TUNIC_GORON,  //0x1000
-        ITEM_TUNIC_ZORA,   //0x2000
-        ITEM_BOOTS_KOKIRI, //0x3000
-        ITEM_BOOTS_IRON,   //0x4000
-        ITEM_BOOTS_HOVER,  //0x5000
+        ITEM_TUNIC_KOKIRI,      //0x0000
+        ITEM_TUNIC_GORON,       //0x1000
+        ITEM_TUNIC_ZORA,        //0x2000
+        ITEM_BOOTS_KOKIRI,      //0x3000
+        ITEM_BOOTS_IRON,        //0x4000
+        ITEM_BOOTS_HOVER,       //0x5000
+        ITEM_OCARINA_FAIRY      //0x6000
+        ITEM_OCARINA_OF_TIME    //0x7000
 
         420 = dont show
         */
 
-        u32 dPadOffset[3] = {
+        u32 dPadOffset[4] = {
             420,
             420,
             420,
-        };
-        f32 dPadScale[3][2] = {
-            {1.00f, 0.00f},
-            {1.00f, 0.00f},
-            {1.00f, 0.00f}
+            420,
 
         };
+
+        f32 dPadScale[4][2] = {
+            {1.00f, 0.00f},
+            {1.00f, 0.00f},
+            {1.00f, 0.00f},
+            {1.00f, 0.00f},
+
+        };
+
+        bool acceptInput = (interfaceCtx->magicAlpha == 255);
 
         if(!CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DDOWN) &&
         !CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DLEFT) &&
@@ -4423,79 +4509,90 @@ void Interface_Draw(PlayState* play) {
 
         }
 
-        if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DDOWN)) {
-            Interface_DPadPage = 0;
-            Interface_DPadPressed = true;
-
-            Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
-                                &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-
-        }
-
-        if(CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DLEFT)) {
+        if(acceptInput && CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DLEFT)) {
             dPadScale[0][0] = 1.25f;
             dPadScale[0][1] = -.25f;
 
         }
 
-        if(CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DUP)) {
+        if(acceptInput && CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DUP)) {
             dPadScale[1][0] = 1.25f;
             dPadScale[1][1] = -.25f;
 
         }
 
-        if(CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DRIGHT)) {
+        if(acceptInput && CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DRIGHT)) {
             dPadScale[2][0] = 1.25f;
             dPadScale[2][1] = -.25f;
 
         }
 
+        if(acceptInput && CHECK_BTN_ANY(play->state.input[0].press.button, BTN_DDOWN)) {
+            dPadScale[3][0] = 1.25f;
+            dPadScale[3][1] = -.25f;
+
+        }
+
         switch(Interface_DPadPage) {
             case 0:
-                if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT) && !Interface_DPadPressed) {
-                    Interface_DPadPage = 1;
+                if(ocarina == 1) dPadOffset[3] = 0x6000;
+                else if(ocarina == 2) dPadOffset[3] = 0x7000;
+                
+                player->pullOcarina = false;
+
+                if(acceptInput && !IS_PAUSED(&play->pauseCtx) && !(player->stateFlags1 & PLAYER_STATE1_27) && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DDOWN) && !Interface_DPadPressed && interfaceCtx->restrictions.ocarina == 0) {
+                    player->unk_6AD = 4;
+                    player->pullOcarina = true;
                     Interface_DPadPressed = true;
 
-                    Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
-                                        &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                }
 
-                }else if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT) && !Interface_DPadPressed) {
-                    Interface_DPadPage = 2;
-                    Interface_DPadPressed = true;
+                if(LINK_AGE_IN_YEARS == YEARS_ADULT) {
+                    if(acceptInput && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT) && !Interface_DPadPressed) {
+                        Interface_DPadPage = 1;
+                        Interface_DPadPressed = true;
 
-                    Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
-                                        &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                        Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                    } else if(acceptInput && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT) && !Interface_DPadPressed) {
+                        Interface_DPadPage = 2;
+                        Interface_DPadPressed = true;
+
+                        Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                            &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+                    }
+
+                    dPadOffset[0] = 0x0000;
+
+                    if(player->currentTunic == PLAYER_TUNIC_GORON) {
+                        dPadOffset[0] = 0x1000;
+
+                    } else if(player->currentTunic == PLAYER_TUNIC_ZORA) {
+                        dPadOffset[0] = 0x2000;
+
+                    }
+
+                    dPadOffset[2] = 0x3000;
+
+                    if(player->currentBoots == PLAYER_BOOTS_IRON) {
+                        dPadOffset[2] = 0x4000;
+
+                    } else if(player->currentBoots == PLAYER_BOOTS_HOVER) {
+                        dPadOffset[2] = 0x5000;
+
+                    }
 
                 }
 
-                dPadOffset[0] = 0x0000;
-
-                if(player->currentTunic == PLAYER_TUNIC_GORON) {
-                    dPadOffset[0] = 0x1000;
-
-                }else if(player->currentTunic == PLAYER_TUNIC_ZORA) {
-                    dPadOffset[0] = 0x2000;
-
-                }
-
-                dPadOffset[1] = 420;
-
-                dPadOffset[2] = 0x3000;
-
-                if(player->currentBoots == PLAYER_BOOTS_IRON) {
-                    dPadOffset[2] = 0x4000;
-
-                }else if(player->currentBoots == PLAYER_BOOTS_HOVER) {
-                    dPadOffset[2] = 0x5000;
-
-                }
                 break;
 
             case 1:
                 if(CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_KOKIRI)) {
                     dPadOffset[0] = 0x0000;
 
-                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_KOKIRI)) {
+                    if(acceptInput && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_KOKIRI)) {
                         Interface_DPadPressed = true;
                         Inventory_ChangeEquipment(EQUIP_TYPE_TUNIC, EQUIP_VALUE_TUNIC_KOKIRI);
                         Player_SetEquipmentData(play, player);
@@ -4509,7 +4606,7 @@ void Interface_Draw(PlayState* play) {
                 if(CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_ZORA)) {
                     dPadOffset[2] = 0x2000;
 
-                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_ZORA)) {
+                    if(acceptInput && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_ZORA)) {
                         Interface_DPadPressed = true;
                         Inventory_ChangeEquipment(EQUIP_TYPE_TUNIC, EQUIP_VALUE_TUNIC_ZORA);
                         Player_SetEquipmentData(play, player);
@@ -4523,7 +4620,7 @@ void Interface_Draw(PlayState* play) {
                 if(CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_GORON)) {
                     dPadOffset[1] = 0x1000;
 
-                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DUP) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_GORON)) {
+                    if(acceptInput && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DUP) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_GORON)) {
                         Interface_DPadPressed = true;
                         Inventory_ChangeEquipment(EQUIP_TYPE_TUNIC, EQUIP_VALUE_TUNIC_GORON);
                         Player_SetEquipmentData(play, player);
@@ -4540,7 +4637,7 @@ void Interface_Draw(PlayState* play) {
                 if(CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_KOKIRI)) {
                     dPadOffset[0] = 0x3000;
 
-                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_KOKIRI)) {
+                    if(acceptInput && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_KOKIRI)) {
                         Interface_DPadPressed = true;
                         Inventory_ChangeEquipment(EQUIP_TYPE_BOOTS, EQUIP_VALUE_BOOTS_KOKIRI);
                         Player_SetEquipmentData(play, player);
@@ -4554,7 +4651,7 @@ void Interface_Draw(PlayState* play) {
                 if(CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_HOVER)) {
                     dPadOffset[2] = 0x5000;
 
-                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_HOVER)) {
+                    if(acceptInput && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_HOVER)) {
                         Interface_DPadPressed = true;
                         Inventory_ChangeEquipment(EQUIP_TYPE_BOOTS, EQUIP_VALUE_BOOTS_HOVER);
                         Player_SetEquipmentData(play, player);
@@ -4568,7 +4665,7 @@ void Interface_Draw(PlayState* play) {
                 if(CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_IRON)) {
                     dPadOffset[1] = 0x4000;
 
-                    if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DUP) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_IRON)) {
+                    if(acceptInput && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DUP) && !Interface_DPadPressed && CHECK_OWNED_EQUIP(EQUIP_TYPE_BOOTS, EQUIP_INV_BOOTS_IRON)) {
                         Interface_DPadPressed = true;
                         Inventory_ChangeEquipment(EQUIP_TYPE_BOOTS, EQUIP_VALUE_BOOTS_IRON);
                         Player_SetEquipmentData(play, player);
@@ -4580,6 +4677,15 @@ void Interface_Draw(PlayState* play) {
                 }
 
                 break;
+
+        }
+
+        if(Interface_DPadPage != 0 && acceptInput && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DDOWN)) {
+            Interface_DPadPage = 0;
+            Interface_DPadPressed = true;
+
+            Audio_PlaySfxGeneral(NA_SE_PL_PUT_OUT_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
 
         }
 
@@ -4607,9 +4713,70 @@ void Interface_Draw(PlayState* play) {
 
         }
 
+        if(dPadOffset[3] != 420) {
+            Math_StepToS(&sOcarinaAlpha, (interfaceCtx->restrictions.ocarina != 0 ? 70 : interfaceCtx->magicAlpha), 35);
+
+            gDPPipeSync(OVERLAY_DISP++);
+            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, sOcarinaAlpha);
+            gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+            OVERLAY_DISP = Gfx_TextureRGBA32(OVERLAY_DISP, interfaceCtx->dpadItemSegment + dPadOffset[3], 32, 32, 257, 78, 16 * dPadScale[2][0], 16 * dPadScale[2][0], (2+dPadScale[3][1]) * (1 << 10), (2+dPadScale[3][1]) * (1 << 10));
+
+        }
+
         gSPSegment(OVERLAY_DISP++, 0x08, interfaceCtx->iconItemSegment);
 
     }
+
+    /*GfxPrint printer;
+    Gfx* gfx;
+
+    OPEN_DISPS_AUTO(play);
+
+    gfx = POLY_OPA_DISP + 1;
+    gSPDisplayList(OVERLAY_DISP++, gfx);
+
+    GfxPrint_Init(&printer);
+    GfxPrint_Open(&printer, gfx);
+
+    GfxPrint_SetColor(&printer, 255, 255, 0, 255);
+    GfxPrint_SetPos(&printer, 4, 8);
+    GfxPrint_Printf(&printer, "POSITION");
+
+    GfxPrint_SetPos(&printer, 4, 9);
+    GfxPrint_Printf(&printer, "X: %.2f", player->actor.world.pos.x);
+
+    GfxPrint_SetPos(&printer, 4, 10);
+    GfxPrint_Printf(&printer, "Y: %.2f", player->actor.world.pos.y);
+
+    GfxPrint_SetPos(&printer, 4, 11);
+    GfxPrint_Printf(&printer, "Z: %.2f", player->actor.world.pos.z);
+
+    GfxPrint_SetPos(&printer, 4, 13);
+    GfxPrint_Printf(&printer, "ROTATION");
+
+    GfxPrint_SetPos(&printer, 4, 14);
+    GfxPrint_Printf(&printer, "X: 0x%04x", player->actor.world.rot.x & 0xFFFF);
+
+    GfxPrint_SetPos(&printer, 4, 15);
+    GfxPrint_Printf(&printer, "Y: 0x%04x", player->actor.world.rot.y & 0xFFFF);
+
+    GfxPrint_SetPos(&printer, 4, 16);
+    GfxPrint_Printf(&printer, "Z: 0x%04x", player->actor.world.rot.z & 0xFFFF);
+
+    GfxPrint_SetPos(&printer, 4, 18);
+    GfxPrint_Printf(&printer, "SCENE: 0x%x", play->sceneId);
+
+    GfxPrint_SetPos(&printer, 4, 19);
+    GfxPrint_Printf(&printer, "ROOM: %i", play->roomCtx.curRoom.num);
+
+    gfx = GfxPrint_Close(&printer);
+    GfxPrint_Destroy(&printer);
+
+    gSPEndDisplayList(gfx++);
+    gSPBranchList(POLY_OPA_DISP, gfx);
+    POLY_OPA_DISP = gfx;
+
+    CLOSE_DISPS_AUTO(play);*/
 
     /*
     OSThread* thread = __osGetActiveQueue();
@@ -4670,6 +4837,8 @@ void Interface_Draw(PlayState* play) {
     */
 
     Interface_SaveResting_Draw(play);
+
+    Interface_DrawCutsceneSkip(play);
 
     CLOSE_DISPS(play->state.gfxCtx, "../z_parameter.c", 4269);
 }
@@ -5154,21 +5323,6 @@ void Interface_SaveResting_CheckAlpha(PlayState* play) {
 
 }
 
-void Interface_DrawCharTexture(Gfx** gfxP, u8* texture, s32 rectLeft, s32 rectTop, f32 scale) {
-    Gfx* gfx = *gfxP;
-
-    YREG(0) = 1024.0f * scale;
-    YREG(2) = 16.0f * scale;
-
-    gDPLoadTextureBlock_4b(gfx++, texture, G_IM_FMT_I, 16, 16, 0, G_TX_NOMIRROR | G_TX_CLAMP,
-                           G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-
-    gSPTextureRectangle(gfx++, rectLeft << 2, rectTop << 2, (rectLeft + YREG(2)) << 2, (rectTop + YREG(2)) << 2,
-                        G_TX_RENDERTILE, 0, 0, YREG(0), YREG(0));
-
-    *gfxP = gfx;
-}
-
 void Interface_SaveResting_ApproachTargetAlpha(PlayState* play) {
     SaveRestingContext* this = &play->interfaceCtx.saveRestingCtx;
 
@@ -5190,220 +5344,32 @@ void Interface_SaveResting_Update(PlayState* play) {
 
 }
 
-f32 sFontWidthsParameter[144] = {
-    8.0f,  // ' '
-    8.0f,  // '!'
-    6.0f,  // '"'
-    9.0f,  // '#'
-    9.0f,  // '$'
-    14.0f, // '%'
-    12.0f, // '&'
-    3.0f,  // '''
-    7.0f,  // '('
-    7.0f,  // ')'
-    7.0f,  // '*'
-    9.0f,  // '+'
-    4.0f,  // ','
-    6.0f,  // '-'
-    4.0f,  // '.'
-    9.0f,  // '/'
-    10.0f, // '0'
-    5.0f,  // '1'
-    9.0f,  // '2'
-    9.0f,  // '3'
-    10.0f, // '4'
-    9.0f,  // '5'
-    9.0f,  // '6'
-    9.0f,  // '7'
-    9.0f,  // '8'
-    9.0f,  // '9'
-    6.0f,  // ':'
-    6.0f,  // ';'
-    9.0f,  // '<'
-    11.0f, // '='
-    9.0f,  // '>'
-    11.0f, // '?'
-    13.0f, // '@'
-    12.0f, // 'A'
-    9.0f,  // 'B'
-    11.0f, // 'C'
-    11.0f, // 'D'
-    8.0f,  // 'E'
-    8.0f,  // 'F'
-    12.0f, // 'G'
-    10.0f, // 'H'
-    4.0f,  // 'I'
-    8.0f,  // 'J'
-    10.0f, // 'K'
-    8.0f,  // 'L'
-    13.0f, // 'M'
-    11.0f, // 'N'
-    13.0f, // 'O'
-    9.0f,  // 'P'
-    13.0f, // 'Q'
-    10.0f, // 'R'
-    10.0f, // 'S'
-    9.0f,  // 'T'
-    10.0f, // 'U'
-    11.0f, // 'V'
-    15.0f, // 'W'
-    11.0f, // 'X'
-    10.0f, // 'Y'
-    10.0f, // 'Z'
-    7.0f,  // '['
-    10.0f, // '\'
-    7.0f,  // ']'
-    10.0f, // '^'
-    9.0f,  // '_'
-    5.0f,  // '`'
-    8.0f,  // 'a'
-    9.0f,  // 'b'
-    8.0f,  // 'c'
-    9.0f,  // 'd'
-    9.0f,  // 'e'
-    6.0f,  // 'f'
-    9.0f,  // 'g'
-    8.0f,  // 'h'
-    4.0f,  // 'i'
-    6.0f,  // 'j'
-    8.0f,  // 'k'
-    4.0f,  // 'l'
-    12.0f, // 'm'
-    9.0f,  // 'n'
-    9.0f,  // 'o'
-    9.0f,  // 'p'
-    9.0f,  // 'q'
-    7.0f,  // 'r'
-    8.0f,  // 's'
-    7.0f,  // 't'
-    8.0f,  // 'u'
-    9.0f,  // 'v'
-    12.0f, // 'w'
-    8.0f,  // 'x'
-    9.0f,  // 'y'
-    8.0f,  // 'z'
-    7.0f,  // '{'
-    5.0f,  // '|'
-    7.0f,  // '}'
-    10.0f, // '~'
-    10.0f, // '‾'
-    12.0f, // 'À'
-    6.0f,  // 'î'
-    12.0f, // 'Â'
-    12.0f, // 'Ä'
-    11.0f, // 'Ç'
-    8.0f,  // 'È'
-    8.0f,  // 'É'
-    8.0f,  // 'Ê'
-    6.0f,  // 'Ë'
-    6.0f,  // 'Ï'
-    13.0f, // 'Ô'
-    13.0f, // 'Ö'
-    10.0f, // 'Ù'
-    10.0f, // 'Û'
-    10.0f, // 'Ü'
-    9.0f,  // 'ß'
-    8.0f,  // 'à'
-    8.0f,  // 'á'
-    8.0f,  // 'â'
-    8.0f,  // 'ä'
-    8.0f,  // 'ç'
-    9.0f,  // 'è'
-    9.0f,  // 'é'
-    9.0f,  // 'ê'
-    9.0f,  // 'ë'
-    6.0f,  // 'ï'
-    9.0f,  // 'ô'
-    9.0f,  // 'ö'
-    9.0f,  // 'ù'
-    9.0f,  // 'û'
-    9.0f,  // 'ü'
-    14.0f, // '[A]'
-    14.0f, // '[B]'
-    14.0f, // '[C]'
-    14.0f, // '[L]'
-    14.0f, // '[R]'
-    14.0f, // '[Z]'
-    14.0f, // '[C-Up]'
-    14.0f, // '[C-Down]'
-    14.0f, // '[C-Left]'
-    14.0f, // '[C-Right]'
-    14.0f, // '▼'
-    14.0f, // '[Control-Pad]'
-    14.0f, // '[D-Pad]'
-    14.0f, // ?
-    14.0f, // ?
-    14.0f, // ?
-    14.0f, // ?
-};
-
-s32 sLowercaseOffset = 0x3D;
-s32 sNumberOffset = 0x30;
-s32 sButtonOffset = -0x12;
-
-#define LOWERCASE_OFFSET 0x3D
-#define NUMBER_OFFSET 0x30
-#define BUTTON_OFFSET -0x12
-#define CHAR_KERNING 0.92f
-#define RESTING_DETERMINE_CHAROFFSET(v) ((v == '-') ? sButtonOffset : ((v >= '0' && v <= '9') ? sNumberOffset : (((v >= 'a' && v <= 'z') || v == ' ') ? sLowercaseOffset : 0x37)))
-#define CHARNULL ']'
-#define SAVEREST_LINESPACE 15
 #define SAVEREST_GETR(i) (this->selection == i ? 255 : 255)
 #define SAVEREST_GETG(i) (this->selection == i ? 255 : 255)
 #define SAVEREST_GETB(i) (this->selection == i ? 0 : 255)
+#define CHARNULL '@'
+#define SAVEREST_LINESPACE 15
 
-void SaveResting_DrawString(PlayState* play, Gfx** gfxP, char* text, u16 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale) {
-    Gfx* gfx = *gfxP;
-
-    Font* font = &play->msgCtx.font;
-    u16 textPos = x;
-    u16 codePointIndex = 0;
-
-    gDPPipeSync(gfx++);
-    gDPSetCombineLERP(gfx++, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0);
-    gDPSetPrimColor(gfx++, 0, 0, r, g, b, a);
-
-    for(s16 i = (rightJustified ? textLength : 0); (rightJustified ? (i >= 0) : (i < textLength)); (rightJustified ? i-- : i++)) {
-        if(text[i] == CHARNULL || text[i] == '\0') continue;
-        if(text[i] == ' ') {
-            u16 diff = (u16)(sFontWidthsParameter[0] * (CHAR_KERNING * (2-scale)));
-            textPos = (rightJustified ? (textPos - diff) : (textPos + diff));
-            continue;
-
-        }
-
-        Font_LoadChar(font, text[i] - ' ', codePointIndex);
-        codePointIndex = codePointIndex + FONT_CHAR_TEX_SIZE;
-
-        //osSyncPrintf("%c", text[i]);
-
-        Interface_DrawCharTexture(&gfx, font->fontBuf + (text[i] - RESTING_DETERMINE_CHAROFFSET(text[i])) * FONT_CHAR_TEX_SIZE, textPos, y, scale);
-
-        u16 diff = (u16)(sFontWidthsParameter[text[(rightJustified ? MAX(i-1, 0) : i)] - ' '] * (CHAR_KERNING * (2-scale)));
-        textPos = (rightJustified ? (textPos - diff) : (textPos + diff));
-
-    }
-
-    //osSyncPrintf("\n");
-
-    *gfxP = gfx;
-
-}
-
-void SaveResting_DrawStringShadowed(PlayState* play, Gfx** gfx, char* text, u16 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale) {
-    SaveResting_DrawString(play, gfx, text, textLength, x+1, y+1, 0, 0, 0, a, rightJustified, scale);
-    SaveResting_DrawString(play, gfx, text, textLength, x, y, r, g, b, a, rightJustified, scale);
+u16 SaveResting_DrawStringShadowed(PlayState* play, Gfx** gfx, char* text, u16 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale) {
+    return Message_DrawString(&play->msgCtx.font, gfx, text, textLength, x, y, r, g, b, a, rightJustified, scale, true);
 
 }
 
 void SaveResting_DrawHelp(PlayState* play, Gfx** gfx) {
-    char helpText[] = "Control Pad - Navigate and Assign Points";
-    SaveResting_DrawStringShadowed(play, gfx, helpText, 40, 20, 90 + (SAVEREST_LINESPACE*7.6), 255, 255, 255, 255, false, 1.2f);
-
-    char helpText2[] = "A - Select B - Back";
-    SaveResting_DrawStringShadowed(play, gfx, helpText2, 19, 20, 90 + (SAVEREST_LINESPACE*8.6), 255, 255, 255, 255, false, 1.2f);
+    char helpText[] = "> or < - Navigate and Assign Points^| - Select + - Back";
+    SaveResting_DrawStringShadowed(play, gfx, helpText, 56, 20, 90 + (SAVEREST_LINESPACE*7.6), 255, 255, 255, 255, false, 1.2f);
 
 }
+
+/*void SaveResting_DrawStatDescription(PlayState* play, Gfx** gfx, SaveRestingStat stat) {
+    u16 textY = 65;
+
+    textY = SaveResting_DrawStringShadowed(play, gfx, stat.description, stat.descriptionLength, 300, textY, 255, 255, 255, 255, true, 1.2f);
+    textY += (SAVEREST_LINESPACE * 1.2);
+
+    SaveResting_DrawStringShadowed(play, gfx, stat.lore, stat.loreLength, 300, textY, 198, 0, 40, 255, true, 1.2f);
+
+}*/
 
 u8 Interface_SaveResting_GetRWithStat(s8 selection, s8 i, u8 wantedStat, u8 stat) {
     return ((selection == i || wantedStat > stat) ? 255 : 255);
@@ -5446,11 +5412,41 @@ void SaveResting_IntIntoArr(char* arr, s16* num) {
 
 }
 
-// FUCK FUTURE-PROOFING. FUCK RECURSION. FUCK ITERATION. FUCK FLOATING POINTS. SPEEEEEEEEEEEED
 u8 Interface_SaveResting_DetermineTextLength(u16 x) {
     if(x < 10) return 1;
     if(x < 100) return 2;
     return 3;
+
+}
+
+static s16 skipAlpha = 0;
+
+void Interface_DrawCutsceneSkip(PlayState* play) {
+    if(!play->csCtx.wantSkip) Math_StepToS(&skipAlpha, 0, 75);
+    else Math_StepToS(&skipAlpha, 255, 50);
+
+    if(skipAlpha <= 0) return;
+
+    Gfx* gfx;
+
+    OPEN_DISPS_AUTO(play);
+
+    gfx = POLY_OPA_DISP + 1;
+    gSPDisplayList(OVERLAY_DISP++, gfx);
+
+    Gfx_SetupDL_39Ptr(&gfx);
+
+    gDPSetAlphaCompare(gfx++, G_AC_NONE);
+    gDPSetCombineMode(gfx++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+
+    char skipText[] = "` Skip";
+    Message_DrawString(&play->msgCtx.font, &gfx, skipText, 6, 300, 20, 255, 255, 255, skipAlpha, true, 1.0f, true);
+
+    gSPEndDisplayList(gfx++);
+    gSPBranchList(POLY_OPA_DISP, gfx);
+    POLY_OPA_DISP = gfx;
+
+    CLOSE_DISPS_AUTO(play);
 
 }
 
@@ -5462,7 +5458,7 @@ void Interface_SaveResting_Draw(PlayState* play) {
 
     //osSyncPrintf("SaveResting_Draw has been called. ADDR:%x", &this);
 
-    Interface_SaveResting_DrawDebug(play, gfxCtx);
+    //Interface_SaveResting_DrawDebug(play, gfxCtx);
 
     GfxPrint printer;
     Gfx* gfx;
@@ -5498,12 +5494,27 @@ void Interface_SaveResting_Draw(PlayState* play) {
 
             break;
         case REST_STATE_MENU:
+            char levelText[] = "Level";
+            SaveResting_DrawStringShadowed(play, &gfx, levelText, 5, 20, textY - (SAVEREST_LINESPACE*3), 255, 255, 255, 255, false, 1);
+
+            char level[] = {CHARNULL, CHARNULL, CHARNULL};
+            sprintf(level, "%d", stats->level);
+            SaveResting_DrawStringShadowed(play, &gfx, level, Interface_SaveResting_DetermineTextLength(stats->level), 130, textY - (SAVEREST_LINESPACE*3), 255, 255, 255, 255, true, 1);
+
+            char xpText[] = "XP";
+            SaveResting_DrawStringShadowed(play, &gfx, xpText, 2, 20, textY - (SAVEREST_LINESPACE*2), 255, 255, 255, 255, false, 1);
+
+            char xp[7] = {CHARNULL, CHARNULL, CHARNULL, CHARNULL, CHARNULL, CHARNULL};
+            u8 xpNeeded = (u16)F32_LERP(30, 500, (f32)stats->level * 0.005f);
+            sprintf(xp, "%d/%d", stats->xp, xpNeeded);
+            SaveResting_DrawStringShadowed(play, &gfx, xp, 1 + Interface_SaveResting_DetermineTextLength(stats->xp) + Interface_SaveResting_DetermineTextLength(xpNeeded), 130, textY - (SAVEREST_LINESPACE*2), 255, 255, 255, 255, true, 1);
+
             char pointsText[] = "Points";
             SaveResting_DrawStringShadowed(play, &gfx, pointsText, 6, 20, textY - SAVEREST_LINESPACE, 255, 255, 255, 255, false, 1);
 
             char pointsStat[] = {CHARNULL, CHARNULL, CHARNULL};
             sprintf(pointsStat, "%d", wantedStats.points);
-            SaveResting_DrawStringShadowed(play, &gfx, pointsStat, 3, 130, textY - SAVEREST_LINESPACE, 255, 255, 255, 255, true, 1);
+            SaveResting_DrawStringShadowed(play, &gfx, pointsStat, Interface_SaveResting_DetermineTextLength(wantedStats.points), 130, textY - SAVEREST_LINESPACE, 255, 255, 255, 255, true, 1);
 
             char strengthText[] = "Strength";
             SaveResting_DrawStringShadowed(play, &gfx, strengthText, 8, 20, textY, SAVEREST_GETR(0), SAVEREST_GETG(0), SAVEREST_GETB(0), 255, false, 1);
@@ -5539,6 +5550,25 @@ void Interface_SaveResting_Draw(PlayState* play) {
             SaveResting_DrawStringShadowed(play, &gfx, backText, 4, 20, textY + (SAVEREST_LINESPACE*5.5), SAVEREST_GETR(5), SAVEREST_GETG(5), SAVEREST_GETB(5), 255, false, 1);
 
             SaveResting_DrawHelp(play, &gfx);
+
+            /*if(this->selection < 4) {
+                SaveRestingStat stat = this->strengthStatDescription;
+                switch(this->selection) {
+                    case 1:
+                        stat = this->intelligenceStatDescription;
+                        break;
+                    case 2:
+                        stat = this->enduranceStatDescription;
+                        break;
+                    case 3:
+                        stat = this->luckStatDescription;
+                        break;
+                    
+                }
+
+                SaveResting_DrawStatDescription(play, &gfx, stat);
+
+            };*/
 
             break;
         default:
@@ -5585,9 +5615,6 @@ void Interface_SaveResting_DrawDebug(PlayState* play, GraphicsContext* gfxCtx) {
 
     //GfxPrint_SetPos(&printer, 1, 4);
     //GfxPrint_Printf(&printer, "STATE: %i", this->state);
-
-    //GfxPrint_SetPos(&printer, 1, 4);
-    //GfxPrint_Printf(&printer, "sButtonOffset: %x", sButtonOffset);
 
     //GfxPrint_SetPos(&printer, 1, 4);
     //GfxPrint_Printf(&printer, "sButtonOffset: %x", sButtonOffset);
@@ -5685,10 +5712,6 @@ void Interface_SaveResting_TakeInput(PlayState* play) {
     u8 state = this->state;
 
     if(!REST_ISRESTING(state)) return;
-
-    //if(CHECK_BTN_ALL(input->press.button, BTN_DLEFT)) sButtonOffset--;
-
-    //if(CHECK_BTN_ALL(input->press.button, BTN_DRIGHT)) sButtonOffset++;
 
     if(input->rel.stick_y < 30 && input->rel.stick_y > -30 && input->rel.stick_x < 30 && input->rel.stick_x > -30)
         Interface_SaveResting_CursorDebounce = false;

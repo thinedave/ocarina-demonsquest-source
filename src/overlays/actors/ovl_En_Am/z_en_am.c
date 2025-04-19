@@ -208,6 +208,8 @@ void EnAm_Init(Actor* thisx, PlayState* play) {
     s32 pad;
     EnAm* this = (EnAm*)thisx;
 
+    this->dyna.actor.xpValue = 30;
+
     Actor_ProcessInitChain(&this->dyna.actor, sInitChain);
     ActorShape_Init(&this->dyna.actor.shape, 0.0f, ActorShadow_DrawCircle, 48.0f);
     SkelAnime_Init(play, &this->skelAnime, &gArmosSkel, &gArmosRicochetAnim, this->jointTable, this->morphTable, 14);

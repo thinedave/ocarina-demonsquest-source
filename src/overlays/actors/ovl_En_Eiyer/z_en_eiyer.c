@@ -119,6 +119,8 @@ void EnEiyer_Init(Actor* thisx, PlayState* play) {
     EnEiyer* this = (EnEiyer*)thisx;
     s32 pad;
 
+    this->actor.xpValue = 30;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     ActorShape_Init(&this->actor.shape, 600.0f, ActorShadow_DrawCircle, 65.0f);
     SkelAnime_Init(play, &this->skelanime, &gStingerSkel, &gStingerIdleAnim, this->jointTable, this->morphTable, 19);

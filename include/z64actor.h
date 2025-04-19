@@ -84,6 +84,7 @@ typedef struct {
  */
 #define ACTOROVL_ALLOC_PERSISTENT (1 << 1)
 
+
 typedef struct {
     /* 0x00 */ uintptr_t vromStart;
     /* 0x04 */ uintptr_t vromEnd;
@@ -251,7 +252,7 @@ typedef struct Actor {
     /* 0x130 */ ActorFunc update; // Update Routine. Called by `Actor_UpdateAll`
     /* 0x134 */ ActorFunc draw; // Draw Routine. Called by `Actor_Draw`
     /* 0x138 */ ActorOverlay* overlayEntry; // Pointer to the overlay table entry for this actor
-    /* 0x13C */ char dbgPad[0x10]; // Padding that only exists in the debug rom
+    u16 xpValue;
 } Actor; // size = 0x14C
 
 typedef enum {

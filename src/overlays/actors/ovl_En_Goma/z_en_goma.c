@@ -108,6 +108,8 @@ void EnGoma_Init(Actor* thisx, PlayState* play) {
     EnGoma* this = (EnGoma*)thisx;
     s16 params;
 
+    this->actor.xpValue = 25;
+
     this->eggTimer = Rand_ZeroOne() * 200.0f;
     Actor_ProcessInitChain(&this->actor, sInitChain);
     Actor_SetScale(&this->actor, 0.01f);
@@ -321,7 +323,7 @@ void EnGoma_SetupHurt(EnGoma* this, PlayState* play) {
                      Animation_GetLastFrame(&gObjectGolDamagedAnim), ANIMMODE_ONCE, -2.0f);
     this->actionFunc = EnGoma_Hurt;
 
-    if ((s8)this->actor.colChkInfo.health <= 0) {
+    if ((s16)this->actor.colChkInfo.health <= 0) {
         this->actionTimer = 5;
         Enemy_StartFinishingBlow(play, &this->actor);
     } else {
@@ -345,7 +347,7 @@ void EnGoma_Hurt(EnGoma* this, PlayState* play) {
     }
 
     if (this->actionTimer == 0) {
-        if ((s8)this->actor.colChkInfo.health <= 0) {
+        if ((s16)this->actor.colChkInfo.health <= 0) {
             EnGoma_SetupDie(this);
         } else {
             EnGoma_SetupFlee(this);
@@ -619,7 +621,7 @@ void EnGoma_UpdateHit(EnGoma* this, PlayState* play) {
             this->actor.velocity.y = 0.0f;
         }
 
-        if ((this->colCyl2.base.acFlags & AC_HIT) && (s8)this->actor.colChkInfo.health > 0) {
+        if ((this->colCyl2.base.acFlags & AC_HIT) && (s16)this->actor.colChkInfo.health > 0) {
             acHitInfo = this->colCyl2.info.acHitInfo;
             this->colCyl2.base.acFlags &= ~AC_HIT;
 

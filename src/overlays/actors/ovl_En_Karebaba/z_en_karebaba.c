@@ -81,7 +81,7 @@ static ColliderCylinderInit sHeadColliderInit = {
     { 4, 25, 0, { 0, 0, 0 } },
 };
 
-static CollisionCheckInfoInit sColCheckInfoInit = { 1, 15, 80, MASS_HEAVY };
+static CollisionCheckInfoInit sColCheckInfoInit = { 10, 15, 80, MASS_HEAVY };
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_F32(targetArrowOffset, 2500, ICHAIN_CONTINUE),
@@ -91,6 +91,8 @@ static InitChainEntry sInitChain[] = {
 
 void EnKarebaba_Init(Actor* thisx, PlayState* play) {
     EnKarebaba* this = (EnKarebaba*)thisx;
+
+    this->actor.xpValue = 10;
 
     Actor_ProcessInitChain(&this->actor, sInitChain);
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 22.0f);

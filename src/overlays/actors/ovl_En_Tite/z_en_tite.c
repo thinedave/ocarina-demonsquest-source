@@ -176,6 +176,8 @@ void EnTite_SetupAction(EnTite* this, EnTiteActionFunc actionFunc) {
 void EnTite_Init(Actor* thisx, PlayState* play) {
     EnTite* this = (EnTite*)thisx;
 
+    this->actor.xpValue = 30;
+
     Actor_ProcessInitChain(thisx, sInitChain);
     thisx->targetMode = 3;
     Actor_SetScale(thisx, 0.01f);

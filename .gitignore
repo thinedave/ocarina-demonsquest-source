@@ -65,4 +65,7 @@ assets/textures/
 # Per-user configuration
 .python-version
 
-*:Zone.Identifier
+*Zone.Identifier
+*.wad
+
+assets_mod_scenemod/

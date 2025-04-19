@@ -86,6 +86,16 @@ typedef enum {
 
 } SaveRestingState;
 
+/*typedef struct SaveRestingStat {
+    char name[13];
+    u16 nameLength;
+    char description[163];
+    u16 descriptionLength;
+    char lore[93];
+    u16 loreLength;
+
+} SaveRestingStat;*/
+
 typedef struct {
     s16 alpha;
     s16 targetAlpha;
@@ -94,6 +104,10 @@ typedef struct {
     SaveRestingState state;
     s8 selection;
     SavePlayerLevels wantedLevels;
+    /*SaveRestingStat strengthStatDescription;
+    SaveRestingStat intelligenceStatDescription;
+    SaveRestingStat enduranceStatDescription;
+    SaveRestingStat luckStatDescription;*/
 
 } SaveRestingContext;
 
@@ -173,13 +187,16 @@ typedef struct {
         /* 0x026D */ u8    all;        // "another"; enables all item restrictions
     }                   restrictions;
     SaveRestingContext saveRestingCtx;
+    u8 criticalHealthTimer;
+    u8 criticalHealthCount;
+    u8 staminaAlpha;
 } InterfaceContext; // size = 0x270
 
 /**
  * Button HUD Positions (Upper Left)
  */
 #define A_BUTTON_X 186
-#define A_BUTTON_Y 9
+#define A_BUTTON_Y 17
 
 #define B_BUTTON_X 160
 #define B_BUTTON_Y 17

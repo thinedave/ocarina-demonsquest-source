@@ -63,7 +63,7 @@ static ColliderJntSphInit sJntSphInit = {
     sJntSphElementsInit,
 };
 
-static CollisionCheckInfoInit2 D_80A1FB94 = { 8, 2, 25, 25, MASS_IMMOVABLE };
+static CollisionCheckInfoInit2 D_80A1FB94 = { 80, 2, 25, 25, MASS_IMMOVABLE };
 
 typedef enum {
     /* 0 */ ENFW_ANIM_0,

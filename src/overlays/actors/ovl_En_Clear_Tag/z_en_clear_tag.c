@@ -355,7 +355,7 @@ void EnClearTag_Update(Actor* thisx, PlayState* play2) {
 
                     Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_THUNDER_GND);
                     this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-10, 0);
-                    if ((s8)this->actor.colChkInfo.health <= 0) {
+                    if ((s16)this->actor.colChkInfo.health <= 0) {
                         this->state = CLEAR_TAG_STATE_CRASHING;
                         this->actor.velocity.y = 0.0f;
                         goto state_crashing;

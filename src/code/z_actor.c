@@ -768,6 +768,13 @@ void Actor_Kill(Actor* actor) {
     actor->draw = NULL;
     actor->update = NULL;
     actor->flags &= ~ACTOR_FLAG_0;
+
+    if(actor->category == ACTORCAT_ENEMY && actor->xpValue > 0) {
+        PlayState* play = Effect_GetPlayState();
+        if(actor->colChkInfo.health == 0) Player_SetupXP(play, actor, GET_PLAYER(play));
+
+    }
+
 }
 
 void Actor_SetWorldToHome(Actor* actor) {
@@ -815,6 +822,7 @@ void Actor_Init(Actor* actor, PlayState* play) {
     actor->uncullZoneForward = 1000.0f;
     actor->uncullZoneScale = 350.0f;
     actor->uncullZoneDownward = 700.0f;
+    actor->xpValue = 0.0f;
     CollisionCheck_InitInfo(&actor->colChkInfo);
     actor->floorBgId = BGCHECK_SCENE;
     ActorShape_Init(&actor->shape, 0.0f, NULL, 0.0f);
@@ -3163,6 +3171,11 @@ Actor* Actor_Find(ActorContext* actorCtx, s32 actorId, s32 actorCategory) {
     return NULL;
 }
 
+bool Actor_HasCategory(ActorContext* actorCtx, s32 actorCategory) {
+    return actorCtx->actorLists[actorCategory].head != NULL;
+
+}
+
 /**
  * Play the death sound effect and flash the screen white for 4 frames.
  * While the screen flashes, the game freezes.
@@ -4289,11 +4302,30 @@ u8 func_800355E4(PlayState* play, Collider* collider) {
     }
 }
 
+void Player_SetupXP(PlayState* play, Actor* actor, Player* this) {
+    gSaveContext.save.info.playerData.levels.xp += actor->xpValue;
+
+    u16 xpNeeded = (u16)F32_LERP(30, 500, (f32)gSaveContext.save.info.playerData.levels.level * 0.005f);
+    if(gSaveContext.save.info.playerData.levels.xp >= xpNeeded) {
+        gSaveContext.save.info.playerData.levels.level++;
+        gSaveContext.save.info.playerData.levels.points += 5;
+        gSaveContext.save.info.playerData.levels.xp = 0;
+        
+        Audio_PlaySfxGeneral(NA_SE_SY_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+                                     (s8*)10);
+
+    }
+
+    Actor_Spawn(&play->actorCtx, play, ACTOR_XPDROP, actor->world.pos.x, actor->world.pos.y,
+                    actor->world.pos.z, 0, 0, 0, 0);
+
+}
+
 u16 Actor_ApplyDamage(Actor* actor) {
     if (actor->colChkInfo.damage >= actor->colChkInfo.health) {
         actor->colChkInfo.health = 0;
     } else {
-        actor->colChkInfo.health = MAX(actor->colChkInfo.damage-10, 0);
+        actor->colChkInfo.health = MAX(actor->colChkInfo.health - actor->colChkInfo.damage, 0);
     }
 
     return actor->colChkInfo.health;

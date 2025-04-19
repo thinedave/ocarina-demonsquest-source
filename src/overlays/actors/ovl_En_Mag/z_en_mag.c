@@ -92,8 +92,6 @@ void EnMag_Init(Actor* thisx, PlayState* play) {
         gSaveContext.transWipeSpeed = 255;
     }
 
-    Font_LoadOrderedFont(&this->font);
-
     this->unk_E316 = 0;
     this->unk_E318 = 0;
     this->unk_E31C = 0;
@@ -394,9 +392,7 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
     static s16 textAlpha = 0;
     static s16 textFadeDirection = 0;
     static s16 textFadeTimer = 0;
-    static u8 noControllerFontIndices[] = {
-        0x17, 0x18, 0x0C, 0x18, 0x17, 0x1D, 0x1B, 0x18, 0x15, 0x15, 0x0E, 0x1B,
-    };
+    static char noControllerFontIndices[] = "NO CONTROLLER";
     /* vanilla
     static u8 pressStartFontIndices[] = {
         0x19, 0x1B, 0x0E, 0x1C, 0x1C, 0x1C, 0x1D, 0x0A, 0x1B, 0x1D,
@@ -411,7 +407,7 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
         gTitleEffectMask20Tex, gTitleEffectMask21Tex, gTitleEffectMask22Tex,
     };
     EnMag* this = (EnMag*)thisx;
-    Font* font = &this->font;
+    Font* font = &play->msgCtx.font;
     s32 pad;
     Gfx* gfx = *gfxP;
     u16 i, j, k;
@@ -501,13 +497,20 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
         gSPTextureRectangle(gfx++, 78 << 2, 198 << 2, 238 << 2, 214 << 2, G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
         */
 
-       EnMag_DrawTextureIA8(&gfx, gTitleCopyright19982003Tex, 160, 16, 13, 199, 160, 16, 1024, 1024);
+       Message_DrawString(&play->msgCtx.font, &gfx, "1998-2003 Nintendo", 18, 20, 186, 255, 255, 255, this->copyrightAlpha, false, 1.3f, true);
 
-       EnMag_DrawTextureIA8(&gfx, gTitleCreditDave2022Tex, 160, 16, 158, 184, 160, 16, 1024, 1024);
+       Message_DrawString(&play->msgCtx.font, &gfx, "thinedave, aegiker", 18, 297, 186, 255, 255, 255, this->copyrightAlpha, true, 1.3f, true);
+       Message_DrawString(&play->msgCtx.font, &gfx, "hylianmodding.com", 17, 292, 198, 255, 255, 255, this->copyrightAlpha, true, 1.3f, true);
+       Message_DrawString(&play->msgCtx.font, &gfx, "zelda64.dev", 11, 294, 210, 255, 255, 255, this->copyrightAlpha, true, 1.3f, true);
+       Message_DrawString(&play->msgCtx.font, &gfx, "2022-2024", 11, 294, 222, 255, 255, 255, this->copyrightAlpha, true, 1.3f, true);
 
-       EnMag_DrawTextureIA8(&gfx, gTitleCreditHylianModdingTex, 160, 16, 158, 200, 160, 16, 1024, 1024);
+       //EnMag_DrawTextureIA8(&gfx, gTitleCopyright19982003Tex, 160, 16, 13, 199, 160, 16, 1024, 1024);
 
-       EnMag_DrawTextureIA8(&gfx, gTitleCreditDecompTex, 160, 16, 158, 213, 160, 16, 1024, 1024);
+       //EnMag_DrawTextureIA8(&gfx, gTitleCreditDave2022Tex, 160, 16, 158, 184, 160, 16, 1024, 1024);
+
+       //EnMag_DrawTextureIA8(&gfx, gTitleCreditHylianModdingTex, 160, 16, 158, 200, 160, 16, 1024, 1024);
+
+       //EnMag_DrawTextureIA8(&gfx, gTitleCreditDecompTex, 160, 16, 158, 213, 160, 16, 1024, 1024);
 
     }
 
@@ -525,8 +528,11 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
         gDPSetPrimColor(gfx++, 0, 0, 0, 0, 0, textAlpha);
 
         rectLeft = VREG(19) + 1;
-        for (i = 0; i < ARRAY_COUNT(noControllerFontIndices); i++) {
-            EnMag_DrawCharTexture(&gfx, font->fontBuf + noControllerFontIndices[i] * FONT_CHAR_TEX_SIZE, rectLeft,
+        for (i = 0; i < 13; i++) {
+            char cha = noControllerFontIndices[i] - ' ';
+            u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
+            EnMag_DrawCharTexture(&gfx, &font->charTexBuf[texID], rectLeft,
                                   YREG(10) + 172);
             rectLeft += VREG(21);
             if (i == 1) {
@@ -539,8 +545,11 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
         gDPSetPrimColor(gfx++, 0, 0, 100, 255, 255, textAlpha);
 
         rectLeft = VREG(19);
-        for (i = 0; i < ARRAY_COUNT(noControllerFontIndices); i++) {
-            EnMag_DrawCharTexture(&gfx, font->fontBuf + noControllerFontIndices[i] * FONT_CHAR_TEX_SIZE, rectLeft,
+        for (i = 0; i < 13; i++) {
+            char cha = noControllerFontIndices[i] - ' ';
+            u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
+            EnMag_DrawCharTexture(&gfx, &font->charTexBuf[texID], rectLeft,
                                   YREG(10) + 171);
             rectLeft += VREG(21);
             if (i == 1) {
@@ -554,7 +563,7 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
             textAlpha = 255;
         }
 
-        textX = 160 - (7*(ARRAY_COUNT(pressStartFontIndices)*.5));
+        textX = 160 - (7*(16*.5));
 
         // Text Shadow
         gDPPipeSync(gfx++);
@@ -564,8 +573,11 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
 
         // rectLeft = YREG(7) + 1; // vanilla
         rectLeft = textX + 1;
-        for (i = 0; i < ARRAY_COUNT(pressStartFontIndices); i++) {
-            EnMag_DrawCharTexture(&gfx, font->fontBuf + (pressStartFontIndices[i] - 0x37) * FONT_CHAR_TEX_SIZE, rectLeft,
+        for (i = 0; i < 16; i++) {
+            char cha = pressStartFontIndices[i] - ' ';
+            u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
+            EnMag_DrawCharTexture(&gfx, &font->charTexBuf[texID], rectLeft,
                                   YREG(10) + 168);
             rectLeft += YREG(8);
             /* vanilla
@@ -581,8 +593,11 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
 
         // rectLeft = YREG(7); // vanilla
         rectLeft = textX;
-        for (i = 0; i < ARRAY_COUNT(pressStartFontIndices); i++) {
-            EnMag_DrawCharTexture(&gfx, font->fontBuf + (pressStartFontIndices[i] - 0x37) * FONT_CHAR_TEX_SIZE, rectLeft,
+        for (i = 0; i < 16; i++) {
+            char cha = pressStartFontIndices[i] - ' ';
+            u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
+            EnMag_DrawCharTexture(&gfx, &font->charTexBuf[texID], rectLeft,
                                   YREG(10) + 167);
             rectLeft += YREG(8);
             /* vanilla

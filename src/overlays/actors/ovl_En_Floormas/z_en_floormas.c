@@ -125,6 +125,8 @@ void EnFloormas_Init(Actor* thisx, PlayState* play2) {
     s32 invisble;
     s32 pad;
 
+    this->actor.xpValue = 65;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 50.0f);
     SkelAnime_InitFlex(play, &this->skelAnime, &gWallmasterSkel, &gWallmasterWaitAnim, this->jointTable,

@@ -129,6 +129,8 @@ void EnBw_SetupAction(EnBw* this, EnBwActionFunc actionFunc) {
 void EnBw_Init(Actor* thisx, PlayState* play) {
     EnBw* this = (EnBw*)thisx;
 
+    this->actor.xpValue = 70;
+
     Actor_SetScale(&this->actor, 0.012999999f);
     this->actor.naviEnemyId = NAVI_ENEMY_TORCH_SLUG;
     this->actor.gravity = -2.0f;

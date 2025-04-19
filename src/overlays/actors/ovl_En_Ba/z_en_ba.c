@@ -94,6 +94,8 @@ void EnBa_Init(Actor* thisx, PlayState* play) {
     s32 pad;
     s16 i;
 
+    this->actor.xpValue = 100;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     this->actor.world.pos.y = this->actor.home.pos.y + 100.0f;
     for (i = 13; i >= 0; i--) {

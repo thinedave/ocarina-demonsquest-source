@@ -63,10 +63,26 @@ static ColliderCylinderInit sCylinderInit = {
     { 18, 20, 0, { 0, 0, 0 } },
 };
 
-static CollisionCheckInfoInit2 sColChkInit = { 1, 2, 25, 25, 0xFF };
+static CollisionCheckInfoInit2 sColChkInit = { 10, 2, 25, 25, 0xFF };
+
+void EnDodojr_SetupEmerge(EnDodojr* this, PlayState* play) {
+    Animation_Change(&this->skelAnime, &object_dodojr_Anim_000860, 1.8f, 0.0f, Animation_GetLastFrame(&object_dodojr_Anim_000860), ANIMMODE_LOOP_INTERP, -10.0f);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_DODO_M_UP);
+    this->actor.world.pos.y -= 60.0f;
+    this->actor.flags |= ACTOR_FLAG_0;
+    this->actor.world.rot.x -= 0x4000;
+    this->actor.shape.rot.x = this->actor.world.rot.x;
+    this->dustPos = this->actor.world.pos;
+    //! @bug floorHeight is always 0 at this point, so the dust is consistently drawn at y=0
+    this->dustPos.y = this->actor.floorHeight;
+    this->actionFunc = EnDodojr_EmergeFromGround;
+
+}
 
 void EnDodojr_Init(Actor* thisx, PlayState* play) {
     EnDodojr* this = (EnDodojr*)thisx;
+
+    this->actor.xpValue = 15;
 
     ActorShape_Init(&this->actor.shape, 0.0f, NULL, 18.0f);
     SkelAnime_Init(play, &this->skelAnime, &object_dodojr_Skel_0020E0, &object_dodojr_Anim_0009D4, this->jointTable,
@@ -80,7 +96,9 @@ void EnDodojr_Init(Actor* thisx, PlayState* play) {
 
     Actor_SetScale(&this->actor, 0.02f);
 
-    this->actionFunc = EnDodojr_WaitUnderground;
+    if(this->actor.params == 0x0001) EnDodojr_SetupEmerge(this, play);
+    else this->actionFunc = EnDodojr_WaitUnderground;
+
 }
 
 void EnDodojr_Destroy(Actor* thisx, PlayState* play) {
@@ -388,7 +406,6 @@ void EnDodojr_UpdateCollider(EnDodojr* this, PlayState* play) {
 }
 
 void EnDodojr_WaitUnderground(EnDodojr* this, PlayState* play) {
-    f32 lastFrame = Animation_GetLastFrame(&object_dodojr_Anim_000860);
     Player* player = GET_PLAYER(play);
     f32 dist;
 
@@ -396,17 +413,7 @@ void EnDodojr_WaitUnderground(EnDodojr* this, PlayState* play) {
         dist = this->actor.world.pos.y - player->actor.world.pos.y;
 
         if (!(dist >= 40.0f)) {
-            Animation_Change(&this->skelAnime, &object_dodojr_Anim_000860, 1.8f, 0.0f, lastFrame, ANIMMODE_LOOP_INTERP,
-                             -10.0f);
-            Actor_PlaySfx(&this->actor, NA_SE_EN_DODO_M_UP);
-            this->actor.world.pos.y -= 60.0f;
-            this->actor.flags |= ACTOR_FLAG_0;
-            this->actor.world.rot.x -= 0x4000;
-            this->actor.shape.rot.x = this->actor.world.rot.x;
-            this->dustPos = this->actor.world.pos;
-            //! @bug floorHeight is always 0 at this point, so the dust is consistently drawn at y=0
-            this->dustPos.y = this->actor.floorHeight;
-            this->actionFunc = EnDodojr_EmergeFromGround;
+            EnDodojr_SetupEmerge(this, play);
         }
     }
 }

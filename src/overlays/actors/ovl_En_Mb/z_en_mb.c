@@ -261,6 +261,8 @@ void EnMb_Init(Actor* thisx, PlayState* play) {
     Player* player = GET_PLAYER(play);
     s16 relYawFromPlayer;
 
+    this->actor.xpValue = 75;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 46.0f);
     this->actor.colChkInfo.mass = MASS_IMMOVABLE;

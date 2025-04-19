@@ -169,7 +169,7 @@ void Graph_TaskSet00(GraphicsContext* gfxCtx) {
 
     if (msg == (OSMesg)666) {
         osSyncPrintf(VT_FGCOL(RED));
-        osSyncPrintf("RCPが帰ってきませんでした。"); // "RCP did not return."
+        osSyncPrintf("RCP did not return."); // "RCP did not return."
         osSyncPrintf(VT_RST);
 
         LogUtils_LogHexDump((void*)PHYS_TO_K1(SP_BASE_REG), 0x20);
@@ -262,6 +262,17 @@ void Graph_TaskSet00(GraphicsContext* gfxCtx) {
     Sched_Notify(&gScheduler);
 }
 
+static u32 sRSPReadNum[4];
+
+s32 Graph_IsHLE() {
+    s32 i;
+    for (i = 0; i < ARRAY_COUNT(sRSPReadNum); ++i) {
+        if (sRSPReadNum[i])
+            return false;
+    }
+    return true;
+}
+
 void Graph_Update(GraphicsContext* gfxCtx, GameState* gameState) {
     u32 problem;
 
@@ -269,6 +280,8 @@ void Graph_Update(GraphicsContext* gfxCtx, GameState* gameState) {
     Graph_InitTHGA(gfxCtx);
 
     OPEN_DISPS(gfxCtx, "../graph.c", 966);
+
+    gSPDmaWrite(POLY_OPA_DISP++, SP_DMEM_START + 0x310, &sRSPReadNum, sizeof(sRSPReadNum));
 
     gDPNoOpString(WORK_DISP++, "WORK_DISP 開始", 0);
     gDPNoOpString(POLY_OPA_DISP++, "POLY_OPA_DISP 開始", 0);
@@ -318,6 +331,7 @@ void Graph_Update(GraphicsContext* gfxCtx, GameState* gameState) {
         }
 
         if (R_UCODE_DISAS_TOGGLE < 0) {
+            osSyncPrintf("Well shit...\n");
             LogUtils_LogHexDump((void*)PHYS_TO_K1(SP_BASE_REG), 0x20);
             LogUtils_LogHexDump((void*)PHYS_TO_K1(DPC_BASE_REG), 0x20);
         }

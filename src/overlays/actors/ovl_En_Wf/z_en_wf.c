@@ -212,6 +212,8 @@ void EnWf_Init(Actor* thisx, PlayState* play) {
     s32 pad;
     EnWf* this = (EnWf*)thisx;
 
+    this->actor.xpValue = 70;
+
     Actor_ProcessInitChain(thisx, sInitChain);
     thisx->colChkInfo.damageTable = &sDamageTable;
     ActorShape_Init(&thisx->shape, 0.0f, ActorShadow_DrawCircle, 0.0f);

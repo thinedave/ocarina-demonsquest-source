@@ -190,7 +190,7 @@ static ColliderJntSphInit sJntSphInit = {
     sJntSphElementsInit,
 };
 
-static CollisionCheckInfoInit2 sColChkInit = { 24, 2, 25, 25, MASS_IMMOVABLE };
+static CollisionCheckInfoInit2 sColChkInit = { 240, 2, 25, 25, MASS_IMMOVABLE };
 
 typedef enum {
     /* 0 */ ENFD_ANIM_0,
@@ -449,6 +449,8 @@ void EnFd_Fade(EnFd* this, PlayState* play) {
 
 void EnFd_Init(Actor* thisx, PlayState* play) {
     EnFd* this = (EnFd*)thisx;
+
+    this->actor.xpValue = 200;
 
     SkelAnime_InitFlex(play, &this->skelAnime, &gFlareDancerSkel, NULL, this->jointTable, this->morphTable, 27);
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 32.0f);
@@ -773,11 +775,11 @@ void EnFd_Draw(Actor* thisx, PlayState* play) {
     if (this->actionFunc != EnFd_Reappear && !(this->fadeAlpha < 0.9f)) {
         if (1) {}
         Gfx_SetupDL_25Xlu(play->state.gfxCtx);
-        clampedHealth = CLAMP(thisx->colChkInfo.health - 10, 0, 23);
-        gDPSetPrimColor(POLY_XLU_DISP++, 0, 128, primColors[clampedHealth / 8].r, primColors[clampedHealth / 8].g,
-                        primColors[clampedHealth / 8].b, (u8)this->fadeAlpha);
-        gDPSetEnvColor(POLY_XLU_DISP++, envColors[clampedHealth / 8].r, envColors[clampedHealth / 8].g,
-                       envColors[clampedHealth / 8].b, (u8)this->fadeAlpha);
+        clampedHealth = CLAMP(thisx->colChkInfo.health - 10, 0, 230);
+        gDPSetPrimColor(POLY_XLU_DISP++, 0, 128, primColors[clampedHealth / 80].r, primColors[clampedHealth / 80].g,
+                        primColors[clampedHealth / 80].b, (u8)this->fadeAlpha);
+        gDPSetEnvColor(POLY_XLU_DISP++, envColors[clampedHealth / 80].r, envColors[clampedHealth / 80].g,
+                       envColors[clampedHealth / 80].b, (u8)this->fadeAlpha);
         gSPSegment(POLY_XLU_DISP++, 0x8,
                    Gfx_TwoTexScroll(play->state.gfxCtx, G_TX_RENDERTILE, 0, 0, 0x20, 0x40, 1, 0,
                                     0xFF - (u8)(frames * 6), 8, 0x40));

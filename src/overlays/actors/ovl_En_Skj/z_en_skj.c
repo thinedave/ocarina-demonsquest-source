@@ -366,6 +366,8 @@ void EnSkj_Init(Actor* thisx, PlayState* play2) {
     s32 pad;
     Player* player;
 
+    this->actor.xpValue = 60;
+
     Actor_ProcessInitChain(thisx, sInitChain);
     switch (type) {
         case 5: // Invisible on the small stump (sarias song))

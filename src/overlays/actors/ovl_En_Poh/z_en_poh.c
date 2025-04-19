@@ -186,6 +186,8 @@ void EnPoh_Init(Actor* thisx, PlayState* play) {
     EnItem00* collectible;
     EnPoh* this = (EnPoh*)thisx;
 
+    this->actor.xpValue = 30;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 30.0f);
     Collider_InitJntSph(play, &this->colliderSph);

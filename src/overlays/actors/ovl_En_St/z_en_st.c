@@ -55,7 +55,7 @@ static ColliderCylinderInit sCylinderInit = {
     { 32, 50, -24, { 0, 0, 0 } },
 };
 
-static CollisionCheckInfoInit2 sColChkInit = { 2, 0, 0, 0, MASS_IMMOVABLE };
+static CollisionCheckInfoInit2 sColChkInit = { 20, 0, 0, 0, MASS_IMMOVABLE };
 
 static ColliderCylinderInit sCylinderInit2 = {
     {
@@ -269,6 +269,43 @@ void EnSt_SetDropAnimAndVel(EnSt* this) {
     this->actor.velocity.y = -10.0f;
 }
 
+static DamageTable sDamageTable = {{
+    // 2 Used by En_St, En_Ssh
+    /* Deku nut      */ DMG_ENTRY(0, 0x1),
+    /* Deku stick    */ DMG_ENTRY(2, 0x0),
+    /* Slingshot     */ DMG_ENTRY(1, 0x0),
+    /* Explosive     */ DMG_ENTRY(2, 0x0),
+    /* Boomerang     */ DMG_ENTRY(0, 0x1),
+    /* Normal arrow  */ DMG_ENTRY(2, 0x0),
+    /* Hammer swing  */ DMG_ENTRY(2, 0x0),
+    /* Hookshot      */ DMG_ENTRY(2, 0x0),
+    /* Kokiri sword  */ DMG_ENTRY(1, 0x0),
+    /* Master sword  */ DMG_ENTRY(2, 0x0),
+    /* Giant's Knife */ DMG_ENTRY(4, 0x0),
+    /* Fire arrow    */ DMG_ENTRY(4, 0x0),
+    /* Ice arrow     */ DMG_ENTRY(4, 0x0),
+    /* Light arrow   */ DMG_ENTRY(4, 0x0),
+    /* Unk arrow 1   */ DMG_ENTRY(0, 0x0),
+    /* Unk arrow 2   */ DMG_ENTRY(0, 0x0),
+    /* Unk arrow 3   */ DMG_ENTRY(0, 0x0),
+    /* Fire magic    */ DMG_ENTRY(4, 0x0),
+    /* Ice magic     */ DMG_ENTRY(3, 0x0),
+    /* Light magic   */ DMG_ENTRY(0, 0x0),
+    /* Shield        */ DMG_ENTRY(0, 0x0),
+    /* Mirror Ray    */ DMG_ENTRY(0, 0x0),
+    /* Kokiri spin   */ DMG_ENTRY(1, 0x0),
+    /* Giant spin    */ DMG_ENTRY(2, 0x0),
+    /* Master spin   */ DMG_ENTRY(4, 0x0),
+    /* Kokiri jump   */ DMG_ENTRY(2, 0x0),
+    /* Giant jump    */ DMG_ENTRY(4, 0x0),
+    /* Master jump   */ DMG_ENTRY(8, 0x0),
+    /* Unknown 1     */ DMG_ENTRY(0, 0x0),
+    /* Unblockable   */ DMG_ENTRY(0, 0x0),
+    /* Hammer jump   */ DMG_ENTRY(0, 0x0),
+    /* Unknown 2     */ DMG_ENTRY(0, 0x0),
+
+}};
+
 /**
  * Initializes the Skulltula's 6 cylinders, and sphere collider.
  */
@@ -286,17 +323,17 @@ void EnSt_InitColliders(EnSt* this, PlayState* play) {
     }
 
     this->colCylinder[0].info.bumper.dmgFlags =
-        DMG_MAGIC_FIRE | DMG_ARROW | DMG_HOOKSHOT | DMG_HAMMER_SWING | DMG_BOOMERANG | DMG_EXPLOSIVE | DMG_DEKU_NUT;
+        DMG_MAGIC_FIRE | DMG_ARROW | DMG_HOOKSHOT | DMG_SLINGSHOT | DMG_HAMMER_SWING | DMG_BOOMERANG | DMG_EXPLOSIVE | DMG_DEKU_NUT;
     this->colCylinder[1].info.bumper.dmgFlags =
         DMG_DEFAULT &
-        ~(DMG_MAGIC_FIRE | DMG_ARROW | DMG_HOOKSHOT | DMG_HAMMER_SWING | DMG_BOOMERANG | DMG_EXPLOSIVE | DMG_DEKU_NUT) &
+        ~(DMG_MAGIC_FIRE | DMG_ARROW | DMG_HOOKSHOT | DMG_SLINGSHOT | DMG_HAMMER_SWING | DMG_BOOMERANG | DMG_EXPLOSIVE | DMG_DEKU_NUT) &
         ~(DMG_MAGIC_LIGHT | DMG_MAGIC_ICE);
     this->colCylinder[2].base.colType = COLTYPE_METAL;
     this->colCylinder[2].info.bumperFlags = BUMP_ON | BUMP_HOOKABLE | BUMP_NO_AT_INFO;
     this->colCylinder[2].info.elemType = ELEMTYPE_UNK2;
     this->colCylinder[2].info.bumper.dmgFlags =
         DMG_DEFAULT &
-        ~(DMG_MAGIC_FIRE | DMG_ARROW | DMG_HOOKSHOT | DMG_HAMMER_SWING | DMG_BOOMERANG | DMG_EXPLOSIVE | DMG_DEKU_NUT);
+        ~(DMG_MAGIC_FIRE | DMG_HAMMER_SWING | DMG_BOOMERANG | DMG_EXPLOSIVE | DMG_DEKU_NUT);
 
     CollisionCheck_SetInfo2(&this->actor.colChkInfo, DamageTable_Get(2), &sColChkInit);
 
@@ -418,7 +455,10 @@ s32 EnSt_CheckHitFrontside(EnSt* this) {
         this->colCylinder[2].base.acFlags &= ~AC_HIT;
         this->invulnerableTimer = 8;
         this->playSwayFlag = 0;
-        this->swayTimer = 60;
+        if(this->colCylinder[2].info.acHitInfo->toucher.dmgFlags & DMG_RANGED) this->rotAwayTimer = 1;
+        else this->swayTimer = 60;
+        //this->swayTimer = 60;
+        //this->rotAwayTimer = 1;
         return true;
     }
 }
@@ -563,7 +603,7 @@ s32 EnSt_DecrStunTimer(EnSt* this) {
     if (this->stunTimer == 0) {
         return 0;
     }
-    this->stunTimer--; //! @bug  no return but v0 ends up being stunTimer before decrement
+    return --this->stunTimer; //! @bug  no return but v0 ends up being stunTimer before decrement
 }
 
 /**
@@ -600,7 +640,7 @@ void EnSt_UpdateYaw(EnSt* this, PlayState* play) {
 
         if (this->actionFunc != EnSt_WaitOnGround) {
             // set the timers to turn away or turn towards the player
-            this->rotAwayTimer = 30;
+            this->rotAwayTimer = 0;
             this->rotTowardsTimer = 0;
         }
 
@@ -616,7 +656,7 @@ void EnSt_UpdateYaw(EnSt* this, PlayState* play) {
             this->rotTowardsTimer--;
             if (this->rotTowardsTimer == 0) {
                 Actor_PlaySfx(&this->actor, NA_SE_EN_STALTU_ROLL);
-                this->rotAwayTimer = 30;
+                this->rotAwayTimer = 0;
             }
             yawDir = 0x8000;
         }
@@ -634,9 +674,11 @@ void EnSt_UpdateYaw(EnSt* this, PlayState* play) {
         this->actor.shape.rot = this->actor.world.rot = rot;
 
         // Do the shaking animation.
-        if (yawDir == 0 && this->rotAwayTimer < 0xA) {
+        if(this->rotAwayTimer == 0 && this->rotTowardsTimer == 0) {
+            return;
+        } else if (yawDir == 0 && this->rotAwayTimer < 10) {
             timer = this->rotAwayTimer;
-        } else if (yawDir == 0x8000 && this->rotTowardsTimer < 0xA) {
+        } else if (yawDir == 0x8000 && this->rotTowardsTimer < 10) {
             timer = this->rotTowardsTimer;
         } else {
             return;
@@ -783,6 +825,8 @@ void EnSt_Sway(EnSt* this) {
 void EnSt_Init(Actor* thisx, PlayState* play) {
     EnSt* this = (EnSt*)thisx;
     s32 pad;
+
+    this->actor.xpValue = 30;
 
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 14.0f);
     SkelAnime_Init(play, &this->skelAnime, &object_st_Skel_005298, NULL, this->jointTable, this->morphTable, 30);
@@ -998,7 +1042,7 @@ void EnSt_Die(EnSt* this, PlayState* play) {
 
 void EnSt_StartOnCeilingOrGround(EnSt* this, PlayState* play) {
     if (!EnSt_IsCloseToGround(this)) {
-        this->rotAwayTimer = 60;
+        this->rotAwayTimer = 0;
         EnSt_SetupAction(this, EnSt_WaitOnCeiling);
         EnSt_WaitOnCeiling(this, play);
     } else {

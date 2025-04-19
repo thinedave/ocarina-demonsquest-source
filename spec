@@ -708,6 +708,12 @@ beginseg
 endseg
 
 beginseg
+    name "ovl_sfxlist"
+    include "build/src/overlays/gamestates/ovl_sfxlist/z_sfxlist.o"
+    include "build/src/overlays/gamestates/ovl_sfxlist/ovl_sfxlist_reloc.o"
+endseg
+
+beginseg
     name "ovl_select"
     include "build/src/overlays/gamestates/ovl_select/z_select.o"
     include "build/src/overlays/gamestates/ovl_select/ovl_select_reloc.o"
@@ -3505,6 +3511,30 @@ beginseg
 endseg
 
 beginseg
+    name "ovl_XPDrop"
+    include "build/src/overlays/actors/ovl_XPDrop/z_xpdrop.o"
+    include "build/src/overlays/actors/ovl_XPDrop/ovl_XPDrop_reloc.o"
+endseg
+
+beginseg
+    name "ovl_BgGanonLadder"
+    include "build/src/overlays/actors/ovl_Bg_GanonLadder/z_bg_ganonladder.o"
+    include "build/src/overlays/actors/ovl_Bg_GanonLadder/ovl_BgGanonLadder_reloc.o"
+endseg
+
+beginseg
+    name "ovl_En_Ganon_Sword"
+    include "build/src/overlays/actors/ovl_En_Ganon_Sword/z_en_ganon_sword.o"
+    include "build/src/overlays/actors/ovl_En_Ganon_Sword/ovl_En_Ganon_Sword_reloc.o"
+endseg
+
+beginseg
+    name "ovl_Notice"
+    include "build/src/overlays/actors/ovl_Notice/z_notice.o"
+    include "build/src/overlays/actors/ovl_Notice/ovl_Notice_reloc.o"
+endseg
+
+beginseg
     name "ovl_Oceff_Spot"
     include "build/src/overlays/actors/ovl_Oceff_Spot/z_oceff_spot.o"
     include "build/src/overlays/actors/ovl_Oceff_Spot/ovl_Oceff_Spot_reloc.o"
@@ -3654,6 +3684,13 @@ beginseg
     name "object_niw"
     romalign 0x1000
     include "build/assets/objects/object_niw/object_niw.o"
+    number 6
+endseg
+
+beginseg
+    name "object_notice"
+    romalign 0x1000
+    include "build/assets/objects/object_notice/object_notice.o"
     number 6
 endseg
 
@@ -4998,6 +5035,13 @@ beginseg
     name "object_ganon"
     romalign 0x1000
     include "build/assets/objects/object_ganon/object_ganon.o"
+    number 6
+endseg
+
+beginseg
+    name "object_ganon_ladder"
+    romalign 0x1000
+    include "build/assets/objects/object_ganon_ladder/object_ganon_ladder.o"
     number 6
 endseg
 
@@ -9970,20 +10014,6 @@ beginseg
 endseg
 
 beginseg
-    name "ganon_boss_scene"
-    romalign 0x1000
-    include "build/assets/scenes/dungeons/ganon_boss/ganon_boss_scene.o"
-    number 2
-endseg
-
-beginseg
-    name "ganon_boss_room_0"
-    romalign 0x1000
-    include "build/assets/scenes/dungeons/ganon_boss/ganon_boss_room_0.o"
-    number 3
-endseg
-
-beginseg
     name "jyasinboss_scene"
     romalign 0x1000
     include "build/assets/scenes/dungeons/jyasinboss/jyasinboss_scene.o"
@@ -10675,3 +10705,21 @@ beginseg
     include "build/assets/scenes/demonsquest/savetest/savetest_room_0.o"
     number 3
 endseg
+
+beginseg
+    name "ganon_boss_scene"
+    romalign 0x1000
+    include "build/./assets/scenes/dungeons/ganon_boss/ganon_boss_scene_main.o"
+    include "build/./assets/scenes/dungeons/ganon_boss/ganon_boss_scene_col.o"
+    number 2
+endseg
+
+beginseg
+    name "ganon_boss_room_0"
+    romalign 0x1000
+    include "build/./assets/scenes/dungeons/ganon_boss/ganon_boss_room_0_main.o"
+    include "build/./assets/scenes/dungeons/ganon_boss/ganon_boss_room_0_model_info.o"
+    include "build/./assets/scenes/dungeons/ganon_boss/ganon_boss_room_0_model.o"
+    number 3
+endseg
+

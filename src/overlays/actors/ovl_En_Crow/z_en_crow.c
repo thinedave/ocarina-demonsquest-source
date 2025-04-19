@@ -108,6 +108,8 @@ static Vec3f sHeadVec = { 2500.0f, 0.0f, 0.0f };
 void EnCrow_Init(Actor* thisx, PlayState* play) {
     EnCrow* this = (EnCrow*)thisx;
 
+    this->actor.xpValue = 30;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     SkelAnime_InitFlex(play, &this->skelAnime, &gGuaySkel, &gGuayFlyAnim, this->jointTable, this->morphTable, 9);
     Collider_InitJntSph(play, &this->collider);

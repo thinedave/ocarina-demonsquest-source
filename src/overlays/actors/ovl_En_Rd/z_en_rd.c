@@ -141,6 +141,8 @@ void EnRd_SetupAction(EnRd* this, EnRdActionFunc actionFunc) {
 void EnRd_Init(Actor* thisx, PlayState* play) {
     EnRd* this = (EnRd*)thisx;
 
+    this->actor.xpValue = 75;
+
     Actor_ProcessInitChain(thisx, sInitChain);
     this->actor.targetMode = 0;
     this->actor.colChkInfo.damageTable = &sDamageTable;

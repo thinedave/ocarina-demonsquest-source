@@ -190,6 +190,8 @@ void EnPeehat_SetupAction(EnPeehat* this, EnPeehatActionFunc actionFunc) {
 void EnPeehat_Init(Actor* thisx, PlayState* play) {
     EnPeehat* this = (EnPeehat*)thisx;
 
+    this->actor.xpValue = 45;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     Actor_SetScale(&this->actor, 36.0f * 0.001f);
     SkelAnime_Init(play, &this->skelAnime, &gPeehatSkel, &gPeehatRisingAnim, this->jointTable, this->morphTable, 24);

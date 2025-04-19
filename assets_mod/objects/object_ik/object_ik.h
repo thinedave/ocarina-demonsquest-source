@@ -3,6 +3,6 @@
 
 #include "gIronKnuckleHammerSlamAnimObject_ik_anim_001c28Anim.h"
 
-#include "gIronKnuckleSpinAttackAnimObject_ik_anim_003dbcAnim.h"
+#include "gIronKnuckleSpinAttackAnim.h"
 
 #endif

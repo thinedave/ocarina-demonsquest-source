@@ -451,6 +451,7 @@ typedef struct PlayState {
     s16 stability;
     s16 poise;
     bool swordOut;
+    bool blockPause;
 } PlayState; // size = 0x12518
 
 typedef struct {
@@ -544,6 +545,8 @@ typedef struct {
     s16 DQ_HeroModeConnectorAlpha;
     bool deads[3];
     s16 heartsBlocked[3];
+    u8 noticeState;
+    u8 noticeIndex;
 } FileSelectState; // size = 0x1CAE0
 
 // Macros for `EntranceInfo.field`
@@ -824,6 +827,11 @@ typedef struct {
 typedef struct {
     GameState state;
     View view;
+} SFXListState;
+
+typedef struct {
+    GameState state;
+    View view;
     u8* staticSegment;
     u8 exit;
 } MemPakNoticeState;
@@ -838,5 +846,13 @@ typedef struct {
     { (uintptr_t)_##name##SegmentRomStart, (uintptr_t)_##name##SegmentRomStart }
 #define ROM_FILE_UNSET \
     { 0 }
+
+#define DEFINE_NOTICE(enum, _0) enum,
+
+typedef enum {
+#include "include/tables/notice_table.h"
+} NoticeID;
+
+#undef DEFINE_NOTICE
 
 #endif

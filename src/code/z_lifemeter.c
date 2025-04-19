@@ -540,17 +540,46 @@ void Health_DrawMeter(PlayState* play) {
     CLOSE_DISPS(gfxCtx, "../z_lifemeter.c", 606);
 }
 
+void Health_UpdateCriticalHeart(PlayState* play) {
+    InterfaceContext* interfaceCtx = &play->interfaceCtx;
+
+    if(!Health_IsCritical()) {
+        interfaceCtx->criticalHealthCount = 0;
+        interfaceCtx->criticalHealthTimer = 0;
+
+        return;
+
+    }
+
+    if(interfaceCtx->criticalHealthCount <= 7) {
+        interfaceCtx->criticalHealthTimer++;
+
+        if(interfaceCtx->criticalHealthTimer == 1) {
+            interfaceCtx->criticalHealthTimer = 0;
+
+            interfaceCtx->criticalHealthCount++;
+        
+            Sfx_PlaySfxCentered(NA_SE_SY_METRONOME);
+
+        }
+
+    }
+
+}
+
 void Health_UpdateBeatingHeart(PlayState* play) {
     InterfaceContext* interfaceCtx = &play->interfaceCtx;
+
+    Health_UpdateCriticalHeart(play);
 
     if (interfaceCtx->beatingHeartOscillatorDirection != 0) {
         interfaceCtx->beatingHeartOscillator--;
         if (interfaceCtx->beatingHeartOscillator <= 0) {
             interfaceCtx->beatingHeartOscillator = 0;
             interfaceCtx->beatingHeartOscillatorDirection = 0;
-            if (!Player_InCsMode(play) && !IS_PAUSED(&play->pauseCtx) && Health_IsCritical() && !Play_InCsMode(play)) {
+            /*if (!Player_InCsMode(play) && !IS_PAUSED(&play->pauseCtx) && Health_IsCritical() && !Play_InCsMode(play)) {
                 Sfx_PlaySfxCentered(NA_SE_SY_HITPOINT_ALARM);
-            }
+            }*/
         }
     } else {
         interfaceCtx->beatingHeartOscillator++;

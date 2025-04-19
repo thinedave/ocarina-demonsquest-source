@@ -281,6 +281,8 @@ void EnZf_Init(Actor* thisx, PlayState* play) {
     EffectBlureInit1 blureInit;
     f32 posDiff;
 
+    this->actor.xpValue = 70;
+
     Actor_ProcessInitChain(thisx, sInitChain);
     thisx->targetMode = 3;
     this->clearFlag = (thisx->params & 0xFF00) >> 8;

@@ -10,8 +10,8 @@
 /**
  * Header Child Day (Default)
 */
-#define LENGTH_SAVETEST_ROOM_0_HEADER00_OBJECTLIST 3
-#define LENGTH_SAVETEST_ROOM_0_HEADER00_ACTORLIST 3
+#define LENGTH_SAVETEST_ROOM_0_HEADER00_OBJECTLIST 4
+#define LENGTH_SAVETEST_ROOM_0_HEADER00_ACTORLIST 4
 SceneCmd savetest_room_0_header00[] = {
     SCENE_CMD_ECHO_SETTINGS(0x00),
     SCENE_CMD_ROOM_BEHAVIOR(0x00, 0x00, false, false),
@@ -27,6 +27,7 @@ s16 savetest_room_0_header00_objectList[LENGTH_SAVETEST_ROOM_0_HEADER00_OBJECTLI
     OBJECT_WARP1,
     OBJECT_DEKUBABA,
     OBJECT_DEKUNUTS,
+    OBJECT_BL,
 };
 
 ActorEntry savetest_room_0_header00_actorList[LENGTH_SAVETEST_ROOM_0_HEADER00_ACTORLIST] = {
@@ -50,6 +51,14 @@ ActorEntry savetest_room_0_header00_actorList[LENGTH_SAVETEST_ROOM_0_HEADER00_AC
     {
         /* Actor ID   */ ACTOR_SAVESPOT,
         /* Position   */ { -140, 0, 0 },
+        /* Rotation   */ { DEG_TO_BINANG(0.000), DEG_TO_BINANG(0.000), DEG_TO_BINANG(0.000) },
+        /* Parameters */ 0x0000
+    },
+
+    // Biri
+    {
+        /* Actor ID   */ ACTOR_EN_BILI,
+        /* Position   */ { -140, 0, -210 },
         /* Rotation   */ { DEG_TO_BINANG(0.000), DEG_TO_BINANG(0.000), DEG_TO_BINANG(0.000) },
         /* Parameters */ 0x0000
     },

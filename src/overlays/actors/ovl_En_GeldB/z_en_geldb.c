@@ -220,6 +220,8 @@ void EnGeldB_Init(Actor* thisx, PlayState* play) {
     EffectBlureInit1 blureInit;
     EnGeldB* this = (EnGeldB*)thisx;
 
+    this->actor.xpValue = 100;
+
     Actor_ProcessInitChain(thisx, sInitChain);
     thisx->colChkInfo.damageTable = &sDamageTable;
     ActorShape_Init(&thisx->shape, 0.0f, ActorShadow_DrawFeet, 0.0f);
@@ -1555,8 +1557,12 @@ void EnGeldB_Draw(Actor* thisx, PlayState* play) {
         { 3000.0f, 0.0f, 1600.0f },
         { 3000.0f, 6000.0f, 1600.0f },
     };
-    static void* eyeTextures[] = { gGerudoRedEyeOpenTex, gGerudoRedEyeHalfTex, gGerudoRedEyeShutTex,
-                                   gGerudoRedEyeHalfTex };
+    static void* eyeTextures[] = {
+    gGerudoRedSkel_gerudo_red_eye_open_ci8_png_001_ci8,
+    gGerudoRedSkel_gerudo_red_eye_half_ci8_png_001_ci8,
+    gGerudoRedSkel_gerudo_red_eye_shut_ci8_png_001_ci8,
+    gGerudoRedSkel_gerudo_red_eye_half_ci8_png_001_ci8,
+};
     s32 pad;
     EnGeldB* this = (EnGeldB*)thisx;
 

@@ -104,6 +104,8 @@ static InitChainEntry sInitChain[] = {
 void EnWeiyer_Init(Actor* thisx, PlayState* play) {
     EnWeiyer* this = (EnWeiyer*)thisx;
 
+    this->actor.xpValue = 45;
+
     Actor_ProcessInitChain(thisx, sInitChain);
     ActorShape_Init(&this->actor.shape, 1000.0f, ActorShadow_DrawCircle, 65.0f);
     SkelAnime_Init(play, &this->skelAnime, &gStingerSkel, &gStingerIdleAnim, this->jointTable, this->morphTable, 19);

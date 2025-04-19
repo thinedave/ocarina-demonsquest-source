@@ -11,7 +11,7 @@
  * Header Child Day (Default)
 */
 SceneCmd savetest_scene_header00[] = {
-    SCENE_CMD_SOUND_SETTINGS(0x00, 0x00, 0x2E),
+    SCENE_CMD_SOUND_SETTINGS(0x00, 0x00, NA_BGM_NO_MUSIC),
     SCENE_CMD_ROOM_LIST(1, savetest_scene_roomList),
     SCENE_CMD_MISC_SETTINGS(0x00, 0x00),
     SCENE_CMD_COL_HEADER(&savetest_collisionHeader),

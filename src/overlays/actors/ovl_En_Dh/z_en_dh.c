@@ -139,6 +139,8 @@ void EnDh_SetupAction(EnDh* this, EnDhActionFunc actionFunc) {
 void EnDh_Init(Actor* thisx, PlayState* play) {
     EnDh* this = (EnDh*)thisx;
 
+    this->actor.xpValue = 200;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     this->actor.colChkInfo.damageTable = &D_809EC620;
     SkelAnime_InitFlex(play, &this->skelAnime, &object_dh_Skel_007E88, &object_dh_Anim_005880, this->jointTable,

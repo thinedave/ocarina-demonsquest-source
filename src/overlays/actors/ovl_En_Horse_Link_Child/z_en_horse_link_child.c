@@ -82,7 +82,7 @@ static ColliderJntSphInit sJntSphInit = {
     sJntSphElementInit,
 };
 
-static CollisionCheckInfoInit sColCheckInfoInit = { 10, 35, 100, MASS_HEAVY };
+static CollisionCheckInfoInit sColCheckInfoInit = { 100, 35, 100, MASS_HEAVY };
 
 void func_80A693D0(EnHorseLinkChild* this) {
     static s32 D_80A6AF5C[] = { 1, 19 };

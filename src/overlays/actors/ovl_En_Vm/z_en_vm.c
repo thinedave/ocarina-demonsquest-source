@@ -134,6 +134,8 @@ void EnVm_SetupAction(EnVm* this, EnVmActionFunc actionFunc) {
 void EnVm_Init(Actor* thisx, PlayState* play) {
     EnVm* this = (EnVm*)thisx;
 
+    this->actor.xpValue = 45;
+
     SkelAnime_Init(play, &this->skelAnime, &gBeamosSkel, &gBeamosAnim, this->jointTable, this->morphTable, 11);
     ActorShape_Init(&thisx->shape, 0.0f, NULL, 0.0f);
     Collider_InitCylinder(play, &this->colliderCylinder);

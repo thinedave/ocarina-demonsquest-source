@@ -524,6 +524,7 @@ typedef struct {
     /* 0x20 */ CutsceneCameraPoint* camEyePoints;
     /* 0x24 */ CsCmdActorCue* playerCue;
     /* 0x28 */ CsCmdActorCue* actorCues[10]; // "npcdemopnt"
+    bool wantSkip;
 } CutsceneContext; // size = 0x50
 
 #endif

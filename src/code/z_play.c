@@ -276,12 +276,10 @@ void Play_Init(GameState* thisx) {
         return;
     }
 
+    this->blockPause = false;
+
     SystemArena_Display();
-    if (ExpansionPak_Found()) {
-        GameState_Realloc(&this->state, 0x200000); // 8MB 
-    } else {
-        GameState_Realloc(&this->state, 0x1D4790); // 4MB 
-    } 
+    GameState_Realloc(&this->state, 0x4D4790); // 8MB
     KaleidoManager_Init(this);
     View_Init(&this->view, gfxCtx);
     Audio_SetExtraFilter(0);
@@ -1085,6 +1083,9 @@ void Play_DrawOverlayElements(PlayState* this) {
     if (this->gameOverCtx.state != GAMEOVER_INACTIVE) {
         GameOver_FadeInLights(this);
     }
+
+    Message_DrawNotice(&this->state, &this->msgCtx.font);
+
 }
 
 void Play_Draw(PlayState* this) {
@@ -1138,6 +1139,8 @@ void Play_Draw(PlayState* this) {
                                               Graph_Alloc(gfxCtx, sizeof(Mtx)));
 
         gSPSegment(POLY_OPA_DISP++, 0x01, this->billboardMtx);
+
+        Stamina_DrawMeter(this);
 
         if ((R_HREG_MODE != HREG_MODE_PLAY) || R_PLAY_DRAW_COVER_ELEMENTS) {
             Gfx* gfxP;

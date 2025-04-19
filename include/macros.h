@@ -217,3 +217,8 @@ extern struct GraphicsContext* __gfxCtx;
     } while (0)
 
 #endif
+
+#define RANDOM_RANGE(min, max) ((Rand_ZeroOne() * (((f32)max)-((f32)min))) + (f32)min)
+#define IRANDOM_RANGE(min, max) Math_FRoundF((Rand_ZeroOne() * (((f32)max)-((f32)min))) + (f32)min)
+
+#define BLENDERU_TO_ZU(x, y, z, scale) {x * scale, z * scale, (-y) * scale}

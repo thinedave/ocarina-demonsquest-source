@@ -135,6 +135,8 @@ void EnTp_Init(Actor* thisx, PlayState* play2) {
     EnTp* next;
     s32 i;
 
+    this->actor.xpValue = 25;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     this->actor.targetMode = 3;
     this->actor.colChkInfo.damageTable = &sDamageTable;

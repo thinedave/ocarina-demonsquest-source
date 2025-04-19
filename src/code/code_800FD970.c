@@ -31,6 +31,11 @@ f32 Rand_ZeroOne(void) {
     return *((f32*)&sRandFloat) - 1.0f;
 }
 
+f32 Rand_Range(f32 min, f32 max) {
+    return fmodf(Rand_ZeroOne(), (max + 1 - min) + min);
+
+}
+
 /**
  * Returns a pseudo-random floating-point number between -0.5f and 0.5f by the same
  * manner in which Rand_ZeroOne generates its result.

@@ -1288,7 +1288,7 @@ void BossFd_CollisionCheck(BossFd* this, PlayState* play) {
         if (hurtbox->toucher.dmgFlags & DMG_ARROW_ICE) {
             this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-20, 0);
         }
-        if ((s8)this->actor.colChkInfo.health <= 20) {
+        if ((s16)this->actor.colChkInfo.health <= 20) {
             this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-20, 0);
         }
         this->work[BFD_DAMAGE_FLASH_TIMER] = 10;

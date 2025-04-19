@@ -154,7 +154,7 @@ static DamageTable sDekuBabaDamageTable = {
     /* Hammer swing  */ DMG_ENTRY(2, DEKUBABA_DMGEFF_NONE),
     /* Hookshot      */ DMG_ENTRY(2, DEKUBABA_DMGEFF_NONE),
     /* Kokiri sword  */ DMG_ENTRY(1, DEKUBABA_DMGEFF_SWORD),
-    /* Master sword  */ DMG_ENTRY(0, DEKUBABA_DMGEFF_SWORD),
+    /* Master sword  */ DMG_ENTRY(2, DEKUBABA_DMGEFF_SWORD),
     /* Giant's Knife */ DMG_ENTRY(4, DEKUBABA_DMGEFF_SWORD),
     /* Fire arrow    */ DMG_ENTRY(4, DEKUBABA_DMGEFF_FIRE),
     /* Ice arrow     */ DMG_ENTRY(2, DEKUBABA_DMGEFF_NONE),
@@ -223,6 +223,8 @@ static InitChainEntry sInitChain[] = {
 void EnDekubaba_Init(Actor* thisx, PlayState* play) {
     EnDekubaba* this = (EnDekubaba*)thisx;
     s32 i;
+
+    this->actor.xpValue = 15;
 
     Actor_ProcessInitChain(&this->actor, sInitChain);
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 22.0f);

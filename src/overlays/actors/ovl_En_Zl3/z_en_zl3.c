@@ -2527,7 +2527,7 @@ void func_80B59828(EnZl3* this, PlayState* play) {
     }
 
     if (func_80B59698(this, play) != 0) {
-        Interface_SetSubTimer(180);
+        Interface_SetSubTimer(150);
         func_80B53468();
         gSaveContext.healthAccumulator = 320;
         Magic_Fill(play);
@@ -2572,7 +2572,7 @@ void func_80B59AD0(EnZl3* this, PlayState* play) {
     Actor* thisx = &this->actor;
 
     Flags_SetSwitch(play, 0x36);
-    Interface_SetSubTimer(180);
+    Interface_SetSubTimer(150);
     func_80B54EA4(this, play);
     func_80B53614(this, play);
     CLEAR_EVENTCHKINF(EVENTCHKINF_C7);

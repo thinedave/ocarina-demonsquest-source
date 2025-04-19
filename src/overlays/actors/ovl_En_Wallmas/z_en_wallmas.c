@@ -116,6 +116,8 @@ static InitChainEntry sInitChain[] = {
 void EnWallmas_Init(Actor* thisx, PlayState* play) {
     EnWallmas* this = (EnWallmas*)thisx;
 
+    this->actor.xpValue = 175;
+
     Actor_ProcessInitChain(thisx, sInitChain);
     ActorShape_Init(&thisx->shape, 0, NULL, 0.5f);
     SkelAnime_InitFlex(play, &this->skelAnime, &gWallmasterSkel, &gWallmasterWaitAnim, this->jointTable,

@@ -158,6 +158,8 @@ static InitChainEntry sInitChain[] = {
 void EnFz_Init(Actor* thisx, PlayState* play) {
     EnFz* this = (EnFz*)thisx;
 
+    this->actor.xpValue = 45;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     this->actor.colChkInfo.damageTable = &sDamageTable;
     this->actor.colChkInfo.health = 60;

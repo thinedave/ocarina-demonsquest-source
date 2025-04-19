@@ -120,6 +120,8 @@ void EnOkuta_Init(Actor* thisx, PlayState* play) {
     f32 ySurface;
     s32 floorBgId;
 
+    this->actor.xpValue = 30;
+
     Actor_ProcessInitChain(thisx, sInitChain);
     this->numShots = (thisx->params >> 8) & 0xFF;
     thisx->params &= 0xFF;
@@ -129,8 +131,8 @@ void EnOkuta_Init(Actor* thisx, PlayState* play) {
         Collider_InitCylinder(play, &this->collider);
         Collider_SetCylinder(play, &this->collider, thisx, &sOctorockColliderInit);
         CollisionCheck_SetInfo(&thisx->colChkInfo, &sDamageTable, &sColChkInfoInit);
-        if ((this->numShots == 0xFF) || (this->numShots == 0)) {
-            this->numShots = 1;
+        if ((this->numShots == 0xFF) || (this->numShots == 0) || this->numShots == 1) {
+            this->numShots = (s16)IRANDOM_RANGE(3, 5);
         }
         thisx->floorHeight =
             BgCheck_EntityRaycastDown4(&play->colCtx, &thisx->floorPoly, &floorBgId, thisx, &thisx->world.pos);
@@ -358,8 +360,16 @@ void EnOkuta_WaitToShoot(EnOkuta* this, PlayState* play) {
 }
 
 void EnOkuta_Shoot(EnOkuta* this, PlayState* play) {
-    Math_ApproachS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 3, 0x71C);
-    if (SkelAnime_Update(&this->skelAnime)) {
+    SkelAnime_Update(&this->skelAnime);
+
+    Player* player = GET_PLAYER(play);
+    Vec3f shootPos = player->actor.world.pos;
+
+    shootPos.x += player->actor.velocity.x * 20;
+    shootPos.z += player->actor.velocity.z * 20;
+
+    Math_ApproachS(&this->actor.shape.rot.y, Math_Vec3f_Yaw(&this->actor.world.pos, &shootPos), 3, 0x71C);
+    if (this->skelAnime.curFrame >= this->skelAnime.endFrame - 5) {
         if (this->timer != 0) {
             this->timer--;
         }

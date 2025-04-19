@@ -156,6 +156,8 @@ static InitChainEntry sInitChain[] = {
 void EnSkb_Init(Actor* thisx, PlayState* play) {
     EnSkb* this = (EnSkb*)thisx;
 
+    this->actor.xpValue = 20;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     this->actor.colChkInfo.damageTable = &sDamageTable;
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 0.0f);

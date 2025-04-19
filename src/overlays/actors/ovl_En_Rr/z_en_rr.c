@@ -165,6 +165,8 @@ void EnRr_Init(Actor* thisx, PlayState* play2) {
     EnRr* this = (EnRr*)thisx;
     s32 i;
 
+    this->actor.xpValue = 70;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     this->actor.colChkInfo.damageTable = &sDamageTable;
     this->actor.colChkInfo.health = 40;

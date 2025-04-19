@@ -145,7 +145,7 @@ static ColliderJntSphInit sJntSphInit = {
     sJntSphItemsInit,
 };
 
-static CollisionCheckInfoInit D_80A65F38 = { 10, 35, 100, MASS_HEAVY };
+static CollisionCheckInfoInit D_80A65F38 = { 100, 35, 100, MASS_HEAVY };
 
 typedef struct {
     /* 0x0 */ s16 sceneId;

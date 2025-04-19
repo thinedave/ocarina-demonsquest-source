@@ -10,9 +10,10 @@ f32 sKaleidoSetupEyeZ1[] = { 0.0f, -64.0f, 0.0f, 64.0f };
 
 void KaleidoSetup_Update(PlayState* play) {
     PauseContext* pauseCtx = &play->pauseCtx;
+    Player* player = GET_PLAYER(play);
     Input* input = &play->state.input[0];
 
-    if (!IS_PAUSED(pauseCtx) && play->gameOverCtx.state == GAMEOVER_INACTIVE &&
+    if (!IS_PAUSED(pauseCtx) && play->gameOverCtx.state == GAMEOVER_INACTIVE && Player_ActionToBottle(player, player->itemAction) < 0 && 
         play->transitionTrigger == TRANS_TRIGGER_OFF && play->transitionMode == TRANS_MODE_OFF &&
         gSaveContext.save.cutsceneIndex < 0xFFF0 && gSaveContext.nextCutsceneIndex < 0xFFF0 && !Play_InCsMode(play) &&
         play->shootingGalleryStatus <= 1 && gSaveContext.magicState != MAGIC_STATE_STEP_CAPACITY &&
@@ -52,7 +53,7 @@ void KaleidoSetup_Update(PlayState* play) {
 
         if (pauseCtx->state == PAUSE_STATE_WAIT_LETTERBOX) {
             WREG(2) = -6240;
-            R_UPDATE_RATE = UPDATE_RATE_30;
+            R_UPDATE_RATE = UPDATE_RATE_60;
 
             if (Letterbox_GetSizeTarget() != 0) {
                 Letterbox_SetSizeTarget(0);

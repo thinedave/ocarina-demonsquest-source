@@ -54,8 +54,8 @@ void EnBdfire_Init(Actor* thisx, PlayState* play) {
     } else {
         EnBdfire_SetupAction(this, func_809BC598);
         ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 0.0f);
-        this->actor.speed = 30.0f;
-        this->unk_154 = (25 - (s32)(this->actor.params * 0.8f));
+        this->actor.speed = 55.0f;
+        this->unk_154 = (60 - (s32)(this->actor.params * 0.8f));
         if (this->unk_154 < 0) {
             this->unk_154 = 0;
         }
@@ -64,7 +64,7 @@ void EnBdfire_Init(Actor* thisx, PlayState* play) {
         if (this->unk_188 < 0.90000004f) {
             this->unk_188 = 0.90000004f;
         }
-        this->unk_18C = 255.0f - (this->actor.params * 10.0f);
+        this->unk_18C = 600.0f - (this->actor.params * 10.0f);
         if (this->unk_18C < 20.0f) {
             this->unk_18C = 20.0f;
         }

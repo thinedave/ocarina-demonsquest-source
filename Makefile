@@ -262,6 +262,7 @@ endif
 
 copy:
 	python3 appendmodassets.py
+	python3 copymodscenes.py
 
 clean:
 	$(RM) -r $(ROM) $(ELF) build
@@ -296,6 +297,7 @@ setup:
 	python3 extract_10u.py
 	python3 extract_assets.py -j$(N_THREADS)
 	python3 appendmodassets.py
+	python3 copymodscenes.py
 	python3 tools/audio/disassemble_sound.py MQDebug baserom/code baserom/Audiotable baserom/Audiobank assets/xml assets/samples assets/samples assets/soundfonts build/include
 	python3 tools/audio/disassemble_sequences.py MQDebug baserom/code baserom/Audioseq assets/xml/sequences/Sequences.xml build/include include/sequence.inc assets/sequences
 	python3 tools/audio/assemble_sequences.py assets/sequences build/include build
@@ -306,6 +308,7 @@ audioclean:
 	$(RM) $(shell find assets/sequences/*.seq -not -path "*.prg.seq")
 	$(RM) -r assets/samples/
 	python3 appendmodassets.py
+	python3 copymodscenes.py
 	python3 tools/audio/disassemble_sound.py MQDebug baserom/code baserom/Audiotable baserom/Audiobank assets/xml assets/samples assets/samples assets/soundfonts build/include
 	python3 tools/audio/disassemble_sequences.py MQDebug baserom/code baserom/Audioseq assets/xml/sequences/Sequences.xml build/include include/sequence.inc assets/sequences
 	python3 tools/audio/assemble_sequences.py assets/sequences build/include build

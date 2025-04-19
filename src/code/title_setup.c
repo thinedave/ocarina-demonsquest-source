@@ -5,10 +5,11 @@ typedef enum {
     NORMAL,
     MAP_SELECT,
     KNUCKLE_DEMO,
+    SFXLIST,
 
 } StartupMode;
 
-const StartupMode STARTUP_MODE = MAP_SELECT;
+const StartupMode STARTUP_MODE = NORMAL;
 
 void Setup_InitImpl(SetupState* this) {
     osSyncPrintf("Zelda common data initalization\n"); // "Zelda common data initalization"
@@ -23,6 +24,12 @@ void Setup_InitImpl(SetupState* this) {
     SaveContext_Init();
 
     switch(STARTUP_MODE) {
+        case SFXLIST:
+            this->state.running = false;
+            osSyncPrintf("ATTEMPTING LOAD SFX\n");
+            SET_NEXT_GAMESTATE(&this->state, SFXList_Init, SFXListState);
+            break;
+
         case NORMAL:
             this->state.running = false;
             osSyncPrintf("ATTEMPTING LOAD SPLASH\n");

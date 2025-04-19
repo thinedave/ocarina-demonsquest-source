@@ -7,11 +7,7 @@ void SysCfb_Init(s32 n64dd) {
     u32 screenSize;
     uintptr_t tmpFbEnd;
 
-    if (ExpansionPak_Found()) {
-        sSysCfbEnd = 0x80800000; // 8MB 
-    } else {
-        sSysCfbEnd = 0x80400000; // 4MB 
-    }
+    sSysCfbEnd = 0x8074BE80; // 8MB 
     screenSize = SCREEN_WIDTH * SCREEN_HEIGHT;
     sSysCfbEnd &= ~0x3F;
     // "The final address used by the system is %08x"

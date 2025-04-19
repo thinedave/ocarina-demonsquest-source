@@ -29,6 +29,8 @@ void EnDekunuts_Gasp(EnDekunuts* this, PlayState* play);
 void EnDekunuts_BeDamaged(EnDekunuts* this, PlayState* play);
 void EnDekunuts_BeStunned(EnDekunuts* this, PlayState* play);
 void EnDekunuts_Die(EnDekunuts* this, PlayState* play);
+void EnDekunuts_SetupSpin(EnDekunuts* this, PlayState* play);
+void EnDekunuts_Spin(EnDekunuts* this, PlayState* play);
 
 ActorInit En_Dekunuts_InitVars = {
     /**/ ACTOR_EN_DEKUNUTS,
@@ -60,6 +62,26 @@ static ColliderCylinderInit sCylinderInit = {
         OCELEM_ON,
     },
     { 18, 32, 0, { 0, 0, 0 } },
+};
+
+static ColliderCylinderInit sCylinderInitDmg = {
+    {
+        COLTYPE_HIT6,
+        AT_ON | AT_TYPE_ENEMY,
+        AC_NONE,
+        OC1_NONE,
+        OC2_NONE,
+        COLSHAPE_CYLINDER,
+    },
+    {
+        ELEMTYPE_UNK0,
+        { DMG_DEFAULT, 0, 20 },
+        { 0x00000000, 0x00, 0x00 },
+        TOUCH_ON | TOUCH_SFX_WOOD,
+        BUMP_NONE,
+        OCELEM_NONE,
+    },
+    { 60, 32, 0, { 0, 0, 0 } },
 };
 
 static CollisionCheckInfoInit sColChkInfoInit = { 10, 0x0012, 0x0020, MASS_IMMOVABLE };
@@ -109,6 +131,10 @@ void EnDekunuts_Init(Actor* thisx, PlayState* play) {
     EnDekunuts* this = (EnDekunuts*)thisx;
     s32 pad;
 
+    this->actor.xpValue = 20;
+
+    osSyncPrintf("INIT DEKU SCRUB\n");
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     if (thisx->params == DEKUNUTS_FLOWER) {
         thisx->flags &= ~(ACTOR_FLAG_0 | ACTOR_FLAG_2);
@@ -118,7 +144,12 @@ void EnDekunuts_Init(Actor* thisx, PlayState* play) {
                        25);
         Collider_InitCylinder(play, &this->collider);
         Collider_SetCylinder(play, &this->collider, &this->actor, &sCylinderInit);
+        
         CollisionCheck_SetInfo(&thisx->colChkInfo, &sDamageTable, &sColChkInfoInit);
+
+        Collider_InitCylinder(play, &this->attackCollider);
+        Collider_SetCylinder(play, &this->attackCollider, &this->actor, &sCylinderInitDmg);
+
         this->shotsPerRound = ((thisx->params >> 8) & 0xFF);
         thisx->params &= 0xFF;
         if ((this->shotsPerRound == 0xFF) || (this->shotsPerRound == 0)) {
@@ -132,6 +163,8 @@ void EnDekunuts_Init(Actor* thisx, PlayState* play) {
 
 void EnDekunuts_Destroy(Actor* thisx, PlayState* play) {
     EnDekunuts* this = (EnDekunuts*)thisx;
+
+    Collider_DestroyCylinder(play, &this->attackCollider);
 
     if (this->actor.params != DEKUNUTS_FLOWER) {
         Collider_DestroyCylinder(play, &this->collider);
@@ -190,6 +223,7 @@ void EnDekunuts_SetupRun(EnDekunuts* this) {
     this->playWalkSfx = false;
     this->collider.base.acFlags |= AC_ON;
     this->actionFunc = EnDekunuts_Run;
+    this->nextSpin = (u8)IRANDOM_RANGE(10, 20);
 }
 
 void EnDekunuts_SetupGasp(EnDekunuts* this) {
@@ -233,6 +267,56 @@ void EnDekunuts_SetupDie(EnDekunuts* this) {
     this->actionFunc = EnDekunuts_Die;
     this->actor.speed = 0.0f;
     Actor_PlaySfx(&this->actor, NA_SE_EN_NUTS_DEAD);
+}
+
+void EnDekunuts_SetupSpin(EnDekunuts* this, PlayState* play) {
+    Animation_PlayOnce(&this->skelAnime, &gDekuNutsSkelSpinAnim);
+    this->actionFunc = EnDekunuts_Spin;
+    this->actor.speed = 0.0f;
+    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 5);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_NUTS_UP);
+    this->actor.world.rot.y = this->actor.yawTowardsPlayer;
+    this->attackCollider.base.atFlags &= ~AT_HIT;
+
+}
+
+void EnDekunuts_Spin(EnDekunuts* this, PlayState* play) {
+    Player* player = GET_PLAYER(play);
+
+    f32 curFrame = this->skelAnime.curFrame;
+
+    if(curFrame == 5.0f) Actor_PlaySfx(&this->actor, NA_SE_IT_MASTER_SWORD_SWING);
+
+    if(curFrame >= 5.0f) {
+        Math_StepToAngleS(&this->actor.world.rot.y, this->actor.yawTowardsPlayer, 255);
+
+    }
+
+    if(curFrame >= 5.0f && curFrame <= 16.0f) {
+        f32 frac = CLAMP((curFrame - 12) * 0.25, 0.0f, 1.0f);
+        this->actor.speed = F32_LERP(15.0f, 0.0f, frac);
+
+        if(!(this->attackCollider.base.atFlags & AT_HIT)) CollisionCheck_SetAT(play, &play->colChkCtx, &this->attackCollider.base);
+
+        /*if (this->actor.xzDistToPlayer < 50.0f && player->invincibilityTimer < 1) {
+            play->damagePlayer(play, -20);
+            player->invincibilityTimer = 20;
+            if (!LINK_IS_ADULT) {
+                Player_PlaySfx(player, NA_SE_VO_LI_DAMAGE_S_KID);
+            } else {
+                Player_PlaySfx(player, NA_SE_VO_LI_DAMAGE_S);
+            }
+
+            Player_PlaySfx(player, NA_SE_IT_SWORD_STRIKE);
+
+        }*/
+
+    }
+
+    if(curFrame > 16.0f) this->actor.speed = 0.0f;
+
+    if(SkelAnime_Update(&this->skelAnime)) EnDekunuts_SetupRun(this);
+
 }
 
 void EnDekunuts_Wait(EnDekunuts* this, PlayState* play) {
@@ -337,6 +421,7 @@ void EnDekunuts_BeginRun(EnDekunuts* this, PlayState* play) {
     if (SkelAnime_Update(&this->skelAnime)) {
         this->runDirection = this->actor.yawTowardsPlayer + 0x8000;
         this->runAwayCount = 3;
+        osSyncPrintf("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
         EnDekunuts_SetupRun(this);
     }
     Math_ApproachS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 2, 0xE38);
@@ -356,6 +441,14 @@ void EnDekunuts_Run(EnDekunuts* this, PlayState* play) {
         this->playWalkSfx = false;
     } else {
         this->playWalkSfx = true;
+    }
+
+    this->nextSpin--;
+    if((this->actor.xzDistToPlayer <= 300.0f && this->nextSpin <= 0) || this->actor.xzDistToPlayer <= 70.0f) {
+        EnDekunuts_SetupSpin(this, play);
+
+        return;
+
     }
 
     Math_StepToF(&this->actor.speed, 7.5f, 1.0f);
@@ -480,6 +573,7 @@ void EnDekunuts_Update(Actor* thisx, PlayState* play) {
                                 UPDBGCHECKINFO_FLAG_0 | UPDBGCHECKINFO_FLAG_2 | UPDBGCHECKINFO_FLAG_3 |
                                     UPDBGCHECKINFO_FLAG_4);
         Collider_UpdateCylinder(&this->actor, &this->collider);
+        Collider_UpdateCylinder(&this->actor, &this->attackCollider);
         if (this->collider.base.acFlags & AC_ON) {
             CollisionCheck_SetAC(play, &play->colChkCtx, &this->collider.base);
         }

@@ -108,6 +108,8 @@ typedef enum {
 void EnSb_Init(Actor* thisx, PlayState* play) {
     EnSb* this = (EnSb*)thisx;
 
+    this->actor.xpValue = 45;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     this->actor.colChkInfo.damageTable = sDamageTable;
     this->actor.colChkInfo.health = 20;

@@ -172,6 +172,28 @@ typedef struct BossGanon {
     /* 0x0718 */ s16 organAlpha;
     /* 0x071A */ u8 useOpenHand;
     /* 0x071B */ u8 windowShatterState;
+    bool ladderFall;
+    bool swordPhase;
+    bool swordDl;
+    ColliderQuad kickCollider;
+    ColliderQuad swordCollider;
+    bool kickAT;
+    s8 swordAT;
+    bool kickHit;
+    bool spawnSword;
+    u8 pulleyTimer;
+    bool grabbedLink;
+    Vec3f beamPos2;
+    Vec3s beamRot;
+    Vec3f beamScale;
+    s16 beamTexScroll;
+    bool pullSword;
+    Vec3f rightHandPos;
+    bool swordCaught;
+    s32 blureIndex;
+    bool invincible;
 } BossGanon; // size = 0x71C
+
+void BossGanon_Wait(BossGanon* this, PlayState* play);
 
 #endif

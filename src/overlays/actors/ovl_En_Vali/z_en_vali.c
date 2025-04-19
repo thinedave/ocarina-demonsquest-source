@@ -138,6 +138,8 @@ void EnVali_Init(Actor* thisx, PlayState* play) {
     EnVali* this = (EnVali*)thisx;
     s32 bgId;
 
+    this->actor.xpValue = 45;
+
     Actor_ProcessInitChain(&this->actor, sInitChain);
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 27.0f);
     this->actor.shape.shadowAlpha = 155;

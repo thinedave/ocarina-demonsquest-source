@@ -33,6 +33,9 @@ f32 func_808C50A8(BossDodongo* this, PlayState* play);
 void BossDodongo_DrawEffects(PlayState* play);
 void BossDodongo_UpdateEffects(PlayState* play);
 
+void BossDodongo_SetupBite(BossDodongo* this, PlayState* play);
+void BossDodongo_Bite(BossDodongo* this, PlayState* play);
+
 ActorInit Boss_Dodongo_InitVars = {
     /**/ ACTOR_EN_DODONGO,
     /**/ ACTORCAT_BOSS,
@@ -192,7 +195,7 @@ void BossDodongo_Init(Actor* thisx, PlayState* play) {
     Animation_PlayLoop(&this->skelAnime, &object_kingdodongo_Anim_00F0D8);
     this->unk_1F8 = 1.0f;
     BossDodongo_SetupIntroCutscene(this, play);
-    this->health = 12;
+    this->health = 120;
     this->colorFilterMin = 995.0f;
     this->actor.colChkInfo.mass = MASS_IMMOVABLE;
     this->colorFilterMax = 1000.0f;
@@ -200,6 +203,9 @@ void BossDodongo_Init(Actor* thisx, PlayState* play) {
     this->unk_228 = 9200.0f;
     Collider_InitJntSph(play, &this->collider);
     Collider_SetJntSph(play, &this->collider, &this->actor, &sJntSphInit, this->items);
+
+    Collider_InitQuad(play, &this->biteCollider);
+    Collider_SetQuad(play, &this->biteCollider, &this->actor, &sBiteQuadInit);
 
     if (Flags_GetClear(play, play->roomCtx.curRoom.num)) { // KD is dead
         temp_s1_3 = SEGMENTED_TO_VIRTUAL(gDodongosCavernBossLavaFloorTex);
@@ -225,6 +231,7 @@ void BossDodongo_Destroy(Actor* thisx, PlayState* play) {
 
     SkelAnime_Free(&this->skelAnime, play);
     Collider_DestroyJntSph(play, &this->collider);
+    Collider_DestroyQuad(play, &this->biteCollider);
 }
 
 void BossDodongo_SetupIntroCutscene(BossDodongo* this, PlayState* play) {
@@ -499,12 +506,158 @@ void BossDodongo_SetupBlowFire(BossDodongo* this) {
 
 void BossDodongo_SetupInhale(BossDodongo* this) {
     this->actor.speed = 0.0f;
-    Animation_Change(&this->skelAnime, &object_kingdodongo_Anim_008EEC, 1.0f, 0.0f,
+    Animation_Change(&this->skelAnime, &object_kingdodongo_Anim_008EEC, 1.7f, 0.0f,
                      Animation_GetLastFrame(&object_kingdodongo_Anim_008EEC), ANIMMODE_ONCE, -5.0f);
     this->actionFunc = BossDodongo_Inhale;
-    this->unk_1DA = 100;
+    this->unk_1DA = 50;
     this->unk_1AC = 0;
     this->unk_1E2 = 1;
+}
+
+void BossDodongo_SetupBite(BossDodongo* this, PlayState* play) {
+    this->actor.speed = 0.0f;
+    Animation_MorphToPlayOnce(&this->skelAnime, &gKingDodongoBitestartAnim, 3.0f);
+    this->actionFunc = BossDodongo_Bite;
+    this->biteCollider.base.atFlags &= ~AT_HIT;
+    
+}
+
+#define MIDDLE_X -890.0f
+#define MIDDLE_Z -3304.0f
+
+// Hardcoded to avoid expensive CheckLine
+// 1 = left, 0 = right
+bool BossDodongo_DetermineDirection(BossDodongo* this, PlayState* play) {
+    Vec3f* pos = &this->actor.world.pos;
+    s32 rotY = (s32)this->actor.world.rot.y + 0x7FFF;
+
+    if((rotY < 0x1000 && rotY > 0x0000) || (rotY > 0xE000 && rotY < 0xFFFF)) {
+        return (pos->x > MIDDLE_X);
+
+    } else if((rotY > 0x7000 && rotY < 0x9000)) {
+        return (pos->x < MIDDLE_X);
+
+    } else if(rotY > 0x3000 && rotY < 0x5000) {
+        return (pos->z < MIDDLE_Z);
+
+    } else if(rotY > 0xB000 && rotY < 0xD000) {
+        return (pos->z > MIDDLE_Z);
+
+    }
+
+    osSyncPrintf("BossDodongo_DetermineDirection failed!\npos->x = %.2f\npos->z = %.2f\nrotY = 0x%04x\npos->x > MIDDLE_X ? %i\npos->z > MIDDLE_Z ? %i", pos->x, pos->z, rotY & 0xFFFF, (pos->x > MIDDLE_X), (pos->z > MIDDLE_Z));
+
+    return false;
+
+}
+
+#undef MIDDLE_X
+#undef MIDDLE_Z
+
+static Vec3f sKingDodongoMouthPos = {0.0f, 0.0f, 0.0f};
+static Vec3s sKingDodongoMouthRot = {0.0f, 0.0f, 0.0f};
+static Vec3s sOffsetRot = {0x3000, 0x1000, 0};
+
+void BossDodongo_Bite(BossDodongo* this, PlayState* play) {
+    Player* player = GET_PLAYER(play);
+    u8 curFrame = (u8)this->skelAnime.curFrame;
+    
+    if(this->skelAnime.animation == &gKingDodongoBitestartAnim) { // windup/bite
+        switch(curFrame) {
+            case 10:
+                this->bite = true;
+                break;
+
+            case 15:
+                this->bite = false;
+                break;
+
+            default: break;
+
+        }
+
+        if(this->biteCollider.base.atFlags & AT_HIT) {
+            this->bite = false;
+            this->grabbedLink = true;
+
+            play->grabPlayer(play, player);
+            player->actor.parent = &this->actor;
+            player->av2.actionVar2 = 0xA;
+            player->actor.speed = player->actor.velocity.y = 0;
+
+            Animation_Change(&this->skelAnime, &gKingDodongoBiteAnim, 1.0f, 0.0f, Animation_GetLastFrame(&gKingDodongoBiteAnim), ANIMMODE_ONCE, 0.0f);
+
+            Actor_PlaySfx(&player->actor, NA_SE_VO_LI_FALL_L_KID);
+
+        }
+
+        if(SkelAnime_Update(&this->skelAnime)) {
+            BossDodongo_SetupWalk(this);
+
+        }
+
+    } else if(this->skelAnime.animation == &gKingDodongoBiteAnim) { // shake
+        switch(curFrame) {
+            case 16:
+                play->damagePlayer(play, -2);
+                Actor_PlaySfx(&player->actor, NA_SE_VO_LI_DAMAGE_S_KID);
+                break;
+
+            case 22:
+                play->damagePlayer(play, -2);
+                Actor_PlaySfx(&player->actor, NA_SE_VO_LI_DAMAGE_S_KID);
+                break;
+
+            case 30:
+                play->damagePlayer(play, -2);
+                Actor_PlaySfx(&player->actor, NA_SE_VO_LI_DAMAGE_S_KID);
+                break;
+
+            default: break;
+
+        }
+
+        if(SkelAnime_Update(&this->skelAnime)) {
+            AnimationHeader* animation = (BossDodongo_DetermineDirection(this, play) ? &gKingDodongoThrowleftAnim : &gKingDodongoThrowrightAnim);
+            Animation_Change(&this->skelAnime, animation, 1.0f, 0.0f, Animation_GetLastFrame(animation), ANIMMODE_ONCE, 0.0f);
+
+        }
+
+    } else { // throw
+        bool direction = (this->skelAnime.animation == &gKingDodongoThrowleftAnim);
+        if(curFrame == (direction ? 6 : 15)) {
+            player->actor.shape.rot.x = player->actor.world.rot.x = 0;
+            player->actor.shape.rot.z = player->actor.world.rot.z = 0;
+            player->av2.actionVar2 = 0x65;
+            player->actor.parent = NULL;
+            player->csAction = PLAYER_CSACTION_NONE;
+            func_8002F6D4(play, &this->actor, 15.0f, this->actor.shape.rot.y + (direction ? 0x3000 : -0x3000), 5.0f, 4);
+
+            this->grabbedLink = false;
+
+        }
+
+        if(SkelAnime_Update(&this->skelAnime)) {
+            BossDodongo_SetupRoll(this);
+
+        }
+
+    }
+
+    //if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DUP)) sOffsetRot.x += 0x1000;
+    //else if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DDOWN)) sOffsetRot.x -= 0x1000;
+    
+    //if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DRIGHT)) sOffsetRot.y += 0x1000;
+    //else if(CHECK_BTN_ALL(play->state.input[0].press.button, BTN_DLEFT)) sOffsetRot.y -= 0x1000;
+
+    if(this->grabbedLink) {
+        Math_Vec3f_Copy(&player->actor.world.pos, &sKingDodongoMouthPos);
+        player->actor.shape.rot.x = player->actor.world.rot.x = sKingDodongoMouthRot.x + sOffsetRot.x;
+        player->actor.shape.rot.y = player->actor.world.rot.y = sKingDodongoMouthRot.y + sOffsetRot.y;
+        player->actor.shape.rot.z = player->actor.world.rot.z = sKingDodongoMouthRot.z;
+
+    }
+
 }
 
 void BossDodongo_Damaged(BossDodongo* this, PlayState* play) {
@@ -552,7 +705,9 @@ void BossDodongo_Explode(BossDodongo* this, PlayState* play) {
         Actor_PlaySfx(&this->actor, NA_SE_IT_BOMB_EXPLOSION);
         Actor_PlaySfx(&this->actor, NA_SE_EN_DODO_K_DAMAGE);
         Actor_RequestQuakeAndRumble(&this->actor, play, 4, 10);
-        this->health -= 2;
+        this->health -= 20;
+
+        this->smallDodongoTimer = 0;
 
         // make sure not to die from the bomb explosion
         if (this->health <= 0) {
@@ -561,10 +716,28 @@ void BossDodongo_Explode(BossDodongo* this, PlayState* play) {
     }
 }
 
+void BossDodongo_SpawnBabyDodongos(BossDodongo* this, PlayState* play) {
+    if(this->smallDodongoTimer > 27) return;
+
+    Vec3f forward = {Math_SinS(this->actor.world.rot.y), 0, Math_CosS(this->actor.world.rot.y)};
+    Vec3f right = {Math_SinS(this->actor.world.rot.z), 0, Math_CosS(this->actor.world.rot.z)};
+
+    if(this->smallDodongoTimer % 7 == 0) {
+        Actor_SpawnAsChild(&play->actorCtx, &this->actor, play, ACTOR_EN_DODOJR, this->actor.world.pos.x + (forward.x * (f32)RANDOM_RANGE(70.0f, 150.0f)),
+            this->actor.world.pos.y, this->actor.world.pos.z + (right.z * (f32)RANDOM_RANGE(-50.0f, 50.0f)), 0, (s16)IRANDOM_RANGE(-0xEFFF, 0xEFFF), 0, 0x0001);
+
+    }
+
+    this->smallDodongoTimer++;
+
+}
+
 void BossDodongo_LayDown(BossDodongo* this, PlayState* play) {
     this->unk_1BE = 10;
     Math_SmoothStepToF(&this->unk_1F8, 1.3f, 1.0f, 0.1f, 0.001f);
     SkelAnime_Update(&this->skelAnime);
+
+    BossDodongo_SpawnBabyDodongos(this, play);
 
     if (Animation_OnFrame(&this->skelAnime, Animation_GetLastFrame(&object_kingdodongo_Anim_004E0C))) {
         Animation_Change(&this->skelAnime, &object_kingdodongo_Anim_0042A8, 1.0f, 0.0f,
@@ -714,14 +887,18 @@ void BossDodongo_Walk(BossDodongo* this, PlayState* play) {
     }
 
     if ((this->unk_1DA == 0) && (this->unk_1BC == 0)) {
-        if ((this->actor.xzDistToPlayer < 500.0f) && (this->unk_1A4 != 0) && !this->playerPosInRange) {
+        if(this->actor.xzDistToPlayer < 250.0f && this->unk_1A4 != 0 && !this->playerPosInRange) {
+            BossDodongo_SetupBite(this, play);
+
+        } else if((!this->playerYawInRange || (this->actor.xzDistToPlayer < 500.0f && this->unk_1A4 != 0)) && !this->playerPosInRange) {
             BossDodongo_SetupInhale(this);
             BossDodongo_SpawnFire(this, play, -1);
+            
         }
 
-        if (!this->playerPosInRange && !this->playerYawInRange) {
-            BossDodongo_SetupRoll(this);
-        }
+        //if (!this->playerPosInRange && !this->playerYawInRange) {
+        //    BossDodongo_SetupRoll(this);
+        //}
     }
 }
 
@@ -744,7 +921,7 @@ void BossDodongo_Roll(BossDodongo* this, PlayState* play) {
     }
 
     sp5C = &sCornerPositions[this->unk_1A0];
-    this->unk_1EC = 3.0f;
+    this->unk_1EC = 5.0f;
 
     if (this->unk_1DA == 0) {
         Math_SmoothStepToF(&this->unk_1E4, this->unk_1EC * 5.0f, 1.0f, this->unk_1EC * 0.25f, 0.0f);
@@ -1095,6 +1272,27 @@ s32 BossDodongo_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Ve
     return true;
 }
 
+static Vec3f sKingDodongoBiteQuads[4] = {
+    BLENDERU_TO_ZU(-8.0f, 10.0f, 3.0f, 1000.0f),
+    BLENDERU_TO_ZU(-8.0f, -10.0f, 3.0f, 1000.0f),
+    BLENDERU_TO_ZU(17.0f, -10.0f, 3.0f, 1000.0f),
+    BLENDERU_TO_ZU(17.0f, 10.0f, 3.0f, 1000.0f),
+    
+};
+
+void BossDodongo_UpdateCollider(BossDodongo* this, PlayState* play, Vec3f* src, ColliderQuad* collider) {
+    Vec3f quadDest[4];
+
+    Matrix_MultVec3f(&src[0], &quadDest[0]);
+    Matrix_MultVec3f(&src[1], &quadDest[1]);
+    Matrix_MultVec3f(&src[2], &quadDest[2]);
+    Matrix_MultVec3f(&src[3], &quadDest[3]);
+    Collider_SetQuadVertices(collider, &quadDest[0], &quadDest[1], &quadDest[2], &quadDest[3]);
+
+}
+
+static Vec3f sKingDodongoMouthOffset = BLENDERU_TO_ZU(11.018f, 1.95134f, 1.1608f, 1000.0f);
+
 void BossDodongo_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, void* thisx) {
     static Vec3f D_808CA450 = { 5000.0f, -2500.0f, 0.0f };
     static Vec3f D_808CA45C = { 0.0f, 0.0f, 0.0f };
@@ -1104,7 +1302,19 @@ void BossDodongo_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s
     static Vec3f D_808CA48C = { 8000.0f, 0.0f, 0.0f };
     BossDodongo* this = (BossDodongo*)thisx;
 
-    if (limbIndex == 6) {
+    if(limbIndex == 3) {
+        if(this->bite) {
+            BossDodongo_UpdateCollider(this, play, sKingDodongoBiteQuads, &this->biteCollider);
+            CollisionCheck_SetAT(play, &play->colChkCtx, &this->biteCollider.base);
+
+        }
+
+        Matrix_MultVec3f(&sKingDodongoMouthOffset, &sKingDodongoMouthPos);
+        sKingDodongoMouthRot.x = rot->x;
+        sKingDodongoMouthRot.y = rot->y;
+        sKingDodongoMouthRot.z = rot->z;
+
+    } else if (limbIndex == 6) {
         Matrix_MultVec3f(&D_808CA45C, &this->vec);
         Matrix_MultVec3f(&D_808CA450, &this->actor.focus.pos);
         Matrix_MultVec3f(&D_808CA468, &this->firePos);
@@ -1115,6 +1325,32 @@ void BossDodongo_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s
         Matrix_MultVec3f(&D_808CA48C, &this->unk_404);
     }
     Collider_UpdateSpheres(limbIndex, &this->collider);
+}
+
+void BossDodongo_DrawDebug(BossDodongo* this, PlayState* play) {
+    GfxPrint printer;
+    Gfx* gfx;
+
+    OPEN_DISPS_AUTO(play);
+
+    gfx = POLY_OPA_DISP + 1;
+    gSPDisplayList(OVERLAY_DISP++, gfx);
+
+    GfxPrint_Init(&printer);
+    GfxPrint_Open(&printer, gfx);
+
+    GfxPrint_SetPos(&printer, 20, 8);
+    GfxPrint_Printf(&printer, "Y: %x", this->actor.world.rot.y);
+
+    gfx = GfxPrint_Close(&printer);
+    GfxPrint_Destroy(&printer);
+
+    gSPEndDisplayList(gfx++);
+    gSPBranchList(POLY_OPA_DISP, gfx);
+    POLY_OPA_DISP = gfx;
+
+    CLOSE_DISPS_AUTO(play);
+
 }
 
 void BossDodongo_Draw(Actor* thisx, PlayState* play) {
@@ -1142,6 +1378,8 @@ void BossDodongo_Draw(Actor* thisx, PlayState* play) {
     CLOSE_DISPS(play->state.gfxCtx, "../z_boss_dodongo.c", 3981);
 
     BossDodongo_DrawEffects(play);
+
+    //BossDodongo_DrawDebug(this, play);
 }
 
 f32 func_808C4F6C(BossDodongo* this, PlayState* play) {

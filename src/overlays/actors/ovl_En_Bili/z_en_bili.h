@@ -27,6 +27,15 @@ typedef struct EnBili {
     /* 0x0198 */ Vec3s jointTable[EN_BILI_LIMB_MAX];
     /* 0x01B6 */ Vec3s morphTable[EN_BILI_LIMB_MAX];
     /* 0x01D4 */ ColliderCylinder collider;
+    u8 beamTimer;
+    ColliderQuad beamCollider;
+    Vec3f beamPos1;
+    Vec3f beamPos2;
+    Vec3f beamPos3;
+    Vec3f beamScale;
+    Vec3s beamRot;
+    s16 beamTexScroll;
+    u8 beamCount;
 } EnBili; // size = 0x0220
 
 typedef enum {

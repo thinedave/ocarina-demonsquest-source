@@ -146,13 +146,36 @@ void Cutscene_DrawDebugInfo(PlayState* play, Gfx** dlist, CutsceneContext* csCtx
     GfxPrint_SetPos(&printer, 4, 26);
     GfxPrint_Printf(&printer, "%s", "SKIP=(START) or (Cursole Right)");
 
+    GfxPrint_SetColor(&printer, 50, 255, 255, 60);
+    GfxPrint_SetPos(&printer, 4, 20);
+    GfxPrint_Printf(&printer, "INDEX: %x NEXT ENTR:", gSaveContext.save.cutsceneIndex, play->nextEntranceIndex);
+
     *dlist = GfxPrint_Close(&printer);
     GfxPrint_Destroy(&printer);
+}
+
+void Cutscene_DrawSkip(PlayState* play, Gfx** gfxP, CutsceneContext* csCtx) {
+    //if(!csCtx->wantSkip) return;
+
+    Gfx* gfx = *gfxP;
+
+    OPEN_DISPS_AUTO(play);
+
+    gDPSetAlphaCompare(gfx++, G_AC_NONE);
+    gDPSetCombineMode(gfx++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+
+    char skipText[] = "Skip";
+    Message_DrawString(&play->msgCtx.font, &gfx, skipText, 4, 20, 90, 255, 255, 255, 255, false, 1.0f, true);
+
+    *gfxP = gfx;
+
+    CLOSE_DISPS_AUTO(play);
 }
 
 void Cutscene_InitContext(PlayState* play, CutsceneContext* csCtx) {
     csCtx->state = CS_STATE_IDLE;
     csCtx->timer = 0.0f;
+    csCtx->wantSkip = false;
 }
 
 void Cutscene_StartManual(PlayState* play, CutsceneContext* csCtx) {
@@ -550,6 +573,7 @@ bool findInUnskippables(void* value) {
     void* csUnskippables[] = {
         SEGMENTED_TO_VIRTUAL(gHyruleFieldZeldaSongOfTimeCs),
         SEGMENTED_TO_VIRTUAL(spot00_sceneCutsceneData_00A920),
+        SEGMENTED_TO_VIRTUAL(spot00_sceneCutsceneData_00C8C0),
         //add more eventually
 
     };
@@ -579,9 +603,17 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
         titleDemoSkipped = true;
     }
 
-    if ((csCtx->curFrame == cmd->startFrame) || titleDemoSkipped ||
-        ((csCtx->curFrame > 20) && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_START) &&
-         (gSaveContext.fileNum != 0xFEDC) && !findInUnskippables(csCtx->script))) {
+    bool triedToSkip = ((csCtx->curFrame > 20) && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_START) && (gSaveContext.fileNum != 0xFEDC) && !findInUnskippables(csCtx->script));
+
+    if ((csCtx->curFrame == cmd->startFrame) || titleDemoSkipped || triedToSkip) {
+        if(triedToSkip && !csCtx->wantSkip) {
+            csCtx->wantSkip = true;
+            return;
+
+        }
+
+        csCtx->wantSkip = false;
+
         csCtx->state = CS_STATE_RUN_UNSTOPPABLE;
         Audio_SetCutsceneFlag(0);
         gSaveContext.cutsceneTransitionControl = 1;
@@ -695,12 +727,14 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
                 break;
 
             case CS_DEST_DEATH_MOUNTAIN_TRAIL_FROM_GORON_RUBY:
+                Item_Give(play, ITEM_GORON_RUBY);
                 play->nextEntranceIndex = ENTR_DEATH_MOUNTAIN_TRAIL_5;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 play->transitionType = TRANS_TYPE_FADE_BLACK;
                 break;
 
             case CS_DEST_ZORAS_FOUNTAIN_FROM_ZORAS_SAPPHIRE:
+                Item_Give(play, ITEM_ZORA_SAPPHIRE);
                 play->nextEntranceIndex = ENTR_ZORAS_FOUNTAIN_0;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 play->transitionType = TRANS_TYPE_FADE_BLACK;
@@ -708,6 +742,7 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
                 break;
 
             case CS_DEST_KOKIRI_FOREST_FROM_KOKIRI_EMERALD:
+                Item_Give(play, ITEM_KOKIRI_EMERALD);
                 play->nextEntranceIndex = ENTR_KOKIRI_FOREST_11;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 play->transitionType = TRANS_TYPE_FADE_BLACK;
@@ -850,10 +885,20 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
                 break;
 
             case CS_DEST_HYRULE_FIELD_INTRO_DREAM:
-                play->nextEntranceIndex = ENTR_HYRULE_FIELD_0;
-                play->transitionTrigger = TRANS_TRIGGER_START;
-                gSaveContext.save.cutsceneIndex = 0xFFF0;
-                play->transitionType = TRANS_TYPE_FADE_BLACK_FAST;
+                if(triedToSkip) {
+                    play->nextEntranceIndex = ENTR_LINKS_HOUSE_0;
+                    gSaveContext.save.cutsceneIndex = 0xFFF0;
+                    play->transitionTrigger = TRANS_TRIGGER_START;
+                    play->transitionType = TRANS_TYPE_FADE_BLACK_FAST;
+
+                } else {
+                    play->nextEntranceIndex = ENTR_HYRULE_FIELD_0;
+                    play->transitionTrigger = TRANS_TRIGGER_START;
+                    gSaveContext.save.cutsceneIndex = 0xFFF0;
+                    play->transitionType = TRANS_TYPE_FADE_BLACK_FAST;
+
+                }
+
                 break;
 
             case CS_DEST_CUTSCENE_MAP_SHEIKAH_LEGEND:
@@ -927,12 +972,14 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
                 break;
 
             case CS_DEST_TEMPLE_OF_TIME_FROM_LIGHT_ARROWS:
+                Item_Give(play, ITEM_ARROW_LIGHT);
                 play->nextEntranceIndex = ENTR_TEMPLE_OF_TIME_5;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 play->transitionType = TRANS_TYPE_FADE_BLACK_FAST;
                 break;
 
             case CS_DEST_KAKARIKO_VILLAGE_FROM_NOCTURNE:
+                Item_Give(play, ITEM_SONG_NOCTURNE);
                 play->nextEntranceIndex = ENTR_KAKARIKO_VILLAGE_13;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 play->transitionType = TRANS_TYPE_FADE_WHITE_INSTANT;
@@ -946,6 +993,7 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
                 break;
 
             case CS_DEST_TEMPLE_OF_TIME_SONG_OF_TIME:
+                Item_Give(play, ITEM_SONG_TIME);
                 play->nextEntranceIndex = ENTR_TEMPLE_OF_TIME_0;
                 gSaveContext.save.cutsceneIndex = 0xFFF7;
                 play->transitionTrigger = TRANS_TRIGGER_START;
@@ -1168,6 +1216,7 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
                 break;
 
             case CS_DEST_LON_LON_RANCH_FROM_EPONAS_SONG:
+                Item_Give(play, ITEM_SONG_EPONA);
                 play->nextEntranceIndex = ENTR_LON_LON_RANCH_1;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 play->transitionType = TRANS_TYPE_FADE_WHITE;
@@ -1315,6 +1364,7 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
                 break;
 
             case CS_DEST_ROYAL_FAMILYS_TOMB_SUNS_SONG_PART_3:
+                Item_Give(play, ITEM_SONG_SUN);
                 play->nextEntranceIndex = ENTR_ROYAL_FAMILYS_TOMB_1;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 play->transitionType = TRANS_TYPE_FADE_BLACK;
@@ -1372,12 +1422,14 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
                 break;
 
             case CS_DEST_HYRULE_FIELD_FROM_FAIRY_OCARINA:
+                Item_Give(play, ITEM_OCARINA_FAIRY);
                 play->nextEntranceIndex = ENTR_HYRULE_FIELD_3;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 play->transitionType = TRANS_TYPE_FADE_BLACK;
                 break;
 
             case CS_DEST_HYRULE_FIELD_FROM_IMPA_ESCORT:
+                Item_Give(play, ITEM_SONG_LULLABY);
                 play->nextEntranceIndex = ENTR_HYRULE_FIELD_17;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 play->transitionType = TRANS_TYPE_FADE_BLACK;
@@ -2214,6 +2266,18 @@ void CutsceneHandler_RunScript(PlayState* play, CutsceneContext* csCtx) {
 
     if (gSaveContext.save.cutsceneIndex >= 0xFFF0) {
         if (0) {} // Also necessary to match
+
+        //OPEN_DISPS_AUTO(play);
+
+        //prevDisplayList = POLY_OPA_DISP;
+        //displayList = Graph_GfxPlusOne(POLY_OPA_DISP);
+        //gSPDisplayList(OVERLAY_DISP++, displayList);
+        //Cutscene_DrawSkip(play, &displayList, csCtx);
+        //gSPEndDisplayList(displayList++);
+        //Graph_BranchDlist(prevDisplayList, displayList);
+        //POLY_OPA_DISP = displayList;
+
+        //CLOSE_DISPS_AUTO(play);
 
         if (BREG(0) != 0) {
             OPEN_DISPS(play->state.gfxCtx, "../z_demo.c", 4101);

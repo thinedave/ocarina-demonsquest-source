@@ -13,7 +13,39 @@ static SaveRestingContext sSaveRestingContext = {
     0,                      // timer
     REST_STATE_INACTIVE,    // state
     0,                      // selection
-    {0,0,0,0,0}             // wantedLevels
+    {0,0,0,0,0},             // wantedLevels
+    /*{
+        "Strength",
+        8,
+        "The measure of your^physical prowess,^your power incarnate.^Affects physical damage^dealt with melee weapons.",
+        109,
+        "\"A sword wields no strength^unless the hand that holds^it has courage.\"",
+        71,
+    },
+    {
+        "Intelligence",
+        12,
+        "The measure of your^mental aptitude,^your wisdom incarnate.^Affects magic damage^dealt with spells and^enchantments.",
+        116,
+        "\"...for what good is a strong^hand if the brain who wields^it cannot think?\"",
+        76,
+    },
+    {
+        "Endurance",
+        9,
+        "The measure of your^physical stamina,^your courage incarnate.^Affects the amount of^stamina drained.",
+        100,
+        "\"The first virtue in a soldier^is endurance of fatigue.^courage is only the^second virtue.\"",
+        91,
+    },
+    {
+        "Luck",
+        4,
+        "The measure of your^godly favor. Affects^your chances of^achieving critical^attacks and nullifying^damage taken.",
+        112,
+        "\"Do not give up hope, hero!^The Goddess Hylia favors^you this day!\"",
+        67,
+    },*/
 
 };
 
@@ -94,26 +126,28 @@ void Interface_Init(PlayState* play) {
                             "../z_construct.c", 178);
 
     //dpad item textures awesome
-    interfaceCtx->dpadItemSegment = GameState_Alloc(&play->state, 0x6000, __FILE__, __LINE__);
+    interfaceCtx->dpadItemSegment = GameState_Alloc(&play->state, 0x8000, __FILE__, __LINE__);
 
-    osSyncPrintf("LETS LOAD THESE FUCKING DPAD ITEMS AT=%x\n", 0x6000);
+    osSyncPrintf("LETS LOAD THESE FUCKING DPAD ITEMS AT=%x\n", 0x8000);
     osSyncPrintf("parameter->dpadItemSegment=%x\n", interfaceCtx->dpadItemSegment);
 
     ASSERT(interfaceCtx->dpadItemSegment != NULL, "parameter->dpadItemSegment != NULL", "../z_construct.c", 193);
 
-    u64 dpadItems[6] = {
+    u64 dpadItems[8] = {
         ITEM_TUNIC_KOKIRI, //0x0000
         ITEM_TUNIC_GORON,  //0x1000
         ITEM_TUNIC_ZORA,   //0x2000
         ITEM_BOOTS_KOKIRI, //0x3000
         ITEM_BOOTS_IRON,   //0x4000
         ITEM_BOOTS_HOVER,  //0x5000
+        ITEM_OCARINA_FAIRY,
+        ITEM_OCARINA_OF_TIME,
 
     };
 
-    osSyncPrintf("Register_Item[%x, %x, %x, %x, %x, %x]\n", dpadItems[0], dpadItems[1], dpadItems[2], dpadItems[3], dpadItems[4], dpadItems[5]);
+    osSyncPrintf("Register_Item[%x, %x, %x, %x, %x, %x, %x, %x]\n", dpadItems[0], dpadItems[1], dpadItems[2], dpadItems[3], dpadItems[4], dpadItems[5], dpadItems[6], dpadItems[7]);
 
-    for(u8 i = 0; i <= 5; i++) {
+    for(u8 i = 0; i <= 7; i++) {
         DmaMgr_RequestSyncDebug(interfaceCtx->dpadItemSegment + (ITEM_ICON_SIZE * i), (uintptr_t)_icon_item_staticSegmentRomStart + (dpadItems[i] * ITEM_ICON_SIZE), ITEM_ICON_SIZE, __FILE__, __LINE__);
 
     }
@@ -244,7 +278,8 @@ void Message_Init(PlayState* play) {
     osSyncPrintf("吹き出しgame_alloc=%x\n", TEXTBOX_SEGMENT_SIZE); // "Textbox game_alloc=%x"
     ASSERT(msgCtx->textboxSegment != NULL, "message->fukidashiSegment != NULL", "../z_construct.c", 352);
 
-    Font_LoadOrderedFont(&play->msgCtx.font);
+    //Font_LoadOrderedFont(&play->msgCtx.font);
+    Font_LoadAll(&play->msgCtx.font);
 
     YREG(31) = 0;
 }

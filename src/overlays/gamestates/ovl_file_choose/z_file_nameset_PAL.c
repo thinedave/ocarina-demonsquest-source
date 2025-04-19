@@ -211,8 +211,11 @@ void FileSelect_SetNameEntryVtx(GameState* thisx) {
     gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 255, 255, 255, this->nameEntryBoxAlpha);
 
     for (phi_v0 = 0, phi_s0 = 0; phi_s0 < 0x20; phi_s0 += 4, phi_v0++) {
+        char cha = this->fileNames[this->buttonIndex][phi_v0] - ' ';
+        u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
         FileSelect_DrawCharacter(this->state.gfxCtx,
-                                 font->fontBuf + this->fileNames[this->buttonIndex][phi_v0] * FONT_CHAR_TEX_SIZE,
+                                 &font->charTexBuf[texID],
                                  phi_s0);
     }
 
@@ -279,14 +282,21 @@ void FileSelect_DrawKeyboard(GameState* thisx) {
         gSPVertex(POLY_OPA_DISP++, &this->keyboardVtx[vtx], 32, 0);
 
         for (tmp = 0; tmp < 32; i++, tmp += 4) {
-            FileSelect_DrawCharacter(this->state.gfxCtx, font->fontBuf + D_808123F0[i] * FONT_CHAR_TEX_SIZE, tmp);
+            char cha = D_808123F0[i] - ' ';
+            u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
+            FileSelect_DrawCharacter(this->state.gfxCtx, &font->charTexBuf[texID], tmp);
         }
 
         vtx += 32;
     }
 
     gSPVertex(POLY_OPA_DISP++, &this->keyboardVtx[0x100], 4, 0);
-    FileSelect_DrawCharacter(this->state.gfxCtx, font->fontBuf + D_808123F0[i] * FONT_CHAR_TEX_SIZE, 0);
+
+    char cha = D_808123F0[i] - ' ';
+    u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
+    FileSelect_DrawCharacter(this->state.gfxCtx, &font->charTexBuf[texID], 0);
 
     CLOSE_DISPS(this->state.gfxCtx, "../z_file_nameset_PAL.c", 347);
 }
@@ -377,19 +387,19 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
     gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 255, 255, 255, 255);
 
     if (this->configMode == CM_NAME_ENTRY) {
-        if (CHECK_BTN_ALL(input->press.button, BTN_START)) {
+        if (CHECK_BTN_ALL(input->press.button, BTN_START) && !Message_NoticeActive()) {
             Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
             // place cursor on END button
             this->kbdY = 5;
             this->kbdX = 4;
-        } else if (CHECK_BTN_ALL(input->press.button, BTN_B)) {
-            if ((this->newFileNameCharCount == 7) && (this->fileNames[this->buttonIndex][7] != 0x3E)) {
+        } else if (CHECK_BTN_ALL(input->press.button, BTN_B) && !Message_NoticeActive()) {
+            if ((this->newFileNameCharCount == 7) && (this->fileNames[this->buttonIndex][7] != ' ')) {
                 for (i = this->newFileNameCharCount; i < 7; i++) {
                     this->fileNames[this->buttonIndex][i] = this->fileNames[this->buttonIndex][i + 1];
                 }
 
-                this->fileNames[this->buttonIndex][i] = 0x3E;
+                this->fileNames[this->buttonIndex][i] = ' ';
                 Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_S, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                      &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
             } else {
@@ -403,7 +413,7 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                         this->fileNames[this->buttonIndex][i] = this->fileNames[this->buttonIndex][i + 1];
                     }
 
-                    this->fileNames[this->buttonIndex][i] = 0x3E;
+                    this->fileNames[this->buttonIndex][i] = ' ';
                     Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_S, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                          &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                 }
@@ -415,10 +425,13 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                     gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 255, 255, 0, 255);
                     gSPVertex(POLY_OPA_DISP++, &this->keyboardVtx[this->charIndex * 4], 4, 0);
 
-                    FileSelect_DrawCharacter(this->state.gfxCtx,
-                                             font->fontBuf + D_808123F0[this->charIndex] * FONT_CHAR_TEX_SIZE, 0);
+                    char cha = D_808123F0[this->charIndex] - ' ';
+                    u16 texID = cha * FONT_CHAR_TEX_SIZE;
 
-                    if (CHECK_BTN_ALL(input->press.button, BTN_A)) {
+                    FileSelect_DrawCharacter(this->state.gfxCtx,
+                                             &font->charTexBuf[texID], 0);
+
+                    if (CHECK_BTN_ALL(input->press.button, BTN_A) && !Message_NoticeActive()) {
                         Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_S, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                              &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                         this->fileNames[this->buttonIndex][this->newFileNameCharCount] = D_808123F0[this->charIndex];
@@ -428,7 +441,7 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                             this->newFileNameCharCount = 7;
                         }
                     }
-                } else if (CHECK_BTN_ALL(input->press.button, BTN_A)/* && (this->charPage != this->kbdButton)*/) {
+                } else if (CHECK_BTN_ALL(input->press.button, BTN_A)/* && (this->charPage != this->kbdButton)*/ && !Message_NoticeActive()) {
                     if (this->kbdButton == FS_KBD_BTN_CURSE && (this->heroModeBoxPosX <= -150 || this->heroModeBoxPosX == 0)) {
                         //selected curse
                         //Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
@@ -447,12 +460,12 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                         
                         
                     } else if (this->kbdButton == FS_KBD_BTN_BACKSPACE) {
-                        if ((this->newFileNameCharCount == 7) && (this->fileNames[this->buttonIndex][7] != 0x3E)) {
+                        if ((this->newFileNameCharCount == 7) && (this->fileNames[this->buttonIndex][7] != ' ')) {
                             for (i = this->newFileNameCharCount; i < 7; i++) {
                                 this->fileNames[this->buttonIndex][i] = this->fileNames[this->buttonIndex][i + 1];
                             }
 
-                            this->fileNames[this->buttonIndex][i] = 0x3E;
+                            this->fileNames[this->buttonIndex][i] = ' ';
                             Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_S, &gSfxDefaultPos, 4,
                                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                                  &gSfxDefaultReverb);
@@ -467,7 +480,7 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                                 this->fileNames[this->buttonIndex][i] = this->fileNames[this->buttonIndex][i + 1];
                             }
 
-                            this->fileNames[this->buttonIndex][i] = 0x3E;
+                            this->fileNames[this->buttonIndex][i] = ' ';
                             Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_S, &gSfxDefaultPos, 4,
                                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                                  &gSfxDefaultReverb);
@@ -476,7 +489,7 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                         validName = false;
 
                         for (i = 0; i < 8; i++) {
-                            if (this->fileNames[this->buttonIndex][i] != 0x3E) {
+                            if (this->fileNames[this->buttonIndex][i] != ' ') {
                                 validName = true;
                                 break;
                             }
@@ -501,7 +514,7 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                     }
                 }
 
-                if (CHECK_BTN_ALL(input->press.button, BTN_CRIGHT)) {
+                if (CHECK_BTN_ALL(input->press.button, BTN_CRIGHT) && !Message_NoticeActive()) {
                     Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                          &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                     this->newFileNameCharCount++;
@@ -509,7 +522,7 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                     if (this->newFileNameCharCount > 7) {
                         this->newFileNameCharCount = 7;
                     }
-                } else if (CHECK_BTN_ALL(input->press.button, BTN_CLEFT)) {
+                } else if (CHECK_BTN_ALL(input->press.button, BTN_CLEFT) && !Message_NoticeActive()) {
                     Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                          &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                     this->newFileNameCharCount--;
@@ -714,6 +727,8 @@ void FileSelect_UpdateOptionsMenu(GameState* thisx) {
     FileSelectState* this = (FileSelectState*)thisx;
     SramContext* sramCtx = &this->sramCtx;
     Input* input = &this->state.input[0];
+
+    if(Message_NoticeActive()) return;
 
     if (CHECK_BTN_ALL(input->press.button, BTN_B)) {
         Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
@@ -958,11 +973,9 @@ void FileSelect_DrawOptionsImpl(GameState* thisx) {
             gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 0, 255);
         }
 
-        //! @bug Mistakenly using sOptionsMenuHeaders instead of sOptionsMenuSettings for the height.
-        //! This works out anyway because all heights are 16.
         gDPLoadTextureBlock(POLY_OPA_DISP++, sOptionsMenuSettings[i].texture[gSaveContext.language], G_IM_FMT_IA,
                             G_IM_SIZ_8b, sOptionsMenuSettings[i].width[gSaveContext.language],
-                            sOptionsMenuHeaders[i].height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
+                            sOptionsMenuSettings[i].height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
                             G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
         gSP1Quadrangle(POLY_OPA_DISP++, vtx, vtx + 2, vtx + 3, vtx + 1, 0);
     }
@@ -984,12 +997,9 @@ void FileSelect_DrawOptionsImpl(GameState* thisx) {
             gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 0, 255);
         }
 
-        //! @bug Mistakenly using sOptionsMenuHeaders instead of sOptionsMenuSettings for the height.
-        //! This is also an OOB read that happens to access the height of the first two elements in
-        //! sOptionsMenuSettings, and since all heights are 16, it works out anyway.
         gDPLoadTextureBlock(POLY_OPA_DISP++, sOptionsMenuSettings[i].texture[gSaveContext.language], G_IM_FMT_IA,
                             G_IM_SIZ_8b, sOptionsMenuSettings[i].width[gSaveContext.language],
-                            sOptionsMenuHeaders[i].height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
+                            sOptionsMenuSettings[i].height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
                             G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
         gSP1Quadrangle(POLY_OPA_DISP++, vtx, vtx + 2, vtx + 3, vtx + 1, 0);
     }

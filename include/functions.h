@@ -1957,4 +1957,20 @@ void MemPakNotice_Destroy(GameState* thisx);
 void MemPakNotice_Draw(GameState* thisx);
 Gfx* MemPakNotice_TextureI8(Gfx* displayListHead, void* texture, s16 textureWidth, s16 textureHeight, s16 rectLeft, s16 rectTop, s16 rectWidth, s16 rectHeight, u16 dsdx, u16 dtdy);
 
+u16 Message_DrawString(Font* font, Gfx** gfxP, char* text, u16 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale, bool shadow);
+void Font_LoadAll(Font* font);
+
+void SFXList_Init(GameState* thisx);
+void SFXList_Main(GameState* thisx);
+void SFXList_Destroy(GameState* thisx);
+void SFXList_Draw(SFXListState* this);
+
+void Stamina_DrawMeter(PlayState* this);
+
+s32 Graph_IsHLE();
+
+void Message_SendNotice(GameState* state, u8 noticeIndex, bool noSkip, void (*exit)(GameState* state, Actor* storedActor), Actor* storedActor);
+void Message_DrawNotice(GameState* state, Font* font);
+bool Message_NoticeActive();
+
 #endif

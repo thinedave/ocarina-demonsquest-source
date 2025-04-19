@@ -1,0 +1,26 @@
+{
+  "version": 1.0,
+  "autoLoad": true,
+  "microcode": "F3DEX2/LX2",
+  "saveTextures": false,
+  "autoPickTextureFormat": true,
+  "preferRGBAOverCI": false,
+  "rdpDefaults": {
+    "geometryMode": {
+      "zBuffer": true,
+      "shade": true,
+      "cullBack": true,
+      "lighting": true,
+      "shadeSmooth": true
+    },
+    "otherModeH": {
+      "alphaDither": "G_AD_NOISE",
+      "textureConvert": "G_TC_FILT",
+      "textureFilter": "G_TF_BILERP",
+      "perspectiveCorrection": "G_TP_PERSP",
+      "cycleType": "G_CYC_2CYCLE"
+    },
+    "otherModeL": {},
+    "other": {}
+  }
+}

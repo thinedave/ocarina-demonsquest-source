@@ -63,6 +63,8 @@ void FileSelect_SelectCopySource(GameState* thisx) {
     SramContext* sramCtx = &this->sramCtx;
     Input* input = &this->state.input[0];
 
+    if(Message_NoticeActive()) return;
+
     if (((this->buttonIndex == FS_BTN_COPY_QUIT) && CHECK_BTN_ANY(input->press.button, BTN_A | BTN_START)) ||
         CHECK_BTN_ALL(input->press.button, BTN_B)) {
         this->actionTimer = 8;
@@ -178,6 +180,8 @@ void FileSelect_SelectCopyDest(GameState* thisx) {
     FileSelectState* this = (FileSelectState*)thisx;
     SramContext* sramCtx = &this->sramCtx;
     Input* input = &this->state.input[0];
+
+    if(Message_NoticeActive()) return;
 
     if (((this->buttonIndex == FS_BTN_COPY_QUIT) && CHECK_BTN_ANY(input->press.button, BTN_A | BTN_START)) ||
         CHECK_BTN_ALL(input->press.button, BTN_B)) {
@@ -368,6 +372,8 @@ void FileSelect_CopyConfirm(GameState* thisx) {
     SramContext* sramCtx = &this->sramCtx;
     Input* input = &this->state.input[0];
     u16 dayTime;
+    
+    if(Message_NoticeActive()) return;
 
     if (((this->buttonIndex != FS_BTN_CONFIRM_YES) && CHECK_BTN_ANY(input->press.button, BTN_A | BTN_START)) ||
         CHECK_BTN_ALL(input->press.button, BTN_B)) {
@@ -700,6 +706,8 @@ void FileSelect_EraseSelect(GameState* thisx) {
     SramContext* sramCtx = &this->sramCtx;
     Input* input = &this->state.input[0];
 
+    if(Message_NoticeActive()) return;
+
     if (((this->buttonIndex == FS_BTN_COPY_QUIT) && CHECK_BTN_ANY(input->press.button, BTN_A | BTN_START)) ||
         CHECK_BTN_ALL(input->press.button, BTN_B)) {
         this->buttonIndex = FS_BTN_MAIN_ERASE;
@@ -840,6 +848,8 @@ void FileSelect_SetupEraseConfirm2(GameState* thisx) {
 void FileSelect_EraseConfirm(GameState* thisx) {
     FileSelectState* this = (FileSelectState*)thisx;
     Input* input = &this->state.input[0];
+
+    if(Message_NoticeActive()) return;
 
     if (((this->buttonIndex != FS_BTN_CONFIRM_YES) && CHECK_BTN_ANY(input->press.button, BTN_A | BTN_START)) ||
         CHECK_BTN_ALL(input->press.button, BTN_B)) {

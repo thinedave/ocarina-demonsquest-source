@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "file_select.h"
 #include "terminal.h"
 #include "assets/textures/title_static/title_static.h"
@@ -172,10 +173,12 @@ static const Vtx DQ_HeroModeConnectorVtx[] = {VTX_QUAD(63,56,24,16)};
  * Update function for `CM_MAIN_MENU`
  */
 void FileSelect_UpdateMainMenu(GameState* thisx) {
-    static u8 emptyName[] = { 0x3E, 0x3E, 0x3E, 0x3E, 0x3E, 0x3E, 0x3E, 0x3E };
+    static u8 emptyName[] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
     FileSelectState* this = (FileSelectState*)thisx;
     SramContext* sramCtx = &this->sramCtx;
     Input* input = &this->state.input[0];
+
+    if(Message_NoticeActive()) return;
 
     if (CHECK_BTN_ALL(input->press.button, BTN_START) || CHECK_BTN_ALL(input->press.button, BTN_A)) {
         if (this->buttonIndex <= FS_BTN_MAIN_FILE_3) {
@@ -384,6 +387,8 @@ static void (*sConfigModeUpdateFuncs[])(GameState*) = {
     FileSelect_UnusedCMDelay,
 };
 
+static sPressedWiiVcCombo = false;
+
 /**
  * Updates the alpha of the cursor to make it pulsate.
  * On the debug rom, this function also handles switching languages with controller 3.
@@ -452,6 +457,21 @@ void FileSelect_PulsateCursor(GameState* thisx) {
         XREG(35) = XREG(36 + this->highlightPulseDir);
         this->highlightPulseDir ^= 1;
     }
+
+    if(Message_NoticeActive()) return;
+
+    bool didCombo = CHECK_BTN_ALL(this->state.input[0].cur.button, BTN_L | BTN_R | BTN_Z | BTN_B);
+
+    if(didCombo && !sPressedWiiVcCombo) {
+        sPressedWiiVcCombo = true;
+        
+        gSaveContext.wiiVcMode = !gSaveContext.wiiVcMode;
+
+        Audio_PlaySfxGeneral(gSaveContext.wiiVcMode ? NA_SE_SY_FSEL_DECIDE_L : NA_SE_SY_FSEL_DECIDE_S, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                                     &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+    } else if(!didCombo && sPressedWiiVcCombo) sPressedWiiVcCombo = false;
+
 }
 
 void FileSelect_ConfigModeUpdate(GameState* thisx) {
@@ -820,7 +840,6 @@ void FileSelect_DrawFileInfo(GameState* thisx, s16 fileIndex, s16 isActive) {
     s16 i;
     s16 vtxOffset;
     s16 j;
-    s16 deathCountSplit[3];
 
     OPEN_DISPS(this->state.gfxCtx, "../z_file_choose.c", 1709);
 
@@ -835,8 +854,10 @@ void FileSelect_DrawFileInfo(GameState* thisx, s16 fileIndex, s16 isActive) {
                         sNamePrimColors[isActive][2], this->nameAlpha[fileIndex]);
 
         for (i = 0, vtxOffset = 0; vtxOffset < 0x20; i++, vtxOffset += 4) {
-            FileSelect_DrawCharacter(this->state.gfxCtx,
-                                     sp54->fontBuf + this->fileNames[fileIndex][i] * FONT_CHAR_TEX_SIZE, vtxOffset);
+            char cha = this->fileNames[fileIndex][i] - ' ';
+            u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
+            FileSelect_DrawCharacter(this->state.gfxCtx, &sp54->charTexBuf[texID], vtxOffset);
         }
     }
 
@@ -847,12 +868,15 @@ void FileSelect_DrawFileInfo(GameState* thisx, s16 fileIndex, s16 isActive) {
         gDPSetPrimColor(POLY_OPA_DISP++, 0x00, 0x00, 255, 255, 255, this->fileInfoAlpha[fileIndex]);
         gSPVertex(POLY_OPA_DISP++, &this->windowContentVtx[D_8081284C[fileIndex]] + 0x24, 12, 0);
 
-        FileSelect_SplitNumber(this->deaths[fileIndex], &deathCountSplit[0], &deathCountSplit[1], &deathCountSplit[2]);
+        char deathCountSplit[3];
+        sprintf(deathCountSplit, "%.3i", this->deaths[fileIndex]);
 
         // draw death count
         for (i = 0, vtxOffset = 0; i < 3; i++, vtxOffset += 4) {
-            FileSelect_DrawCharacter(this->state.gfxCtx, sp54->fontBuf + deathCountSplit[i] * FONT_CHAR_TEX_SIZE,
-                                     vtxOffset);
+            char cha = deathCountSplit[i] - ' ';
+            u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
+            FileSelect_DrawCharacter(this->state.gfxCtx, &sp54->charTexBuf[texID], vtxOffset);
         }
 
         gDPPipeSync(POLY_OPA_DISP++);
@@ -1348,6 +1372,8 @@ void FileSelect_ConfirmFile(GameState* thisx) {
     FileSelectState* this = (FileSelectState*)thisx;
     Input* input = &this->state.input[0];
 
+    if(Message_NoticeActive()) return;
+
     if (CHECK_BTN_ALL(input->press.button, BTN_START) || (CHECK_BTN_ALL(input->press.button, BTN_A))) {
         if (this->confirmButtonIndex == FS_BTN_CONFIRM_YES) {
             if(this->deads[this->selectedFileIndex]) {
@@ -1713,6 +1739,8 @@ void FileSelect_Main(GameState* thisx) {
     sFileSelectUpdateFuncs[this->menuMode](&this->state);
     sFileSelectDrawFuncs[this->menuMode](&this->state);
 
+    Message_DrawNotice(&this->state, &this->font);
+
     // do not draw controls text in the options menu
     if ((this->configMode <= CM_NAME_ENTRY_TO_MAIN) || (this->configMode >= CM_UNUSED_DELAY)) {
         Gfx_SetupDL_39Opa(this->state.gfxCtx);
@@ -1934,8 +1962,15 @@ void FileSelect_Init(GameState* thisx) {
     this->state.main = FileSelect_Main;
     this->state.destroy = FileSelect_Destroy;
     FileSelect_InitContext(&this->state);
-    Font_LoadOrderedFont(&this->font);
+    //Font_LoadOrderedFont(&this->font);
+    Font_LoadAll(&this->font);
     SEQCMD_RESET_AUDIO_HEAP(0, 10);
     // Setting ioData to 1 and writing it to ioPort 7 will skip the harp intro
     Audio_PlaySequenceWithSeqPlayerIO(SEQ_PLAYER_BGM_MAIN, NA_BGM_FILE_SELECT, 0, 7, 1);
+
+    //if(Graph_IsHLE()) {
+        Message_SendNotice(&this->state, NOTICE_BAD_EMULATOR, true, NULL, NULL);
+
+    //}
+
 }

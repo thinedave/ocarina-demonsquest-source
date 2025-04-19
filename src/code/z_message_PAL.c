@@ -1131,16 +1131,23 @@ void Message_DrawText(PlayState* play, Gfx** gfxP) {
                     Audio_PlaySfxGeneral(NA_SE_NONE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                          &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                 }
-                Message_DrawTextChar(play, &font->charTexBuf[charTexIdx], &gfx);
-                charTexIdx += FONT_CHAR_TEX_SIZE;
+
+                char cha = character - ' ';
+                u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
+                Message_DrawTextChar(play, &font->charTexBuf[texID], &gfx);
 
                 msgCtx->textPosX += (s32)(sFontWidths[character - ' '] * (R_TEXT_CHAR_SCALE / 100.0f));
                 break;
         }
     }
     if (msgCtx->textDelayTimer == 0) {
-        msgCtx->textDrawPos = i + 1;
-        msgCtx->textDelayTimer = msgCtx->textDelay * .05;
+        if(msgCtx->textBoxType != TEXTBOX_TYPE_OCARINA && CHECK_BTN_ALL(play->state.input[0].press.button, BTN_B))
+            msgCtx->textDrawPos = msgCtx->decodedTextLen - 2;
+        else
+            msgCtx->textDrawPos = ((msgCtx->textBoxType == TEXTBOX_TYPE_OCARINA || msgCtx->textDrawPos > msgCtx->decodedTextLen - 2) ? msgCtx->textDrawPos + 1 : msgCtx->textDrawPos + 3);
+
+        msgCtx->textDelayTimer = 0;
     } else {
         msgCtx->textDelayTimer--;
     }
@@ -1237,7 +1244,7 @@ void Message_Decode(PlayState* play) {
             // Substitute the player name control character for the file's player name.
             for (playerNameLen = ARRAY_COUNT(gSaveContext.save.info.playerData.playerName); playerNameLen > 0;
                  playerNameLen--) {
-                if (gSaveContext.save.info.playerData.playerName[playerNameLen - 1] != 0x3E) {
+                if (gSaveContext.save.info.playerData.playerName[playerNameLen - 1] != ' ') {
                     break;
                 }
             }
@@ -1245,26 +1252,6 @@ void Message_Decode(PlayState* play) {
             osSyncPrintf("\n名前 ＝ ");
             for (i = 0; i < playerNameLen; i++) {
                 curChar2 = gSaveContext.save.info.playerData.playerName[i];
-                if (curChar2 == 0x3E) {
-                    curChar2 = ' ';
-                } else if (curChar2 == 0x40) {
-                    curChar2 = '.';
-                } else if (curChar2 == 0x3F) {
-                    curChar2 = '-';
-                } else if (curChar2 < 0xA) {
-                    curChar2 += 0;
-                    curChar2 += '0';
-                } else if (curChar2 < 0x24) {
-                    curChar2 += 0;
-                    curChar2 += '7';
-                } else if (curChar2 < 0x3E) {
-                    curChar2 += 0;
-                    curChar2 += '=';
-                }
-                if (curChar2 != ' ') {
-                    Font_LoadChar(font, curChar2 - ' ', charTexIdx);
-                    charTexIdx += FONT_CHAR_TEX_SIZE;
-                }
                 osSyncPrintf("%x ", curChar2);
                 msgCtx->msgBufDecoded[decodedBufPos] = curChar2;
                 decodedBufPos++;
@@ -1296,17 +1283,17 @@ void Message_Decode(PlayState* play) {
             }
 
             for (i = 0; i < 4; i++) {
-                Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
+                //Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
                 charTexIdx += FONT_CHAR_TEX_SIZE;
                 msgCtx->msgBufDecoded[decodedBufPos] = digits[i] + '0';
                 decodedBufPos++;
                 if (i == 1) {
-                    Font_LoadChar(font, '"' - ' ', charTexIdx);
+                    //Font_LoadChar(font, '"' - ' ', charTexIdx);
                     charTexIdx += FONT_CHAR_TEX_SIZE;
                     msgCtx->msgBufDecoded[decodedBufPos] = '"';
                     decodedBufPos++;
                 } else if (i == 3) {
-                    Font_LoadChar(font, '"' - ' ', charTexIdx);
+                    //Font_LoadChar(font, '"' - ' ', charTexIdx);
                     charTexIdx += FONT_CHAR_TEX_SIZE;
                     msgCtx->msgBufDecoded[decodedBufPos] = '"';
                 }
@@ -1338,7 +1325,7 @@ void Message_Decode(PlayState* play) {
                     loadChar = true;
                 }
                 if (loadChar) {
-                    Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
+                    //Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
                     msgCtx->msgBufDecoded[decodedBufPos] = digits[i] + '0';
                     charTexIdx += FONT_CHAR_TEX_SIZE;
                     decodedBufPos++;
@@ -1368,7 +1355,7 @@ void Message_Decode(PlayState* play) {
                     loadChar = true;
                 }
                 if (loadChar) {
-                    Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
+                    //Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
                     msgCtx->msgBufDecoded[decodedBufPos] = digits[i] + '0';
                     charTexIdx += FONT_CHAR_TEX_SIZE;
                     osSyncPrintf("%x(%x) ", digits[i] + '0' - ' ', digits[i]);
@@ -1389,7 +1376,7 @@ void Message_Decode(PlayState* play) {
 
             for (i = 0; i < 2; i++) {
                 if (i == 1 || digits[i] != 0) {
-                    Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
+                    //Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
                     msgCtx->msgBufDecoded[decodedBufPos] = digits[i] + '0';
                     charTexIdx += FONT_CHAR_TEX_SIZE;
                     osSyncPrintf("%x(%x) ", digits[i] + '0' - ' ', digits[i]);
@@ -1438,7 +1425,7 @@ void Message_Decode(PlayState* play) {
                             loadChar = true;
                         }
                         if (loadChar) {
-                            Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
+                            //Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
                             msgCtx->msgBufDecoded[decodedBufPos] = digits[i] + '0';
                             charTexIdx += FONT_CHAR_TEX_SIZE;
                             decodedBufPos++;
@@ -1468,17 +1455,17 @@ void Message_Decode(PlayState* play) {
                     }
 
                     for (i = 0; i < 4; i++) {
-                        Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
+                        //Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
                         charTexIdx += FONT_CHAR_TEX_SIZE;
                         msgCtx->msgBufDecoded[decodedBufPos] = digits[i] + '0';
                         decodedBufPos++;
                         if (i == 1) {
-                            Font_LoadChar(font, '"' - ' ', charTexIdx);
+                            //Font_LoadChar(font, '"' - ' ', charTexIdx);
                             charTexIdx += FONT_CHAR_TEX_SIZE;
                             msgCtx->msgBufDecoded[decodedBufPos] = '"';
                             decodedBufPos++;
                         } else if (i == 3) {
-                            Font_LoadChar(font, '"' - ' ', charTexIdx);
+                            //Font_LoadChar(font, '"' - ' ', charTexIdx);
                             charTexIdx += FONT_CHAR_TEX_SIZE;
                             msgCtx->msgBufDecoded[decodedBufPos] = '"';
                         }
@@ -1504,12 +1491,12 @@ void Message_Decode(PlayState* play) {
             }
 
             for (i = 0; i < 4; i++) {
-                Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
+                //Font_LoadChar(font, digits[i] + '0' - ' ', charTexIdx);
                 charTexIdx += FONT_CHAR_TEX_SIZE;
                 msgCtx->msgBufDecoded[decodedBufPos] = digits[i] + '0';
                 decodedBufPos++;
                 if (i == 1) {
-                    Font_LoadChar(font, ':' - ' ', charTexIdx);
+                    //Font_LoadChar(font, ':' - ' ', charTexIdx);
                     charTexIdx += FONT_CHAR_TEX_SIZE;
                     msgCtx->msgBufDecoded[decodedBufPos] = ':';
                     decodedBufPos++;
@@ -1565,7 +1552,7 @@ void Message_Decode(PlayState* play) {
             } else if (curChar == MESSAGE_THREE_CHOICE) {
                 msgCtx->choiceNum = 3;
             } else if (curChar != ' ') {
-                Font_LoadChar(font, curChar - ' ', charTexIdx);
+                //Font_LoadChar(font, curChar - ' ', charTexIdx);
                 charTexIdx += FONT_CHAR_TEX_SIZE;
             }
         }
@@ -3210,11 +3197,11 @@ void Message_Update(PlayState* play) {
             }
             break;
         case MSGMODE_TEXT_DISPLAYING:
-            if (msgCtx->textBoxType != TEXTBOX_TYPE_NONE_BOTTOM && YREG(31) == 0 &&
+            /*if (msgCtx->textBoxType != TEXTBOX_TYPE_NONE_BOTTOM && YREG(31) == 0 &&
                 CHECK_BTN_ALL(play->state.input[0].press.button, BTN_B) && !msgCtx->textUnskippable) {
                 sTextboxSkipped = true;
                 msgCtx->textDrawPos = msgCtx->decodedTextLen;
-            }
+            }*/
             break;
         case MSGMODE_TEXT_AWAIT_INPUT:
             if (YREG(31) == 0 && Message_ShouldAdvance(play)) {
@@ -3358,3 +3345,383 @@ UNK_TYPE D_80153D7C = 0x00000000;
 // This should be part of z_game_over.c, but cannot be moved there as the entire
 // late_rodata section of this file is in the way
 s16 gGameOverTimer = 0;
+
+static f32 sFontWidthsParameter[144] = {
+    8.0f,  // ' '
+    8.0f,  // '!'
+    6.0f,  // '"'
+    9.0f,  // '#'
+    9.0f,  // '$'
+    14.0f, // '%'
+    12.0f, // '&'
+    3.0f,  // '''
+    7.0f,  // '('
+    7.0f,  // ')'
+    7.0f,  // '*'
+    9.0f,  // '+'
+    4.0f,  // ','
+    6.0f,  // '-'
+    4.0f,  // '.'
+    9.0f,  // '/'
+    10.0f, // '0'
+    5.0f,  // '1'
+    9.0f,  // '2'
+    9.0f,  // '3'
+    10.0f, // '4'
+    9.0f,  // '5'
+    9.0f,  // '6'
+    9.0f,  // '7'
+    9.0f,  // '8'
+    9.0f,  // '9'
+    6.0f,  // ':'
+    6.0f,  // ';'
+    9.0f,  // '<'
+    11.0f, // '='
+    9.0f,  // '>'
+    11.0f, // '?'
+    13.0f, // '@'
+    12.0f, // 'A'
+    9.0f,  // 'B'
+    11.0f, // 'C'
+    11.0f, // 'D'
+    8.0f,  // 'E'
+    8.0f,  // 'F'
+    12.0f, // 'G'
+    10.0f, // 'H'
+    4.0f,  // 'I'
+    8.0f,  // 'J'
+    10.0f, // 'K'
+    8.0f,  // 'L'
+    13.0f, // 'M'
+    11.0f, // 'N'
+    13.0f, // 'O'
+    9.0f,  // 'P'
+    13.0f, // 'Q'
+    10.0f, // 'R'
+    10.0f, // 'S'
+    9.0f,  // 'T'
+    10.0f, // 'U'
+    11.0f, // 'V'
+    15.0f, // 'W'
+    11.0f, // 'X'
+    10.0f, // 'Y'
+    10.0f, // 'Z'
+    7.0f,  // '['
+    10.0f, // '\'
+    7.0f,  // ']'
+    10.0f, // '^'
+    9.0f,  // '_'
+    5.0f,  // '`'
+    8.0f,  // 'a'
+    9.0f,  // 'b'
+    8.0f,  // 'c'
+    9.0f,  // 'd'
+    9.0f,  // 'e'
+    6.0f,  // 'f'
+    9.0f,  // 'g'
+    8.0f,  // 'h'
+    4.0f,  // 'i'
+    6.0f,  // 'j'
+    8.0f,  // 'k'
+    4.0f,  // 'l'
+    12.0f, // 'm'
+    9.0f,  // 'n'
+    9.0f,  // 'o'
+    9.0f,  // 'p'
+    9.0f,  // 'q'
+    7.0f,  // 'r'
+    8.0f,  // 's'
+    7.0f,  // 't'
+    8.0f,  // 'u'
+    9.0f,  // 'v'
+    12.0f, // 'w'
+    8.0f,  // 'x'
+    9.0f,  // 'y'
+    8.0f,  // 'z'
+    7.0f,  // '{'
+    5.0f,  // '|'
+    7.0f,  // '}'
+    10.0f, // '~'
+    10.0f, // '‾'
+    12.0f, // 'À'
+    6.0f,  // 'î'
+    12.0f, // 'Â'
+    12.0f, // 'Ä'
+    11.0f, // 'Ç'
+    8.0f,  // 'È'
+    8.0f,  // 'É'
+    8.0f,  // 'Ê'
+    6.0f,  // 'Ë'
+    6.0f,  // 'Ï'
+    13.0f, // 'Ô'
+    13.0f, // 'Ö'
+    10.0f, // 'Ù'
+    10.0f, // 'Û'
+    10.0f, // 'Ü'
+    9.0f,  // 'ß'
+    8.0f,  // 'à'
+    8.0f,  // 'á'
+    8.0f,  // 'â'
+    8.0f,  // 'ä'
+    8.0f,  // 'ç'
+    9.0f,  // 'è'
+    9.0f,  // 'é'
+    9.0f,  // 'ê'
+    9.0f,  // 'ë'
+    6.0f,  // 'ï'
+    9.0f,  // 'ô'
+    9.0f,  // 'ö'
+    9.0f,  // 'ù'
+    9.0f,  // 'û'
+    9.0f,  // 'ü'
+    14.0f, // '[A]'
+    14.0f, // '[B]'
+    14.0f, // '[C]'
+    14.0f, // '[L]'
+    14.0f, // '[R]'
+    14.0f, // '[Z]'
+    14.0f, // '[C-Up]'
+    14.0f, // '[C-Down]'
+    14.0f, // '[C-Left]'
+    14.0f, // '[C-Right]'
+    14.0f, // '▼'
+    14.0f, // '[Control-Pad]'
+    14.0f, // '[D-Pad]'
+    14.0f, // '[Start]'
+    14.0f, // ?
+    14.0f, // ?
+    14.0f, // ?
+};
+
+void Message_DrawCharTexture(Gfx** gfxP, char character, u8* texture, s32 rectLeft, s32 rectTop, f32 scale, u16 r, u16 g, u16 b, u16 a, bool shadow, bool rightJustified) {
+    Gfx* gfx = *gfxP;
+
+    YREG(0) = 1024.0f * scale;
+    YREG(2) = 16.0f * (1.0f / scale);
+
+    gDPPipeSync(gfx++);
+
+    gDPLoadTextureBlock_4b(gfx++, texture, G_IM_FMT_I, 16, 16, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+                           G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+    if(shadow) {
+        s32 rectLeftShadow = rectLeft + 1;
+        s32 rectTopShadow = rectTop + 1;
+
+        gDPSetPrimColor(gfx++, 0, 0, 0, 0, 0, a);
+        gSPTextureRectangle(gfx++, rectLeftShadow << 2, rectTopShadow << 2, (rectLeftShadow + YREG(2)) << 2, (rectTopShadow + YREG(2)) << 2,
+                            G_TX_RENDERTILE, 0, 0, YREG(0), YREG(0));
+
+    }
+
+    gDPPipeSync(gfx++);
+
+    gDPSetPrimColor(gfx++, 0, 0, r, g, b, a);
+    gSPTextureRectangle(gfx++, rectLeft << 2, rectTop << 2, (rectLeft + YREG(2)) << 2, (rectTop + YREG(2)) << 2,
+                        G_TX_RENDERTILE, 0, 0, YREG(0), YREG(0));
+
+    *gfxP = gfx;
+}
+
+#define CHAR_KERNING 1.0f
+#define CHARNULL '@'
+#define SAVEREST_LINESPACE 15
+#define MULTILINE_BREAKER '^'
+
+u16 Message_DrawString(Font* font, Gfx** gfxP, char* text, u16 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale, bool shadow) {
+    Gfx* gfx = *gfxP;
+    u16 textPos = x;
+    u8 breakerCount = 0;
+
+    gDPSetCombineLERP(gfx++, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0);
+
+    for(u16 i = 0; i < textLength; i++) {
+        if(text[i] == MULTILINE_BREAKER) breakerCount++;
+
+    }
+
+    if(rightJustified) y += (SAVEREST_LINESPACE * breakerCount);
+
+    breakerCount = 0;
+
+    for(s16 i = (rightJustified ? textLength : 0); (rightJustified ? (i >= 0) : (i < textLength)); (rightJustified ? i-- : i++)) {
+        switch(text[i]) {
+            case '|':
+                text[i] = 0x9F;
+                break;
+            case '+':
+                text[i] = 0xA0;
+                break;
+            case '>':
+                text[i] = 0xAA;
+                break;
+            case '<':
+                text[i] = 0xAB;
+                break;
+            case '`':
+                text[i] = 0xAC;
+                break;
+            case '{':
+                text[i] = 0xA2;
+                break;
+            case '}':
+                text[i] = 0xA3;
+                break;
+            case '[':
+                text[i] = 0xA4;
+                break;
+            case CHARNULL: continue;
+            case '\0': continue;
+            case ' ':
+                u16 diff = (u16)(sFontWidthsParameter[0] * (CHAR_KERNING * (2-scale)));
+                textPos = CLAMP((rightJustified ? (textPos - diff) : (textPos + diff)), 0, 320);
+
+                continue;
+            case MULTILINE_BREAKER:
+                textPos = x;
+                breakerCount++;
+
+                continue;
+            default: break;
+
+        }
+
+        char cha = text[i] - ' ';
+        u16 texID = cha * FONT_CHAR_TEX_SIZE;
+
+        Message_DrawCharTexture(&gfx, text[i], &font->charTexBuf[texID], textPos, y + ((SAVEREST_LINESPACE * breakerCount) * (rightJustified ? -1 : 1)), scale, r, g, b, a, shadow, rightJustified);
+
+        u16 diff = (u16)(sFontWidthsParameter[text[(rightJustified ? MAX(i-1, 0) : i)] - ' '] * (CHAR_KERNING * (2-scale)));
+        textPos = CLAMP((rightJustified ? (textPos - diff) : (textPos + diff)), 0, 320);
+
+    }
+
+    *gfxP = gfx;
+
+    return y + (SAVEREST_LINESPACE * breakerCount);
+
+}
+
+typedef struct {
+    u16 x;
+    u16 y;
+    u16 xx;
+    u16 yy;
+    u8 timer;
+    s8 index;
+    u8 state;
+    void (*exit)(GameState* state, Actor* storedActor);
+    Actor* storedActor;
+
+} NoticeState;
+
+static NoticeState sNotice = {
+    160,
+    120,
+    160,
+    120,
+    0,
+    -1,
+    0,
+    NULL,
+    NULL,
+
+};
+
+bool Message_NoticeActive() {
+    return sNotice.state > 0;
+
+}
+
+typedef struct {
+    u16 len;
+    char* text;
+
+} NoticeHolder;
+
+#define DEFINE_NOTICE(enum, str) [enum] = {sizeof(str) - 1, str},
+
+static NoticeHolder sNotices[] = {
+#include "include/tables/notice_table.h"
+};
+
+#undef DEFINE_NOTICE
+
+void Message_SendNotice(GameState* state, u8 noticeIndex, bool noSkip, void (*exit)(GameState* state, Actor* storedActor), Actor* storedActor) {
+    if(sNotice.state > 0) return;
+
+    sNotice.state = 1;
+    sNotice.timer = (noSkip ? 0 : 70);
+    sNotice.index = noticeIndex;
+    sNotice.exit = exit;
+    sNotice.storedActor = storedActor;
+
+    if(!noSkip) Audio_PlaySfxGeneral(NA_SE_SY_DECIDE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+}
+
+void Message_DrawNotice(GameState* state, Font* font) {
+    if(sNotice.index == -1) return;
+
+    OPEN_DISPS(state->gfxCtx, __FILE__, __LINE__);
+
+    if(sNotice.state > 0 && sNotice.timer >= 80 && CHECK_BTN_ALL(state->input[0].press.button, BTN_B)) {
+        sNotice.state = 0;
+    
+        Audio_PlaySfxGeneral(NA_SE_SY_CANCEL, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+        if(sNotice.exit != NULL) sNotice.exit(state, sNotice.storedActor);
+
+    }
+
+    u8 speed = (R_UPDATE_RATE == UPDATE_RATE_30 ? 15 : 25);
+
+    if(sNotice.state == 0) {
+        Math_StepToS(&sNotice.x, 160, speed);
+        Math_StepToS(&sNotice.y, 120, speed);
+        Math_StepToS(&sNotice.xx, 160, speed);
+        Math_StepToS(&sNotice.yy, 120, speed);
+        
+        if(sNotice.x == 160) return;
+
+    } else {
+        Math_StepToS(&sNotice.x, 20, speed);
+        Math_StepToS(&sNotice.y, 20, speed);
+        Math_StepToS(&sNotice.xx, 300, speed);
+        Math_StepToS(&sNotice.yy, 220, speed);
+
+    }
+
+    if(sNotice.timer < 80) sNotice.timer++;
+
+    if(sNotice.timer == 2) Audio_PlaySfxGeneral(NA_SE_SY_DECIDE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+
+    Gfx* gfx = POLY_OPA_DISP + 1;
+    gSPDisplayList(OVERLAY_DISP++, gfx);
+
+    Gfx_SetupDL_39Ptr(&gfx);
+
+    gDPSetAlphaCompare(gfx++, G_AC_NONE);
+    gDPSetCombineMode(gfx++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+
+    gDPSetScissor(gfx++, G_SC_NON_INTERLACE, sNotice.x, sNotice.y, sNotice.xx, sNotice.yy);
+
+    gDPSetPrimColor(gfx++, 0, 0, 0, 0, 0, 150);
+    gSPTextureRectangle(gfx++, 20 << 2, 20 << 2, (20 + 280) << 2, (20 + 200) << 2, 0, 0, 0, 0, 0);
+
+    gDPSetCombineMode(gfx++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+
+    Message_DrawString(font, &gfx, sNotices[sNotice.index].text,
+                sNotices[sNotice.index].len, 22, 22, 255, 255, 255, 255, false, 1.2f, false);
+
+    Message_DrawString(font, &gfx, "+  - Close", 10, 290, 208, 255, 255, 255, 255, true, 1.5f, false);
+
+    gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    gSPEndDisplayList(gfx++);
+    gSPBranchList(POLY_OPA_DISP, gfx);
+    POLY_OPA_DISP = gfx;
+
+    CLOSE_DISPS(state->gfxCtx, __FILE__, __LINE__);
+
+}
