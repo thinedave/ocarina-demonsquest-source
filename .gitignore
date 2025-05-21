@@ -70,3 +70,7 @@ assets/textures/
 
 assets_mod_scenemod/
 message_data_mod.h
+
+*.ram
+*.bak
+*.bs1
