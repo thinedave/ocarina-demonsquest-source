@@ -301,6 +301,8 @@ void FileSelect_DrawKeyboard(GameState* thisx) {
     CLOSE_DISPS(this->state.gfxCtx, "../z_file_nameset_PAL.c", 347);
 }
 
+static bool sWarnedHeroMode = false;
+
 void FileSelect_DrawNameEntry(GameState* thisx) {
     FileSelectState* this = (FileSelectState*)thisx;
     Font* font = &this->font;
@@ -449,6 +451,13 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                             
                         this->wantsDemonsCurse = !this->wantsDemonsCurse;
 
+                        if(!sWarnedHeroMode) {
+                            sWarnedHeroMode = true;
+
+                            Message_SendNotice(&this->state, NOTICE_HERO, true, NULL, NULL);
+
+                        }
+
                         this->heroModeBoxPosX = (this->wantsDemonsCurse ? 120 : 0);
 
                         Audio_PlaySfxGeneral(NA_SE_EV_DIAMOND_SWITCH, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
@@ -578,6 +587,8 @@ void FileSelect_UpdateKeyboardCursor(GameState* thisx) {
     s16 prevKbdX;
 
     this->kbdButton = 99;
+
+    if(Message_NoticeActive()) return;
 
     if (this->kbdY != 5) {
         if (this->stickAdjX < -30) {

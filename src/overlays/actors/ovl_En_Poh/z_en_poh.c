@@ -435,7 +435,7 @@ void EnPoh_Talk(EnPoh* this, PlayState* play) {
     } else {
         this->actor.textId = 0x5005;
     }
-    this->unk_198 = 200;
+    this->unk_198 = (play->sceneId == SCENE_POWERTRIAL ? 0 : 200);
     this->unk_195 = 32;
     this->actor.flags |= ACTOR_FLAG_0;
     this->actionFunc = func_80ADFE80;

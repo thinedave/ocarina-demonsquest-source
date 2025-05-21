@@ -1,0 +1,1 @@
+extern AnimationHeader SwordPhase3swingsAnim;

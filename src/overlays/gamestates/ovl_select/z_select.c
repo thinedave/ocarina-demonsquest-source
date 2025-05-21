@@ -286,6 +286,7 @@ static SceneSelectEntry sScenes[] = {
     { "Broken Hyrule Garden Game 2", MapSelect_LoadGame, ENTR_HAIRAL_NIWA2_0 },
     // Save test scene
     { "126:SAVETEST", MapSelect_LoadGame, ENTR_SAVETEST_0 },
+    { "127:POWERTRIAL", MapSelect_LoadGame, ENTR_POWERTRIAL_0 },
 };
 
 void MapSelect_UpdateMenu(MapSelectState* this) {
@@ -374,10 +375,10 @@ void MapSelect_UpdateMenu(MapSelectState* this) {
 
         // user can change "opt", but it doesn't do anything
         if (CHECK_BTN_ALL(input->press.button, BTN_CUP)) {
-            this->opt--;
+            gSaveContext.courageTrialLevel--;
         }
         if (CHECK_BTN_ALL(input->press.button, BTN_CDOWN)) {
-            this->opt++;
+            gSaveContext.courageTrialLevel++;
         }
 
         if (CHECK_BTN_ALL(input->press.button, BTN_DUP)) {
@@ -525,7 +526,7 @@ void MapSelect_PrintMenu(MapSelectState* this, GfxPrint* printer) {
 
     GfxPrint_SetColor(printer, 155, 55, 150, 255);
     GfxPrint_SetPos(printer, 20, 26);
-    GfxPrint_Printf(printer, "OPT=%d", this->opt);
+    GfxPrint_Printf(printer, "TRIAL_LEVEL=%d", gSaveContext.courageTrialLevel);
 }
 
 static const char* sLoadingMessages[] = {

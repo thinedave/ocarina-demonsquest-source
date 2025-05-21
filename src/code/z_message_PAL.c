@@ -3528,6 +3528,16 @@ void Message_DrawCharTexture(Gfx** gfxP, char character, u8* texture, s32 rectLe
 #define SAVEREST_LINESPACE 15
 #define MULTILINE_BREAKER '^'
 
+/*
+    String char aliases:
+    | = A Button
+    + = B Button
+    > = Control Pad
+    < = D-Pad
+    @ = CHARNULL (Unused)
+    ^ = Multi-line breaker (Could probably replace with \n?)
+*/
+
 u16 Message_DrawString(Font* font, Gfx** gfxP, char* text, u16 textLength, u16 x, u16 y, u16 r, u16 g, u16 b, u16 a, bool rightJustified, f32 scale, bool shadow) {
     Gfx* gfx = *gfxP;
     u16 textPos = x;

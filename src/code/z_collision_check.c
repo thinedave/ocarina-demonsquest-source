@@ -2987,7 +2987,7 @@ void CollisionCheck_ApplyDamage(PlayState* play, CollisionCheckContext* colChkCt
     Player* player = GET_PLAYER(play);
     Actor* attacker = collider->ac;
 
-    if(attacker != NULL && (attacker->id == ACTOR_PLAYER || attacker->id == ACTOR_EN_ARROW || attacker->id == ACTOR_ARROW_FIRE || attacker->id == ACTOR_ARROW_ICE || attacker->id == ACTOR_ARROW_LIGHT)) {
+    if(attacker != NULL && (attacker->id == ACTOR_PLAYER || attacker->id == ACTOR_ARMS_HOOK || attacker->id == ACTOR_EN_ARROW || attacker->id == ACTOR_ARROW_FIRE || attacker->id == ACTOR_ARROW_ICE || attacker->id == ACTOR_ARROW_LIGHT)) {
         damage *= 10;
         
         if(player->storedDoubleDamage) {
@@ -3002,10 +3002,7 @@ void CollisionCheck_ApplyDamage(PlayState* play, CollisionCheckContext* colChkCt
         else if(info->acHitInfo->toucher.dmgFlags & (DMG_MAGIC_FIRE | DMG_MAGIC_ICE | DMG_MAGIC_LIGHT | DMG_ARROW_FIRE | DMG_ARROW_ICE | DMG_ARROW_LIGHT))
             statToScale = gSaveContext.save.info.playerData.levels.intelligence;
 
-        f32 lerped = F32_LERP(1.0f, 2.0f, CLAMP_MIN((f32)(statToScale), 1)/100);
-
-
-        damage *= F32_LERP(1.0f, 2.0f, CLAMP_MIN((f32)(statToScale), 1)/100);
+        damage *= F32_LERP(1.0f, 1.35f, CLAMP_MIN((f32)(statToScale), 1)/100);
 
         //handle luck
         u8 chance = F32_LERP(100.0f, 2.0f, CLAMP_MIN((f32)(gSaveContext.save.info.playerData.levels.luck), 0)/100);

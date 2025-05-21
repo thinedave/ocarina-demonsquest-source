@@ -4303,12 +4303,14 @@ u8 func_800355E4(PlayState* play, Collider* collider) {
 }
 
 void Player_SetupXP(PlayState* play, Actor* actor, Player* this) {
+    if((u32)gSaveContext.save.info.playerData.levels.xp + (u32)actor->xpValue > 65535) return;
+    
     gSaveContext.save.info.playerData.levels.xp += actor->xpValue;
 
-    u16 xpNeeded = (u16)F32_LERP(30, 500, (f32)gSaveContext.save.info.playerData.levels.level * 0.005f);
-    if(gSaveContext.save.info.playerData.levels.xp >= xpNeeded) {
+    u16 xpNeeded = (u16)F32_LERP(30, 700, (f32)gSaveContext.save.info.playerData.levels.level * 0.01);
+    if(gSaveContext.save.info.playerData.levels.level < 100 && gSaveContext.save.info.playerData.levels.xp >= xpNeeded) {
         gSaveContext.save.info.playerData.levels.level++;
-        gSaveContext.save.info.playerData.levels.points += 5;
+        gSaveContext.save.info.playerData.levels.points += 2;
         gSaveContext.save.info.playerData.levels.xp = 0;
         
         Audio_PlaySfxGeneral(NA_SE_SY_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,

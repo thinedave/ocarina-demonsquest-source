@@ -322,6 +322,7 @@ typedef struct {
     /* 0x1424 */ s16 healthAccumulator;
     u8 saveReturnFlag;
     bool wiiVcMode;
+    u8 courageTrialLevel;
 } SaveContext; // size = 0x1428
 
 typedef enum {

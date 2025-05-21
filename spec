@@ -3535,6 +3535,18 @@ beginseg
 endseg
 
 beginseg
+    name "ovl_DemonsDoor"
+    include "build/src/overlays/actors/ovl_DemonsDoor/z_demonsdoor.o"
+    include "build/src/overlays/actors/ovl_DemonsDoor/ovl_DemonsDoor_reloc.o"
+endseg
+
+beginseg
+    name "ovl_PowerTrialHandler"
+    include "build/src/overlays/actors/ovl_PowerTrialHandler/z_powertrialhandler.o"
+    include "build/src/overlays/actors/ovl_PowerTrialHandler/ovl_PowerTrialHandler_reloc.o"
+endseg
+
+beginseg
     name "ovl_Oceff_Spot"
     include "build/src/overlays/actors/ovl_Oceff_Spot/z_oceff_spot.o"
     include "build/src/overlays/actors/ovl_Oceff_Spot/ovl_Oceff_Spot_reloc.o"
@@ -3684,13 +3696,6 @@ beginseg
     name "object_niw"
     romalign 0x1000
     include "build/assets/objects/object_niw/object_niw.o"
-    number 6
-endseg
-
-beginseg
-    name "object_notice"
-    romalign 0x1000
-    include "build/assets/objects/object_notice/object_notice.o"
     number 6
 endseg
 
@@ -5042,6 +5047,20 @@ beginseg
     name "object_ganon_ladder"
     romalign 0x1000
     include "build/assets/objects/object_ganon_ladder/object_ganon_ladder.o"
+    number 6
+endseg
+
+beginseg
+    name "object_notice"
+    romalign 0x1000
+    include "build/assets/objects/object_notice/object_notice.o"
+    number 6
+endseg
+
+beginseg
+    name "object_demonsdoor"
+    romalign 0x1000
+    include "build/assets/objects/object_demonsdoor/object_demonsdoor.o"
     number 6
 endseg
 
@@ -10720,6 +10739,23 @@ beginseg
     include "build/./assets/scenes/dungeons/ganon_boss/ganon_boss_room_0_main.o"
     include "build/./assets/scenes/dungeons/ganon_boss/ganon_boss_room_0_model_info.o"
     include "build/./assets/scenes/dungeons/ganon_boss/ganon_boss_room_0_model.o"
+    number 3
+endseg
+
+beginseg
+    name "powertrial_scene"
+    romalign 0x1000
+    include "build/assets/scenes/demonsquest/powertrial/powertrial_scene_main.o"
+    include "build/assets/scenes/demonsquest/powertrial/powertrial_scene_col.o"
+    number 2
+endseg
+
+beginseg
+    name "powertrial_room_0"
+    romalign 0x1000
+    include "build/assets/scenes/demonsquest/powertrial/powertrial_room_0_main.o"
+    include "build/assets/scenes/demonsquest/powertrial/powertrial_room_0_model_info.o"
+    include "build/assets/scenes/demonsquest/powertrial/powertrial_room_0_model.o"
     number 3
 endseg
 

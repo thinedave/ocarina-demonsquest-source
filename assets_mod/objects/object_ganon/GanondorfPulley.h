@@ -1,0 +1,10 @@
+#ifndef MOD_OBJECT_GANON_PULLEY_H
+#define MOD_OBJECT_GANON_PULLEY_H 1
+
+extern Vtx gGanondorfPulley_gGanondorfPulley_mesh_layer_Transparent_vtx_cull[8];
+extern Vtx gGanondorfPulley_gGanondorfPulley_mesh_layer_Transparent_vtx_0[20];
+extern Gfx gGanondorfPulley_gGanondorfPulley_mesh_layer_Transparent_tri_0[];
+extern Gfx mat_gGanondorfPulley_f3dlite_material_layerTransparent[];
+extern Gfx gGanondorfPulley[];
+
+#endif

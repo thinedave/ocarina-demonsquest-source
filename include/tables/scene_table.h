@@ -124,3 +124,4 @@
 
 // Demon's Quest scenes
 /* 0x6E */ DEFINE_SCENE(savetest_scene, none, SCENE_SAVETEST, SDC_DEFAULT, 0, 0)
+/* 0x6F */ DEFINE_SCENE(powertrial_scene, none, SCENE_POWERTRIAL, SDC_CALM_WATER, 0, 0)

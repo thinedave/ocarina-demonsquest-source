@@ -5415,7 +5415,9 @@ void SaveResting_IntIntoArr(char* arr, s16* num) {
 u8 Interface_SaveResting_DetermineTextLength(u16 x) {
     if(x < 10) return 1;
     if(x < 100) return 2;
-    return 3;
+    if(x < 1000) return 3;
+    if(x < 10000) return 4;
+    return 5;
 
 }
 
@@ -5504,10 +5506,21 @@ void Interface_SaveResting_Draw(PlayState* play) {
             char xpText[] = "XP";
             SaveResting_DrawStringShadowed(play, &gfx, xpText, 2, 20, textY - (SAVEREST_LINESPACE*2), 255, 255, 255, 255, false, 1);
 
-            char xp[7] = {CHARNULL, CHARNULL, CHARNULL, CHARNULL, CHARNULL, CHARNULL};
-            u8 xpNeeded = (u16)F32_LERP(30, 500, (f32)stats->level * 0.005f);
-            sprintf(xp, "%d/%d", stats->xp, xpNeeded);
-            SaveResting_DrawStringShadowed(play, &gfx, xp, 1 + Interface_SaveResting_DetermineTextLength(stats->xp) + Interface_SaveResting_DetermineTextLength(xpNeeded), 130, textY - (SAVEREST_LINESPACE*2), 255, 255, 255, 255, true, 1);
+            char xp[16];
+            u16 length;
+
+            if(stats->level >= 100) {
+                sprintf(xp, "%d/MAX", stats->xp);
+                length = 4 + Interface_SaveResting_DetermineTextLength(stats->xp);
+
+            } else {
+                u16 xpNeeded = (u16)F32_LERP(30, 700, (f32)stats->level * 0.01);
+                sprintf(xp, "%d/%d", stats->xp, xpNeeded);
+                length = 1 + Interface_SaveResting_DetermineTextLength(stats->xp) + Interface_SaveResting_DetermineTextLength(xpNeeded);
+
+            }
+
+            SaveResting_DrawStringShadowed(play, &gfx, xp, length, 130, textY - (SAVEREST_LINESPACE*2), 255, 255, 255, 255, true, 1);
 
             char pointsText[] = "Points";
             SaveResting_DrawStringShadowed(play, &gfx, pointsText, 6, 20, textY - SAVEREST_LINESPACE, 255, 255, 255, 255, false, 1);

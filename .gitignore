@@ -69,3 +69,4 @@ assets/textures/
 *.wad
 
 assets_mod_scenemod/
+message_data_mod.h

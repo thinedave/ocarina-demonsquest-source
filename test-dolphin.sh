@@ -9,7 +9,7 @@ CLEAN_MODE=$?
 PROJECT_ROOT=`git rev-parse --show-toplevel`
 BUILD_DIR=$PROJECT_ROOT/build/rom
 MOD_TOOLS_DIR=$PROJECT_ROOT/scripts_mod
-Z64COMPRESS=$MOD_TOOLS_DIR/z64compress.exe
+Z64COMPRESS=$MOD_TOOLS_DIR/z64compress
 GZINJECT=$MOD_TOOLS_DIR/gzinject
 # DOLPHIN_FILES_DIR=$MOD_TOOLS_DIR/dolphin_files
 FLIPS=$MOD_TOOLS_DIR/flips.exe
@@ -18,7 +18,7 @@ DOLPHIN_EXE=$MOD_TOOLS_DIR/Dolphin.exe
 OOT_DONOR_WAD=$MOD_TOOLS_DIR/oot_donor.wad
 OOT_ORIGINAL_ROM=$MOD_TOOLS_DIR/oot_original_rom.z64
 INJECTED_WAD="oot_injected.wad"
-DQ_VERSION="14"
+DQ_VERSION="_FINAL"
 COMPRESSED_ROM="demonsquest$DQ_VERSION_10U.z64"
 
 exit_with_error() {
@@ -49,6 +49,7 @@ if [[ $? != 0 ]]; then
 fi
 
 DMADATA_INFO=`python3 dmalength.py`
+echo $DMADATA_INFO
 
 cd $BUILD_DIR
 cp $PROJECT_ROOT/zelda_ocarina_mq_dbg.z64 uncompressed.z64
@@ -86,4 +87,4 @@ $FLIPS --create --bps $OOT_ORIGINAL_ROM $COMPRESSED_ROM demonsquest$DQ_VERSION.b
 # //rm -rf "$(readlink -e $DOLPHIN_FILES_DIR/Cache)"
 # //rm -rf "$(readlink -e $DOLPHIN_FILES_DIR/ResourcePacks)"
 
-"$DOLPHIN_EXE" "$INJECTED_WAD" &
+#"$DOLPHIN_EXE" "$INJECTED_WAD" &

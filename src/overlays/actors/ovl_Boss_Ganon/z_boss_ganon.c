@@ -656,7 +656,7 @@ void BossGanon_Init(Actor* thisx, PlayState* play2) {
             // light ball (anything from 0x64 - 0xC7)
             thisx->update = BossGanon_LightBall_Update;
             thisx->draw = BossGanon_LightBall_Draw;
-            thisx->speed = 12.0f;
+            thisx->speed = (f32)RANDOM_RANGE(12.0f, 20.0f);
 
             xDistFromPlayer = player->actor.world.pos.x - thisx->world.pos.x;
             yDistFromPlayer = (player->actor.world.pos.y + 30.0f) - thisx->world.pos.y;
@@ -1350,13 +1350,7 @@ void BossGanon_IntroCutscene(BossGanon* this, PlayState* play) {
                 this->csState = this->csCamIndex = 0;
                 Cutscene_StopManual(play, &play->csCtx);
                 Player_SetCsActionWithHaltedActors(play, &this->actor, PLAYER_CSACTION_7);
-                BossGanon_SetupSwordPhaseCutscene(this, play);
-                Actor_PlaySfx(&this->actor, NA_SE_EN_GANON_DEAD);
-                Actor_PlaySfx(&this->actor, NA_SE_EN_GANON_DD_THUNDER);
-                Sfx_PlaySfxAtPos(&sZeroVec, NA_SE_EN_LAST_DAMAGE);
-                SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_BGM_MAIN, 1);
-                this->screenFlashTimer = 4;
-                //BossGanon_SetupWait(this, play);
+                BossGanon_SetupWait(this, play);
             }
 
             if (sZelda != NULL) {
@@ -1544,12 +1538,12 @@ void BossGanon_SwordPhaseCutscene(BossGanon* this, PlayState* play) {
             if ((this->fwork[GDF_FWORK_1] > 100.0f) && (this->csTimer > 60) &&
                 (Message_GetState(&play->msgCtx) == TEXT_STATE_NONE)) {
                 Audio_StopSfxById(NA_SE_EN_GANON_BREATH);
-                Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseCutsceneRecoverAnim, 0.0f);
-                this->fwork[GDF_FWORK_1] = Animation_GetLastFrame(&SwordPhaseCutsceneRecoverAnim);
+                Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseCutscenerecoverAnim, 0.0f);
+                this->fwork[GDF_FWORK_1] = Animation_GetLastFrame(&SwordPhaseCutscenerecoverAnim);
                 //Actor_PlaySfx(&this->actor, NA_SE_EN_GANON_LAUGH);
             } else {
                 if (Animation_OnFrame(&this->skelAnime, this->fwork[GDF_FWORK_1])) {
-                    Animation_MorphToLoop(&this->skelAnime, &SwordPhaseCutsceneRecoveridleAnim, 0.0f);
+                    Animation_MorphToLoop(&this->skelAnime, &SwordPhaseIdleAnim, 0.0f);
                     this->csState = 4;
                     this->csTimer = 0;
                 }
@@ -1572,8 +1566,8 @@ void BossGanon_SwordPhaseCutscene(BossGanon* this, PlayState* play) {
             if ((this->csTimer > 20) && (Message_GetState(&play->msgCtx) == TEXT_STATE_NONE)) {
                 this->csState = 6;
                 this->csTimer = 0;
-                Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseCutscenePullswordAnim, 0.0f);
-                this->fwork[GDF_FWORK_1] = Animation_GetLastFrame(&SwordPhaseCutscenePullswordAnim);
+                Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseSlamAnim, 0.0f);
+                this->fwork[GDF_FWORK_1] = Animation_GetLastFrame(&SwordPhaseSlamAnim);
 
                 this->csCamMovementScale = 0.05f;
                 this->csCamMaxStepScale = 0.0f;
@@ -1613,7 +1607,7 @@ void BossGanon_SwordPhaseCutscene(BossGanon* this, PlayState* play) {
                     this->swordDl = true;
                     break;
                 
-                case 46:
+                case 48:
                     SEQCMD_PLAY_SEQUENCE(SEQ_PLAYER_BGM_MAIN, 0, 0, NA_BGM_GANONDORF_BOSS);
                     break;
                 
@@ -1622,7 +1616,7 @@ void BossGanon_SwordPhaseCutscene(BossGanon* this, PlayState* play) {
             SEQCMD_SET_TEMPO(SEQ_PLAYER_BGM_MAIN, 0, 140);
             
             if (Animation_OnFrame(&this->skelAnime, this->fwork[GDF_FWORK_1])) {
-                Animation_MorphToLoop(&this->skelAnime, &SwordPhaseCutsceneSlamloopAnim, 0.0f);
+                Animation_MorphToLoop(&this->skelAnime, &SwordPhaseSlamloopAnim, 0.0f);
                 this->csState = 7;
                 this->csTimer = 0;
                 this->unk_2E8 = 0;
@@ -1678,14 +1672,14 @@ void BossGanon_SwordPhaseCutscene(BossGanon* this, PlayState* play) {
             break;
 
         case 10:
-            Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseCutsceneSwordgetupAnim, 0.0f);
+            Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseSlamgetupAnim, 0.0f);
             Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_ST_LAUGH);
             this->csState = 11;
 
             break;
 
         case 11:
-            if(Animation_OnFrame(&this->skelAnime, Animation_GetLastFrame(&SwordPhaseCutsceneSwordgetupAnim))) {
+            if(Animation_OnFrame(&this->skelAnime, Animation_GetLastFrame(&SwordPhaseSlamgetupAnim))) {
                 this->csState = 0;
                 BossGanon_SetupSwordPhaseIdle(this, play);
 
@@ -3242,7 +3236,7 @@ void BossGanon_UpdateDamage(BossGanon* this, PlayState* play) {
         if(this->swordPhase) {
             this->unk_2D4 = 4;
 
-            if((!this->invincible) && this->actor.colChkInfo.damage > 0) {
+            if(!this->invincible && this->actor.colChkInfo.damage > 0 && (u8)IRANDOM_RANGE(0, 3) > 0) {
                 Actor_ApplyDamage(&this->actor);
 
                 if(this->actor.colChkInfo.health == 0) {
@@ -3260,7 +3254,7 @@ void BossGanon_UpdateDamage(BossGanon* this, PlayState* play) {
 
                 }
 
-            } else if(this->swordDl) {
+            } else if(this->swordDl && this->actionFunc != BossGanon_SwordPhaseThrow) {
                 BossGanon_SetupSwordPhaseBlock(this, play);
 
             }
@@ -3294,7 +3288,7 @@ void BossGanon_UpdateDamage(BossGanon* this, PlayState* play) {
                     hitWithSword = true;
                 }
 
-                if (((s16)this->actor.colChkInfo.health >= 30) || hitWithSword) {
+                if ((this->actor.colChkInfo.health >= 30) || hitWithSword) {
                     this->actor.colChkInfo.health = MAX(this->actor.colChkInfo.health-damage, 0);
                 }
 
@@ -3305,7 +3299,7 @@ void BossGanon_UpdateDamage(BossGanon* this, PlayState* play) {
                     }
                 }
 
-                if ((s16)this->actor.colChkInfo.health <= 0) {
+                if (this->actor.colChkInfo.health <= 0) {
                     if(!this->swordPhase) {
                         BossGanon_SetupSwordPhaseCutscene(this, play);
                         Actor_PlaySfx(&this->actor, NA_SE_EN_GANON_DEAD);
@@ -3854,6 +3848,11 @@ s32 BossGanon_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3
         case GANONDORF_LIMB_RIGHT_FOOT:
             rot->y += this->legRot.x - this->legRot.z;
             rot->z += this->legRot.y;
+            break;
+
+        case GANONDORF_LIMB_JEWEL:
+            if(this->swordPhase) rot->x += 0x0500;
+
             break;
 
         default:
@@ -4529,7 +4528,7 @@ void BossGanon_Draw(Actor* thisx, PlayState* play) {
     BossGanon_DrawTriforce(this, play);
     BossGanon_DrawDarkVortex(this, play);
     BossGanon_DrawPulleys(this, play);
-    BossGanon_DrawHPDebug(this, play);
+    //BossGanon_DrawHPDebug(this, play);
 
     BossGanon_GenShadowTexture(shadowTex, this, play);
     BossGanon_DrawShadowTexture(shadowTex, this, play);
@@ -4668,10 +4667,10 @@ void BossGanon_LightBall_Update(Actor* thisx, PlayState* play2) {
                         Rumble_Request(this->actor.xyzDistToPlayerSq, 180, 20, 100);
 
                         if (hitWithBottle == false) {
-                            // if ganondorf is 250 units away from link, at least 3 volleys are required
-                            if ((ganondorf->actor.xyzDistToPlayerSq > SQ(250.0f)) && (this->unk_1A4 < 3)) {
+                            // if ganondorf is 250 units away from link, at least 5 volleys are required
+                            if ((ganondorf->actor.xyzDistToPlayerSq > SQ(250.0f)) && (this->unk_1A4 < 5)) {
                                 this->unk_1C2 = 1;
-                            } else if (Rand_ZeroOne() < 0.7f) {
+                            } else if (Rand_ZeroOne() < 0.7f || (this->unk_1A4 < 4)) {
                                 this->unk_1C2 = 1;
                             } else {
                                 this->unk_1C2 = 3;
@@ -5718,7 +5717,27 @@ void BossGanon_DrawEffects(PlayState* play) {
     CLOSE_DISPS(gfxCtx, "../z_boss_ganon.c", 11255);
 }
 
-void BossGanon_FacePlayer(BossGanon* this) {
+void BossGanon_FacePlayer(BossGanon* this, PlayState* play) {
+    s32 pad;
+    s16 angleDiff = this->actor.yawTowardsPlayer - this->actor.shape.rot.y;
+
+    if (ABS(angleDiff) <= 0x4000) {
+        Math_SmoothStepToS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 6, 4000, 100);
+        this->actor.world.rot.y = this->actor.shape.rot.y;
+        Actor_TrackPlayer(play, &this->actor, &this->headRot, &this->torsoRot, this->actor.focus.pos);
+    } else {
+        if (angleDiff < 0) {
+            Math_SmoothStepToS(&this->headRot.y, -0x2000, 6, 6200, 0x100);
+        } else {
+            Math_SmoothStepToS(&this->headRot.y, 0x2000, 6, 6200, 0x100);
+        }
+
+        Math_SmoothStepToS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 12, 1000, 100);
+        this->actor.world.rot.y = this->actor.shape.rot.y;
+    }
+}
+
+/*void BossGanon_FacePlayer(BossGanon* this) {
     s16 targetYaw = this->actor.wallYaw - this->actor.shape.rot.y;
 
     if ((this->actor.bgCheckFlags & BGCHECKFLAG_WALL) && (ABS(targetYaw) >= 0x4000)) {
@@ -5728,10 +5747,12 @@ void BossGanon_FacePlayer(BossGanon* this) {
         Math_SmoothStepToS(&this->actor.world.rot.y, this->actor.yawTowardsPlayer, 1, 0x750, 0);
     }
 
-}
+}*/
 
 void BossGanon_UpdateSwordPhase(Actor* thisx, PlayState* play) {
     BossGanon* this = (BossGanon*)thisx;
+
+    this->torsoRot.x = this->torsoRot.y = this->torsoRot.z = 0;
 
     SEQCMD_SET_TEMPO(SEQ_PLAYER_BGM_MAIN, 0, 140);
 
@@ -5758,7 +5779,7 @@ void BossGanon_UpdateCollider(BossGanon* this, PlayState* play, Vec3f* src, Coll
 }
 
 void BossGanon_SetupSwordPhaseSlashDownLeft(BossGanon* this, PlayState* play) {
-    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseSwordslashdownleftAnim, 3.0f);
+    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseSwingdownleftAnim, 3.0f);
     this->actionFunc = BossGanon_SwordPhaseSlashDownLeft;
     this->swordCollider.base.atFlags &= ~AT_HIT;
     this->actor.speed = 0.0f;
@@ -5766,12 +5787,12 @@ void BossGanon_SetupSwordPhaseSlashDownLeft(BossGanon* this, PlayState* play) {
 }
 
 void BossGanon_SwordPhaseSlashDownLeft(BossGanon* this, PlayState* play) {
-    #define AT_START 9
-    #define AT_END 15
+    #define AT_START 12
+    #define AT_END 16
 
     u8 curFrame = (u8)this->skelAnime.curFrame;
 
-    BossGanon_FacePlayer(this);
+    BossGanon_FacePlayer(this, play);
     this->actor.shape.rot.y = this->actor.world.rot.y;
 
     switch(curFrame) {
@@ -5808,7 +5829,7 @@ void BossGanon_SwordPhaseSlashDownLeft(BossGanon* this, PlayState* play) {
 }
 
 void BossGanon_SetupSwordPhase3Swing(BossGanon* this, PlayState* play) {
-    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhase3swingAnim, 3.0f);
+    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhase3swingsAnim, 3.0f);
     this->actionFunc = BossGanon_SwordPhase3Swing;
     this->swordCollider.base.atFlags &= ~AT_HIT;
     this->actor.speed = 0.0f;
@@ -5841,11 +5862,11 @@ void BossGanon_SwordPhase3Swing(BossGanon* this, PlayState* play) {
     }
 
     if(curFrame >= 33 && curFrame <= 38) {
-        this->actor.speed = 5.5f;
-        Actor_MoveXZGravity(&this->actor);
+        //this->actor.speed = 5.5f;
+        //Actor_MoveXZGravity(&this->actor);
 
     } else {
-        BossGanon_FacePlayer(this);
+        BossGanon_FacePlayer(this, play);
 
     }
 
@@ -5873,7 +5894,7 @@ void BossGanon_SwordPhase3Swing(BossGanon* this, PlayState* play) {
 static u8 sGanonThrustTimer = 0;
 
 void BossGanon_SetupSwordPhaseThrust1(BossGanon* this, PlayState* play) {
-    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseSwordthrust1Anim, 3.0f);
+    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseThrustAnim, 3.0f);
     this->actionFunc = BossGanon_SwordPhaseThrust1;
     this->swordCollider.base.atFlags &= ~AT_HIT;
     this->actor.speed = 0.0f;
@@ -5883,12 +5904,12 @@ void BossGanon_SetupSwordPhaseThrust1(BossGanon* this, PlayState* play) {
 
 void BossGanon_SwordPhaseThrust1(BossGanon* this, PlayState* play) {
     #define AT_START 20
-    #define AT_END 30
+    #define AT_END 35
 
     u8 curFrame = (u8)this->skelAnime.curFrame;
     
     if(curFrame < 23) {
-        BossGanon_FacePlayer(this);
+        BossGanon_FacePlayer(this, play);
         this->actor.shape.rot.y = this->actor.world.rot.y;
 
     }
@@ -5922,7 +5943,7 @@ void BossGanon_SwordPhaseThrust1(BossGanon* this, PlayState* play) {
 
     }
 
-    if(sGanonThrustTimer < 30 && curFrame == 29.0f && Math_Vec3f_DistXZ(&this->actor.world.pos, &GET_PLAYER(play)->actor.world.pos) > 100.0f) this->skelAnime.curFrame = 29.0f;
+    if(sGanonThrustTimer < AT_END && curFrame == 29.0f && Math_Vec3f_DistXZ(&this->actor.world.pos, &GET_PLAYER(play)->actor.world.pos) > 100.0f) this->skelAnime.curFrame = 34.0f;
 
     #undef AT_START
     #undef AT_END
@@ -5930,7 +5951,7 @@ void BossGanon_SwordPhaseThrust1(BossGanon* this, PlayState* play) {
 }
 
 void BossGanon_SetupSwordPhaseSlashRight(BossGanon* this, PlayState* play) {
-    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseSwordslashrightAnim, 3.0f);
+    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseSlashrightAnim, 3.0f);
     this->actionFunc = BossGanon_SwordPhaseSlashRight;
     this->swordCollider.base.atFlags &= ~AT_HIT;
     this->actor.speed = 0.0f;
@@ -5938,12 +5959,12 @@ void BossGanon_SetupSwordPhaseSlashRight(BossGanon* this, PlayState* play) {
 }
 
 void BossGanon_SwordPhaseSlashRight(BossGanon* this, PlayState* play) {
-    #define AT_START 11
-    #define AT_END 17
+    #define AT_START 7
+    #define AT_END 13
 
     u8 curFrame = (u8)this->skelAnime.curFrame;
     
-    BossGanon_FacePlayer(this);
+    BossGanon_FacePlayer(this, play);
     this->actor.shape.rot.y = this->actor.world.rot.y;
 
     switch(curFrame) {
@@ -5980,7 +6001,7 @@ void BossGanon_SwordPhaseSlashRight(BossGanon* this, PlayState* play) {
 }
 
 void BossGanon_SetupSwordPhaseKick(BossGanon* this, PlayState* play) {
-    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseSwordkickAnim, 3.0f);
+    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseKickAnim, 3.0f);
     this->actionFunc = BossGanon_SwordPhaseKick;
     this->kickCollider.base.atFlags &= ~AT_HIT;
     this->actor.speed = 0.0f;
@@ -5988,12 +6009,12 @@ void BossGanon_SetupSwordPhaseKick(BossGanon* this, PlayState* play) {
 }
 
 void BossGanon_SwordPhaseKick(BossGanon* this, PlayState* play) {
-    #define AT_START 8
-    #define AT_END 17
+    #define AT_START 10
+    #define AT_END 14
     
     u8 curFrame = (u8)this->skelAnime.curFrame;
     
-    BossGanon_FacePlayer(this);
+    BossGanon_FacePlayer(this, play);
     this->actor.shape.rot.y = this->actor.world.rot.y;
 
     switch(curFrame) {
@@ -6029,7 +6050,7 @@ void BossGanon_SwordPhaseKick(BossGanon* this, PlayState* play) {
 }
 
 void BossGanon_SetupSwordPhaseThrow(BossGanon* this, PlayState* play) {
-    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseSwordthrowAnim, 3.0f);
+    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseThrowAnim, 3.0f);
     this->actionFunc = BossGanon_SwordPhaseThrow;
     this->swordCollider.base.atFlags &= ~AT_HIT;
     this->actor.speed = 0.0f;
@@ -6039,7 +6060,7 @@ void BossGanon_SetupSwordPhaseThrow(BossGanon* this, PlayState* play) {
 void BossGanon_SwordPhaseThrow(BossGanon* this, PlayState* play) {
     u8 curFrame = (u8)this->skelAnime.curFrame;
     
-    BossGanon_FacePlayer(this);
+    BossGanon_FacePlayer(this, play);
     this->actor.shape.rot.y = this->actor.world.rot.y;
 
     switch(curFrame) {
@@ -6089,7 +6110,7 @@ void BossGanon_SwordPhasePull(BossGanon* this, PlayState* play) {
     bool finished = SkelAnime_Update(&this->skelAnime);
     
     if(this->skelAnime.animation == &SwordPhasePullAnim) {
-        BossGanon_FacePlayer(this);
+        BossGanon_FacePlayer(this, play);
         this->actor.shape.rot.y = this->actor.world.rot.y;
 
         switch(curFrame) {
@@ -6125,7 +6146,7 @@ void BossGanon_SwordPhasePull(BossGanon* this, PlayState* play) {
 
             case 20:
                 if(this->grabbedLink) {
-                    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhasePullgrappleAnim, 3.0f);
+                    Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseGrappleAnim, 3.0f);
                     this->csState = 1;
 
                 }
@@ -6165,7 +6186,7 @@ void BossGanon_SwordPhasePull(BossGanon* this, PlayState* play) {
 
             }
 
-            if(this->skelAnime.animation == &SwordPhasePullgrappleAnim && curFrame == 41) {
+            if(this->skelAnime.animation == &SwordPhaseGrappleAnim && curFrame == 41) {
                 player->actor.world.rot.x = 0;
                 player->actor.world.rot.z = 0;
                 player->actor.world.pos.y += 40.0f;
@@ -6174,7 +6195,7 @@ void BossGanon_SwordPhasePull(BossGanon* this, PlayState* play) {
                 player->csAction = PLAYER_CSACTION_NONE;
                 func_8002F6D4(play, &this->actor, 15.0f, this->actor.shape.rot.y, 2.0f, 0);
 
-            } else if(this->skelAnime.animation == &SwordPhasePullgrappleAnim && curFrame < 41) player->av2.actionVar2 = 0xA;
+            } else if(this->skelAnime.animation == &SwordPhaseGrappleAnim && curFrame < 41) player->av2.actionVar2 = 0xA;
 
             player->actor.shape.rot.x = player->actor.world.rot.x;
             player->actor.shape.rot.y = player->actor.world.rot.y;
@@ -6226,7 +6247,7 @@ void BossGanon_SwordPhaseCatch(BossGanon* this, PlayState* play) {
         }
 
     } else if(this->skelAnime.animation == &SwordPhasePullidleAnim && this->swordCaught) {
-        Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseSwordcatchAnim, 3.0f);
+        Animation_MorphToPlayOnce(&this->skelAnime, &SwordPhaseCatchAnim, 3.0f);
         this->skelAnime.curFrame = 16;
         this->swordDl = true;
         this->useOpenHand = false;
@@ -6256,7 +6277,7 @@ void EnGanon_DrawPulley(PlayState* play, Vec3f* pos, Vec3s* rot, Vec3f* scale, u
     //gDPSetPrimColor(POLY_XLU_DISP++, 0, 0, 150, 200, 255, 128);
     gDPSetPrimColor(POLY_XLU_DISP++, 0, 0, r, g, b, a);
 
-    gSPDisplayList(POLY_XLU_DISP++, GanondorfPulley);
+    gSPDisplayList(POLY_XLU_DISP++, gGanondorfPulley);
 
     CLOSE_DISPS_AUTO(play);
 
@@ -6283,7 +6304,7 @@ void BossGanon_DrawPulleys(BossGanon* this, PlayState* play) {
     this->beamRot.y = Math_Vec3f_Yaw(&this->rightHandPos, &this->beamPos2);
     this->beamRot.x = Math_Vec3f_Pitch(&this->rightHandPos, &this->beamPos2);
 
-    EnGanon_DrawPulley(play, &this->rightHandPos, &this->beamRot, &this->beamScale, 255, 255, 255, 180, 0);
+    EnGanon_DrawPulley(play, &this->rightHandPos, &this->beamRot, &this->beamScale, 89, 0, 198, 180, 0);
 
 }
 
@@ -6306,7 +6327,7 @@ void BossGanon_SetupSwordPhaseBlock(BossGanon* this, PlayState* play) {
     this->actor.world.rot.y = this->actor.yawTowardsPlayer;
     this->actor.shape.rot.y = this->actor.world.rot.y;
 
-    Animation_PlayOnce(&this->skelAnime, blockAnim);
+    Animation_MorphToPlayOnce(&this->skelAnime, blockAnim, 2.0f);
     this->actionFunc = BossGanon_SwordPhaseBlock;
     this->swordCollider.base.atFlags &= ~AT_HIT;
     this->actor.speed = 0.0f;
@@ -6320,7 +6341,7 @@ void BossGanon_SetupSwordPhaseBlock(BossGanon* this, PlayState* play) {
 }
 
 void BossGanon_SwordPhaseBlock(BossGanon* this, PlayState* play) {
-    BossGanon_FacePlayer(this);
+    BossGanon_FacePlayer(this, play);
     this->actor.shape.rot.y = this->actor.world.rot.y;
 
     if(this->skelAnime.curFrame == 8.0f) this->invincible = false;
@@ -6359,7 +6380,7 @@ void BossGanon_ChooseNextAction(BossGanon* this, PlayState* play) {
     if(ABS(yawDiff) >= 0x2000) return;
 
     if(dist >= sGanonGrappleDist) {
-        if(sGanonGrappleCooldown == 0 && (u8)IRANDOM_RANGE(0, 2) == 0) BossGanon_SetupSwordPhaseThrow(this, play);
+        if(sGanonGrappleCooldown == 0 && (u8)IRANDOM_RANGE(0, 1) == 0) BossGanon_SetupSwordPhaseThrow(this, play);
         else BossGanon_SetupSwordPhaseThrust1(this, play);
         return;
 
@@ -6368,15 +6389,12 @@ void BossGanon_ChooseNextAction(BossGanon* this, PlayState* play) {
     if(dist < sGanonGrappleDist && sGanonSwordTimer >= sGanonNextChoose) {
         sGanonSwordTimer = 0;
         // One might call the intentional fallthrough evil code.
-        switch((u8)IRANDOM_RANGE(0, 9)) {
+        switch((u8)IRANDOM_RANGE(0, 10)) {
             case 0: FALLTHROUGH;
-            case 1:
-                BossGanon_SetupSwordPhaseSlashRight(this, play);
-                break;
-
+            case 1: FALLTHROUGH;
             case 2: FALLTHROUGH;
             case 3:
-                BossGanon_SetupSwordPhase3Swing(this, play);
+                BossGanon_SetupSwordPhaseSlashRight(this, play);
                 break;
 
             case 4: FALLTHROUGH;
@@ -6386,11 +6404,12 @@ void BossGanon_ChooseNextAction(BossGanon* this, PlayState* play) {
 
             case 6: FALLTHROUGH;
             case 7: FALLTHROUGH;
-            case 8:
+            case 8: FALLTHROUGH;
+            case 9:
                 BossGanon_SetupSwordPhaseSlashDownLeft(this, play);
                 break;
 
-            case 9:
+            case 10:
                 BossGanon_SetupSwordPhaseKick(this, play);
                 break;
 
@@ -6401,7 +6420,7 @@ void BossGanon_ChooseNextAction(BossGanon* this, PlayState* play) {
 }
 
 void BossGanon_SetupSwordPhaseIdle(BossGanon* this, PlayState* play) {
-    Animation_MorphToLoop(&this->skelAnime, &SwordPhaseSwordidleAnim, 3.0f);
+    Animation_MorphToLoop(&this->skelAnime, &SwordPhaseIdleAnim, 3.0f);
     this->actionFunc = BossGanon_SwordPhaseIdle;
     this->actor.update = BossGanon_UpdateSwordPhase;
     this->actor.flags |= ACTOR_FLAG_0;
@@ -6415,7 +6434,7 @@ void BossGanon_SwordPhaseIdleIdle(BossGanon* this, PlayState* play) {
     this->actor.speed = 0.0f;
 
     if(this->actor.xzDistToPlayer >= 100.0f) {
-        Animation_MorphToLoop(&this->skelAnime, &SwordPhaseSwordwalkAnim, 3.0f);
+        Animation_MorphToLoop(&this->skelAnime, &SwordPhaseWalkAnim, 3.0f);
 
     }
 
@@ -6428,7 +6447,7 @@ void BossGanon_SwordPhaseIdleWalk(BossGanon* this, PlayState* play) {
     Actor_MoveXZGravity(&this->actor);
 
     if(this->actor.xzDistToPlayer < 100.0f) {
-        Animation_MorphToLoop(&this->skelAnime, &SwordPhaseSwordidleAnim, 3.0f);
+        Animation_MorphToLoop(&this->skelAnime, &SwordPhaseIdleAnim, 3.0f);
 
     }
 
@@ -6443,8 +6462,8 @@ typedef struct BossGanonSwordPhaseIdleFunc {
 } BossGanonSwordPhaseIdleFunc;
 
 static BossGanonSwordPhaseIdleFunc sBossGanonSwordPhaseIdleFuncs[2] = {
-    {&SwordPhaseSwordidleAnim, BossGanon_SwordPhaseIdleIdle},
-    {&SwordPhaseSwordwalkAnim, BossGanon_SwordPhaseIdleWalk},
+    {&SwordPhaseIdleAnim, BossGanon_SwordPhaseIdleIdle},
+    {&SwordPhaseWalkAnim, BossGanon_SwordPhaseIdleWalk},
 
 };
 
@@ -6455,7 +6474,7 @@ void BossGanon_SwordPhaseIdle(BossGanon* this, PlayState* play) {
 
     SkelAnime_Update(&this->skelAnime);
 
-    BossGanon_FacePlayer(this);
+    BossGanon_FacePlayer(this, play);
     this->actor.shape.rot.y = this->actor.world.rot.y;
 
     for(u8 i = 0; i < 2; i++) {

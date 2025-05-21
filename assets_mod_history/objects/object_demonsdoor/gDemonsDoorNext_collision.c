@@ -1,0 +1,35 @@
+#include "ultra64.h"
+#include "z64.h"
+#include "macros.h"
+#include "object_demonsdoor.h"
+
+CollisionHeader gDemonsDoorNext_collisionHeader = {
+    { -894, -116, -1373 },
+    { 894, 152, 692 },
+    ARRAY_COUNT(gDemonsDoorNext_vertices), gDemonsDoorNext_vertices,
+    ARRAY_COUNT(gDemonsDoorNext_polygons), gDemonsDoorNext_polygons,
+    gDemonsDoorNext_polygonTypes,
+    NULL,
+    0, NULL
+};
+
+SurfaceType gDemonsDoorNext_polygonTypes[1] = {
+    { SURFACETYPE0(0, 0, 0x00, 0, 0x00, 0x00, 0, 0), SURFACETYPE1(0x00, 0x00, 0, 0, 0, 0, 0, 0) },
+};
+
+Vec3s gDemonsDoorNext_vertices[6] = {
+    {   -894,   -116,  -1373 },
+    {   -894,     40,    681 },
+    {    894,    152,    681 },
+    {    894,   -116,  -1373 },
+    {   -894,    -36,    692 },
+    {    894,     76,    692 },
+};
+
+CollisionPoly gDemonsDoorNext_polygons[4] = {
+    { 0, COLPOLY_VTX(0, COLPOLY_IGNORE_NONE), COLPOLY_VTX(1, COLPOLY_IGNORE_NONE), COLPOLY_VTX_INDEX(2), { COLPOLY_SNORMAL(-0.06255235522985458), COLPOLY_SNORMAL(0.9951672554016113), COLPOLY_SNORMAL(-0.07569258660078049) }, 65492 },
+    { 0, COLPOLY_VTX(0, COLPOLY_IGNORE_NONE), COLPOLY_VTX(2, COLPOLY_IGNORE_NONE), COLPOLY_VTX_INDEX(3), { COLPOLY_SNORMAL(2.0612023376997968e-07), COLPOLY_SNORMAL(0.9915565252304077), COLPOLY_SNORMAL(-0.12967513501644135) }, 65473 },
+    { 0, COLPOLY_VTX(4, COLPOLY_IGNORE_NONE), COLPOLY_VTX(5, COLPOLY_IGNORE_NONE), COLPOLY_VTX_INDEX(2), { COLPOLY_SNORMAL(-0.009538312442600727), COLPOLY_SNORMAL(0.15174835920333862), COLPOLY_SNORMAL(0.9883730411529541) }, 64849 },
+    { 0, COLPOLY_VTX(4, COLPOLY_IGNORE_NONE), COLPOLY_VTX(2, COLPOLY_IGNORE_NONE), COLPOLY_VTX_INDEX(1), { COLPOLY_SNORMAL(-0.009538315236568451), COLPOLY_SNORMAL(0.15174837410449982), COLPOLY_SNORMAL(0.9883730411529541) }, 64849 },
+};
+

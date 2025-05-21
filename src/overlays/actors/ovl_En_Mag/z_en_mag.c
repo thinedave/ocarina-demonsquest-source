@@ -500,9 +500,9 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
        Message_DrawString(&play->msgCtx.font, &gfx, "1998-2003 Nintendo", 18, 20, 186, 255, 255, 255, this->copyrightAlpha, false, 1.3f, true);
 
        Message_DrawString(&play->msgCtx.font, &gfx, "thinedave, aegiker", 18, 297, 186, 255, 255, 255, this->copyrightAlpha, true, 1.3f, true);
-       Message_DrawString(&play->msgCtx.font, &gfx, "hylianmodding.com", 17, 292, 198, 255, 255, 255, this->copyrightAlpha, true, 1.3f, true);
+       Message_DrawString(&play->msgCtx.font, &gfx, "z64.chat", 8, 292, 198, 255, 255, 255, this->copyrightAlpha, true, 1.3f, true);
        Message_DrawString(&play->msgCtx.font, &gfx, "zelda64.dev", 11, 294, 210, 255, 255, 255, this->copyrightAlpha, true, 1.3f, true);
-       Message_DrawString(&play->msgCtx.font, &gfx, "2022-2024", 11, 294, 222, 255, 255, 255, this->copyrightAlpha, true, 1.3f, true);
+       Message_DrawString(&play->msgCtx.font, &gfx, "2022-2025", 11, 294, 222, 255, 255, 255, this->copyrightAlpha, true, 1.3f, true);
 
        //EnMag_DrawTextureIA8(&gfx, gTitleCopyright19982003Tex, 160, 16, 13, 199, 160, 16, 1024, 1024);
 

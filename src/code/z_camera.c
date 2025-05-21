@@ -4366,7 +4366,7 @@ s32 Camera_Subj3(Camera* camera) {
     camera->playerToAtOffset.x = camera->at.x - playerPosRot->pos.x;
     camera->playerToAtOffset.y = camera->at.y - playerPosRot->pos.y;
     camera->playerToAtOffset.z = camera->at.z - playerPosRot->pos.z;
-    camera->fov = Camera_LERPCeilF(roData->fovTarget, camera->fov, 0.25f, 1.0f);
+    camera->fov = Camera_LERPCeilF((CHECK_BTN_ALL(Effect_GetPlayState()->state.input[0].cur.button, BTN_R) ? roData->fovTarget * 0.8f : roData->fovTarget), camera->fov, 0.25f, 1.0f);
     camera->roll = 0;
     camera->atLERPStepScale = 0.0f;
     return 1;
@@ -7653,8 +7653,8 @@ Vec3s Camera_Update(Camera* camera) {
             }
         }
     }
-    Camera_PrintSettings(camera);
-    Camera_DbgChangeMode(camera);
+    //Camera_PrintSettings(camera);
+    //Camera_DbgChangeMode(camera);
 
     if (camera->status == CAM_STAT_WAIT) {
         if (R_DEBUG_CAM_UPDATE) {

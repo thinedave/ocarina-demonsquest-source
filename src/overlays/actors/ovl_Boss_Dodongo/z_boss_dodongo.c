@@ -564,11 +564,11 @@ void BossDodongo_Bite(BossDodongo* this, PlayState* play) {
     
     if(this->skelAnime.animation == &gKingDodongoBitestartAnim) { // windup/bite
         switch(curFrame) {
-            case 10:
+            case 16:
                 this->bite = true;
                 break;
 
-            case 15:
+            case 19:
                 this->bite = false;
                 break;
 
@@ -625,7 +625,7 @@ void BossDodongo_Bite(BossDodongo* this, PlayState* play) {
 
     } else { // throw
         bool direction = (this->skelAnime.animation == &gKingDodongoThrowleftAnim);
-        if(curFrame == (direction ? 6 : 15)) {
+        if(curFrame == (direction ? 10 : 5)) {
             player->actor.shape.rot.x = player->actor.world.rot.x = 0;
             player->actor.shape.rot.z = player->actor.world.rot.z = 0;
             player->av2.actionVar2 = 0x65;

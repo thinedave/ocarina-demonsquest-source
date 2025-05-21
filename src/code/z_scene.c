@@ -264,6 +264,67 @@ void Scene_CommandRoomShape(PlayState* play, SceneCmd* cmd) {
     play->roomCtx.curRoom.roomShape = SEGMENTED_TO_VIRTUAL(cmd->mesh.data);
 }
 
+#define COURAGETRIAL_OBJECT_ENTRY_MAGIC 213
+
+static SCmdObjectList sCourageTrialObjectEntryEntrance = {
+    SCENE_CMD_ID_OBJECT_LIST,
+    2,
+    (s16[]){
+        OBJECT_DEMONSDOOR,
+        OBJECT_WARP1,
+    }
+};
+
+static SCmdObjectList sCourageTrialObjectEntryChild = {
+    SCENE_CMD_ID_OBJECT_LIST,
+    9,
+    (s16[]){
+        OBJECT_DEMONSDOOR,
+        OBJECT_DEKUBABA,
+        OBJECT_DEKUNUTS,
+        OBJECT_SKB,
+        OBJECT_DODONGO,
+        OBJECT_AM,
+        OBJECT_VM,
+        OBJECT_BL,
+        OBJECT_TITE,
+    }
+};
+
+static SCmdObjectList sCourageTrialObjectEntryAdult1 = {
+    SCENE_CMD_ID_OBJECT_LIST,
+    13,
+    (s16[]){
+        OBJECT_DEMONSDOOR,
+        OBJECT_RD,
+        OBJECT_BB,
+        OBJECT_POH,
+        OBJECT_BW,
+        OBJECT_FW,
+        OBJECT_SK2,
+        OBJECT_IK,
+        OBJECT_ZF,
+        OBJECT_ZF,
+        OBJECT_DH,
+        OBJECT_WF,
+        OBJECT_FIREFLY,
+    }
+};
+
+static SCmdObjectList* sCourageTrialObjectEntries[] = {
+    &sCourageTrialObjectEntryEntrance,
+    &sCourageTrialObjectEntryChild,
+    &sCourageTrialObjectEntryChild,
+    &sCourageTrialObjectEntryChild,
+    &sCourageTrialObjectEntryChild,
+    &sCourageTrialObjectEntryAdult1,
+    &sCourageTrialObjectEntryAdult1,
+    &sCourageTrialObjectEntryAdult1,
+    &sCourageTrialObjectEntryAdult1,
+    &sCourageTrialObjectEntryAdult1,
+    &sCourageTrialObjectEntryAdult1,
+};
+
 void Scene_CommandObjectList(PlayState* play, SceneCmd* cmd) {
     s32 i;
     s32 j;
@@ -271,7 +332,15 @@ void Scene_CommandObjectList(PlayState* play, SceneCmd* cmd) {
     ObjectEntry* entry;
     ObjectEntry* invalidatedEntry;
     ObjectEntry* entries;
-    s16* objectListEntry = SEGMENTED_TO_VIRTUAL(cmd->objectList.data);
+
+    u8 objectListLength = cmd->objectList.length;
+    s16* objectListEntry;
+    if(objectListLength == COURAGETRIAL_OBJECT_ENTRY_MAGIC) {
+        objectListLength = sCourageTrialObjectEntries[gSaveContext.courageTrialLevel]->length;
+        objectListEntry = sCourageTrialObjectEntries[gSaveContext.courageTrialLevel]->data;
+
+    } else objectListEntry = SEGMENTED_TO_VIRTUAL(cmd->objectList.data);
+
     void* nextPtr;
 
     k = 0;
@@ -300,10 +369,10 @@ void Scene_CommandObjectList(PlayState* play, SceneCmd* cmd) {
         entry++;
     }
 
-    ASSERT(cmd->objectList.length <= ARRAY_COUNT(play->objectCtx.slots),
+    ASSERT(objectListLength <= ARRAY_COUNT(play->objectCtx.slots),
            "scene_info->object_bank.num <= OBJECT_EXCHANGE_BANK_MAX", "../z_scene.c", 705);
 
-    while (k < cmd->objectList.length) {
+    while (k < objectListLength) {
         nextPtr = func_800982FC(&play->objectCtx, i, *objectListEntry);
         if (i < (ARRAY_COUNT(play->objectCtx.slots) - 1)) {
             entries[i + 1].segment = nextPtr;

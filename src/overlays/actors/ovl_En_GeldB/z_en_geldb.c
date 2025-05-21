@@ -1558,11 +1558,11 @@ void EnGeldB_Draw(Actor* thisx, PlayState* play) {
         { 3000.0f, 6000.0f, 1600.0f },
     };
     static void* eyeTextures[] = {
-    gGerudoRedSkel_gerudo_red_eye_open_ci8_png_001_ci8,
-    gGerudoRedSkel_gerudo_red_eye_half_ci8_png_001_ci8,
-    gGerudoRedSkel_gerudo_red_eye_shut_ci8_png_001_ci8,
-    gGerudoRedSkel_gerudo_red_eye_half_ci8_png_001_ci8,
-};
+        gGerudoRedEyeOpenTex,
+        gGerudoRedEyeHalfTex,
+        gGerudoRedEyeShutTex,
+        gGerudoRedEyeHalfTex,
+    };
     s32 pad;
     EnGeldB* this = (EnGeldB*)thisx;
 

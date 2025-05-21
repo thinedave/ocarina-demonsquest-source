@@ -11,6 +11,14 @@ allowed_types = {
 
 }
 
+def handle_text():
+    file_name = "message_data_mod.h"
+    new_dir = "assets/text/message_data.h"
+
+    print("Copying text asset '" + file_name + "' to file '" + new_dir + "'")
+
+    copyfile(file_name, new_dir)
+
 def handle_file_noncode(file_name):
     print("Opening file '" + file_name + "'")
 
@@ -81,3 +89,4 @@ def handle_directory(dir):
             handle_directory(os.path.join(path, subdir))
 
 handle_directory(assets_mod)
+handle_text()

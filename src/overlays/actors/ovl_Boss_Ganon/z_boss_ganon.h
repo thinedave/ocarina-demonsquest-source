@@ -192,6 +192,8 @@ typedef struct BossGanon {
     bool swordCaught;
     s32 blureIndex;
     bool invincible;
+    Vec3s headRot;
+    Vec3s torsoRot;
 } BossGanon; // size = 0x71C
 
 void BossGanon_Wait(BossGanon* this, PlayState* play);

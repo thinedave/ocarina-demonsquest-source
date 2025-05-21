@@ -516,7 +516,7 @@ void EnFd_Land(EnFd* this, PlayState* play) {
 
     Math_SmoothStepToF(&this->skelAnime.playSpeed, 1.0f, 0.1f, 1.0f, 0.0f);
     if (Animation_OnFrame(&this->skelAnime, this->skelAnime.endFrame)) {
-        this->spinTimer = Rand_S16Offset(60, 90);
+        this->spinTimer = Rand_S16Offset(20, 30);
         this->runRadius = Math_Vec3f_DistXYZ(&this->actor.world.pos, &this->actor.home.pos);
         EnFd_GetPosAdjAroundCircle(&adjPos, this, this->runRadius, this->runDir);
         this->actor.world.rot.y = RAD_TO_BINANG(Math_FAtan2F(adjPos.x, adjPos.z));
@@ -530,7 +530,7 @@ void EnFd_SpinAndSpawnFire(EnFd* this, PlayState* play) {
     f32 tgtSpeed;
     f32 rotSpeed;
 
-    if ((this->spinTimer < 31) && (this->invincibilityTimer == 0)) {
+    if ((this->spinTimer < 21) && (this->invincibilityTimer == 0)) {
         func_8002F974(&this->actor, NA_SE_EN_FLAME_FIRE_ATTACK - SFX_FLAG);
     } else {
         func_8002F974(&this->actor, NA_SE_EN_FLAME_ROLL - SFX_FLAG);
@@ -538,7 +538,7 @@ void EnFd_SpinAndSpawnFire(EnFd* this, PlayState* play) {
 
     if (DECR(this->spinTimer) != 0) {
         this->actor.shape.rot.y += (this->runDir * 0x2000);
-        if (this->spinTimer == 30 && this->invincibilityTimer == 0) {
+        if (this->spinTimer == 20 && this->invincibilityTimer == 0) {
             if (this->actor.xzDistToPlayer > 160.0f) {
                 // orange flames
                 EnFd_SpawnChildFire(this, play, 8, 0);
@@ -567,7 +567,7 @@ void EnFd_SpinAndSpawnFire(EnFd* this, PlayState* play) {
             this->initYawToInitPos = Math_Vec3f_Yaw(&this->actor.home.pos, &this->actor.world.pos);
             this->curYawToInitPos = this->runDir < 0 ? 0xFFFF : 0;
             this->circlesToComplete = (play->state.frames & 7) + 2;
-            this->spinTimer = Rand_S16Offset(30, 120);
+            this->spinTimer = Rand_S16Offset(20, 20);
             Animation_ChangeByInfo(&this->skelAnime, sAnimationInfo, ENFD_ANIM_3);
             this->actionFunc = EnFd_Run;
         }

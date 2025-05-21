@@ -192,6 +192,8 @@ void EnFz_Init(Actor* thisx, PlayState* play) {
     this->posOrigin.z = this->actor.world.pos.z;
     this->unusedFloat = 135.0f;
 
+    this->drawIndex = (6 - (u16)Math_FRoundF((f32)this->actor.colChkInfo.health * 0.1f)) >> 1;
+
     if (this->actor.params < 0) {
         this->envAlpha = 0;
         this->actor.scale.y = 0.0f;
@@ -333,21 +335,30 @@ void EnFz_ApplyDamage(EnFz* this, PlayState* play) {
 
     if (this->isFreezing) {
         if ((this->actor.params < 0) && (this->collider1.base.atFlags & AT_HIT)) {
+            osSyncPrintf("params\n");
             this->isMoving = false;
             this->collider1.base.acFlags &= ~AC_HIT;
             this->actor.speed = this->speedXZ = 0.0f;
             this->timer = 10;
             EnFz_SetupDisappear(this);
         } else if (this->collider2.base.acFlags & AC_BOUNCED) {
+            osSyncPrintf("bounced\n");
             this->collider2.base.acFlags &= ~AC_BOUNCED;
             this->collider1.base.acFlags &= ~AC_HIT;
         } else if (this->collider1.base.acFlags & AC_HIT) {
+            osSyncPrintf("hit\n");
             this->collider1.base.acFlags &= ~AC_HIT;
             switch (this->actor.colChkInfo.damageEffect) {
                 case 0xF:
+                    osSyncPrintf("case 0xF:\n");
+                    osSyncPrintf("damage: %d\n", this->actor.colChkInfo.damage);
                     Actor_ApplyDamage(&this->actor);
+
+                    this->drawIndex = (6 - (u16)Math_FRoundF((f32)this->actor.colChkInfo.health * 0.1f)) >> 1;
+
                     Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_XLU, 8);
                     if (this->actor.colChkInfo.health != 0) {
+                        osSyncPrintf("this->actor.colChkInfo.health != 0\n");
                         Actor_PlaySfx(&this->actor, NA_SE_EN_FREEZAD_DAMAGE);
                         vec.x = this->actor.world.pos.x;
                         vec.y = this->actor.world.pos.y;
@@ -355,6 +366,7 @@ void EnFz_ApplyDamage(EnFz* this, PlayState* play) {
                         EnFz_Damaged(this, play, &vec, 10, 0.0f);
                         this->unusedCounter++;
                     } else {
+                        osSyncPrintf("elsed\n");
                         Actor_PlaySfx(&this->actor, NA_SE_EN_FREEZAD_DEAD);
                         Actor_PlaySfx(&this->actor, NA_SE_EV_ICE_BROKEN);
                         vec.x = this->actor.world.pos.x;
@@ -366,12 +378,18 @@ void EnFz_ApplyDamage(EnFz* this, PlayState* play) {
                     break;
 
                 case 2:
+                    osSyncPrintf("case 2:\n");
                     Actor_ApplyDamage(&this->actor);
+
+                    this->drawIndex = (6 - (u16)Math_FRoundF((f32)this->actor.colChkInfo.health * 0.1f)) >> 1;
+
                     Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_XLU, 8);
                     if (this->actor.colChkInfo.health == 0) {
+                        osSyncPrintf("melt\n");
                         Actor_PlaySfx(&this->actor, NA_SE_EN_FREEZAD_DEAD);
                         EnFz_SetupMelt(this);
                     } else {
+                        osSyncPrintf("nomelt\n");
                         Actor_PlaySfx(&this->actor, NA_SE_EN_FREEZAD_DAMAGE);
                     }
                     break;
@@ -718,16 +736,15 @@ void EnFz_Draw(Actor* thisx, PlayState* play) {
     };
     EnFz* this = (EnFz*)thisx;
     s32 pad;
-    s32 index;
 
-    index = (60 - this->actor.colChkInfo.health) >> 1;
+    if(this->drawIndex < 0 || this->drawIndex > 2) return;
 
     OPEN_DISPS(play->state.gfxCtx, "../z_en_fz.c", 1167);
 
     if (1) {}
 
     if (this->actor.colChkInfo.health == 0) {
-        index = 2;
+        this->drawIndex = 2;
     }
 
     if (this->isActive) {
@@ -742,7 +759,7 @@ void EnFz_Draw(Actor* thisx, PlayState* play) {
                           PRIMITIVE, ENVIRONMENT, COMBINED, ENVIRONMENT, COMBINED, 0, ENVIRONMENT, 0);
         gDPSetPrimColor(POLY_XLU_DISP++, 0, 128, 155, 255, 255, 255);
         gDPSetEnvColor(POLY_XLU_DISP++, 200, 200, 200, this->envAlpha);
-        gSPDisplayList(POLY_XLU_DISP++, displayLists[index]);
+        gSPDisplayList(POLY_XLU_DISP++, displayLists[this->drawIndex]);
     }
 
     CLOSE_DISPS(play->state.gfxCtx, "../z_en_fz.c", 1200);

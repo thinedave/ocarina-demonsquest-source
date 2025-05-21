@@ -49,11 +49,11 @@ void BgGanonLadder_Init(Actor* thisx, PlayState* play) {
     Actor_ProcessInitChain(&this->dyna.actor, sInitChain);
 
     DynaPolyActor_Init(&this->dyna, DYNA_TRANSFORM_POS);
-    CollisionHeader_GetVirtual(&ganon_boss_room_ladder_collisionHeader, &colHeader);
+    CollisionHeader_GetVirtual(&ganon_boss_room_0DL_005E50_mesh_001_collisionHeader, &colHeader);
 
     this->dyna.bgId = DynaPoly_SetBgActor(play, &play->colCtx.dyna, &this->dyna.actor, colHeader);
 
-    Actor_SetScale(&this->dyna.actor, 10.0f);
+    Actor_SetScale(&this->dyna.actor, 0.1f);
 
     BgGanonLadder_SetupAction(this, BgGanonLadder_Wait);
 
@@ -227,7 +227,7 @@ void BgGanonLadder_Draw(Actor* thisx, PlayState* play) {
     gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(play->state.gfxCtx, "../z_bg_ingate.c", 245),
               G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-    gSPDisplayList(POLY_OPA_DISP++, ganon_boss_room_ladder);
+    gSPDisplayList(POLY_OPA_DISP++, ganon_boss_room_0DL_005E50_mesh_001);
 
     CLOSE_DISPS_AUTO(play);
 

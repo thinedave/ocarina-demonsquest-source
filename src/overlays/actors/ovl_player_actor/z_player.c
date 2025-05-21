@@ -4097,8 +4097,10 @@ void Player_ChangeStability(PlayState* play, s8 amount) {
 }
 
 void Player_ChangeStamina(PlayState* play, s8 amount) {
+    if(amount == 0) return;
+
     if(amount < 0)
-        amount *= F32_LERP(1.0f, 0.1f, (f32)(gSaveContext.save.info.playerData.levels.endurance)/100);
+        amount *= F32_LERP(1.0f, 0.23f, (f32)(gSaveContext.save.info.playerData.levels.endurance)/100);
 
     play->stamina = play->stamina + amount;
 
@@ -4216,11 +4218,17 @@ void func_80837C0C(PlayState* play, Player* this, s32 arg2, f32 arg3, f32 arg4, 
 
     Player_PlaySfx(this, NA_SE_PL_DAMAGE);
 
-    this->actor.colChkInfo.damage *= 2;
+    this->actor.colChkInfo.damage *= (gSaveContext.save.info.demonsCurse ? 3 : 2);
 
     if (arg2 == 3 && this->currentTunic == PLAYER_TUNIC_GORON) { // ?freeze damage? && ?goron tunic equipped?
         this->actor.colChkInfo.damage *= 5; // fool
 
+    }
+
+    if(this->actionFunc == Player_Action_8084EAC0 && this->skelAnime.animation != &gPlayerAnim_link_bottle_drink_demo_start) {
+        Player_UpdateBottleHeld(play, this, ITEM_BOTTLE_EMPTY, PLAYER_IA_BOTTLE);
+        gSaveContext.healthAccumulator = 0;
+    
     }
 
     if (!func_80837B18(play, this, 0 - this->actor.colChkInfo.damage)) {
@@ -4856,7 +4864,16 @@ s32 Player_HandleExitsAndVoids(PlayState* play, Player* this, CollisionPoly* pol
             } else {
                 play->nextEntranceIndex = play->exitList[exitIndex - 1];
 
-                if (play->nextEntranceIndex == ENTR_RETURN_GROTTO) {
+                if(play->nextEntranceIndex == ENTR_POWERTRIAL_0 && play->sceneId == SCENE_POWERTRIAL) {
+                    if(gSaveContext.courageTrialLevel == 10) {
+                        gSaveContext.courageTrialLevel = 0;
+                        play->nextEntranceIndex = ENTR_GREAT_FAIRYS_FOUNTAIN_MAGIC_2;
+
+                    } else gSaveContext.courageTrialLevel = MIN(gSaveContext.courageTrialLevel + 1, 11);
+                    
+                } else if(play->nextEntranceIndex == ENTR_HYRULE_CASTLE_0 && play->sceneId == SCENE_POWERTRIAL) {
+                    gSaveContext.courageTrialLevel = 0;
+                } else if (play->nextEntranceIndex == ENTR_RETURN_GROTTO) {
                     gSaveContext.respawnFlag = 2;
                     play->nextEntranceIndex = gSaveContext.respawn[RESPAWN_MODE_RETURN].entranceIndex;
                     play->transitionType = TRANS_TYPE_FADE_WHITE;
@@ -6203,7 +6220,7 @@ s32 Player_ActionChange_6(Player* this, PlayState* play) {
         Math_StepToS(&sSprintTimer, 25, 1);
 
         if(sSprintTimer >= 5) {
-            bool slow = (play->actorCtx.targetCtx.bgmEnemy != NULL || Actor_HasCategory(&play->actorCtx, ACTORCAT_BOSS) || Audio_GetActiveSeqId(SEQ_PLAYER_BGM_MAIN) == NA_BGM_ESCAPE);
+            bool slow = (play->actorCtx.targetCtx.bgmEnemy != NULL || play->roomCtx.curRoom.behaviorType1 == ROOM_BEHAVIOR_TYPE1_1 || Actor_HasCategory(&play->actorCtx, ACTORCAT_BOSS) || Audio_GetActiveSeqId(SEQ_PLAYER_BGM_MAIN) == NA_BGM_ESCAPE);
 
             f32 frac = (f32)(sSprintTimer-5) * 0.05f;
             f32 to = REG(44) * (slow ? 1.35f : 2.0f);
@@ -6249,7 +6266,7 @@ s32 Player_ActionChange_11(Player* this, PlayState* play) {
     f32 frame;
 
     if ((play->shootingGalleryStatus == 0) && (this->currentShield != PLAYER_SHIELD_NONE) &&
-        CHECK_BTN_ALL(sControlInput->cur.button, BTN_R) && play->poise > 25 &&
+        CHECK_BTN_ALL(sControlInput->cur.button, BTN_R) && play->stamina > 25 &&
         (Player_IsChildWithHylianShield(this) || (!func_80833B2C(this) && (this->unk_664 == NULL)))) {
 
         func_80832318(this);
@@ -12092,27 +12109,26 @@ s16 func_8084ABD8(PlayState* play, Player* this, s32 arg2, s16 arg3) {
     s16 temp2;
     s16 temp3;
 
-    if (!func_8002DD78(this) && !func_808334B4(this) && (arg2 == 0)) {
-        temp2 = sControlInput->rel.stick_y * 240.0f;
-        Math_SmoothStepToS(&this->actor.focus.rot.x, temp2, 14, 4000, 30);
+    bool rPressed = CHECK_BTN_ALL(sControlInput->cur.button, BTN_R);
 
-        temp2 = sControlInput->rel.stick_x * -16.0f;
-        temp2 = CLAMP(temp2, -3000, 3000);
-        this->actor.focus.rot.y += temp2;
-    } else {
-        temp1 = (this->stateFlags1 & PLAYER_STATE1_23) ? 3500 : 14000;
-        temp3 = ((sControlInput->rel.stick_y >= 0) ? 1 : -1) *
-                (s32)((1.0f - Math_CosS(sControlInput->rel.stick_y * 200)) * 1500.0f);
-        this->actor.focus.rot.x += temp3;
-        this->actor.focus.rot.x = CLAMP(this->actor.focus.rot.x, -temp1, temp1);
+    temp1 = (this->stateFlags1 & PLAYER_STATE1_23) ? 3500 : 14000;
+    temp3 = ((sControlInput->rel.stick_y >= 0) ? 1 : -1) *
+            (s32)((1.0f - Math_CosS(sControlInput->rel.stick_y * 200)) * 1500.0f);
 
-        temp1 = 19114;
-        temp2 = this->actor.focus.rot.y - this->actor.shape.rot.y;
-        temp3 = ((sControlInput->rel.stick_x >= 0) ? 1 : -1) *
-                (s32)((1.0f - Math_CosS(sControlInput->rel.stick_x * 200)) * -1500.0f);
-        temp2 += temp3;
-        this->actor.focus.rot.y = CLAMP(temp2, -temp1, temp1) + this->actor.shape.rot.y;
-    }
+    if(rPressed) temp3 = (s32)((f32)temp3 * 0.5f);
+
+    this->actor.focus.rot.x += temp3;
+    this->actor.focus.rot.x = CLAMP(this->actor.focus.rot.x, -temp1, temp1);
+
+    temp1 = 19114;
+    temp2 = this->actor.focus.rot.y - this->actor.shape.rot.y;
+    temp3 = ((sControlInput->rel.stick_x >= 0) ? 1 : -1) *
+            (s32)((1.0f - Math_CosS(sControlInput->rel.stick_x * 200)) * -1500.0f);
+
+    if(rPressed) temp3 = (s32)((f32)temp3 * 0.5f);
+
+    temp2 += temp3;
+    this->actor.focus.rot.y = CLAMP(temp2, -temp1, temp1) + this->actor.shape.rot.y;
 
     this->unk_6AE |= 2;
     return func_80836AB8(this, (play->shootingGalleryStatus != 0) || func_8002DD78(this) || func_808334B4(this)) - arg3;
@@ -12222,11 +12238,11 @@ void Player_Action_8084B1D8(Player* this, PlayState* play) {
 
     if ((this->csAction != PLAYER_CSACTION_NONE) || (this->unk_6AD == 0) || (this->unk_6AD >= 4) ||
         func_80833B54(this) || (this->unk_664 != NULL) || (func_8083AD4C(play, this) == CAM_MODE_NORMAL) ||
-        (((this->unk_6AD == 2) && (CHECK_BTN_ANY(sControlInput->press.button, BTN_A | BTN_B | BTN_R) ||
+        (((this->unk_6AD == 2) && (CHECK_BTN_ANY(sControlInput->press.button, BTN_A | BTN_B) ||
                                    func_80833B2C(this) || (!func_8002DD78(this) && !func_808334B4(this)))) ||
          ((this->unk_6AD == 1) &&
           CHECK_BTN_ANY(sControlInput->press.button,
-                        BTN_A | BTN_B | BTN_R | BTN_CUP | BTN_CLEFT | BTN_CRIGHT | BTN_CDOWN)))) {
+                        BTN_A | BTN_B | BTN_CUP | BTN_CLEFT | BTN_CRIGHT | BTN_CDOWN)))) {
         func_8083C148(this, play);
         Sfx_PlaySfxCentered(NA_SE_SY_CAMERA_ZOOM_UP);
     } else if ((DECR(this->av2.actionVar2) == 0) || (this->unk_6AD != 2)) {

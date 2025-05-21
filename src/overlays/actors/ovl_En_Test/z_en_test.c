@@ -373,7 +373,7 @@ void EnTest_ChooseRandomAction(EnTest* this, PlayState* play) {
 }
 
 void EnTest_SetupSlashLeft(EnTest* this, PlayState* play) {
-    Animation_PlayOnce(&this->skelAnime, &SlashLeftSlashleftAnim);
+    //Animation_PlayOnce(&this->skelAnime, &SlashLeftSlashleftAnim);
     Audio_StopSfxByPosAndId(&this->actor.projectedPos, NA_SE_EN_STAL_WARAU);
     this->swordCollider.base.atFlags &= ~AT_BOUNCED;
     this->actor.speed = 0.0f;
@@ -400,7 +400,7 @@ void EnTest_SlashLeft(EnTest* this, PlayState* play) {
 }
 
 void EnTest_SetupSlashRightLeft(EnTest* this, PlayState* play) {
-    Animation_PlayOnce(&this->skelAnime, &gStalfosSkelSlashrightleftAnim);
+    //Animation_PlayOnce(&this->skelAnime, &gStalfosSkelSlashrightleftAnim);
     Audio_StopSfxByPosAndId(&this->actor.projectedPos, NA_SE_EN_STAL_WARAU);
     this->swordCollider.base.atFlags &= ~AT_BOUNCED;
     this->actor.speed = 0.0f;
@@ -427,7 +427,7 @@ void EnTest_SlashRightLeft(EnTest* this, PlayState* play) {
 }
 
 void EnTest_SetupThrust(EnTest* this, PlayState* play) {
-    Animation_PlayOnce(&this->skelAnime, &gStalfosSkel_001Action_004Anim);
+    //Animation_PlayOnce(&this->skelAnime, &gStalfosSkel_001Action_004Anim);
     Audio_StopSfxByPosAndId(&this->actor.projectedPos, NA_SE_EN_STAL_WARAU);
     this->swordCollider.base.atFlags &= ~AT_BOUNCED;
     this->actor.speed = 0.0f;
@@ -454,7 +454,7 @@ void EnTest_Thrust(EnTest* this, PlayState* play) {
 }
 
 void EnTest_SetupSpinAttack(EnTest* this, PlayState* play) {
-    Animation_PlayOnce(&this->skelAnime, &gStalfosSkel_001SpinattackAnim);
+    //Animation_PlayOnce(&this->skelAnime, &gStalfosSkel_001SpinattackAnim);
     Audio_StopSfxByPosAndId(&this->actor.projectedPos, NA_SE_EN_STAL_WARAU);
     this->swordCollider.base.atFlags &= ~AT_BOUNCED;
     this->actor.speed = 0.0f;
@@ -488,10 +488,12 @@ void EnTest_ChooseRand(EnTest* this, PlayState* play) {
             EnTest_SetupJumpslash(this);
             break;
         case 1:
-            EnTest_SetupSlashRightLeft(this, play);
+            EnTest_SetupSlashDown(this);
+            //EnTest_SetupSlashRightLeft(this, play);
             break;
         case 2:
-            EnTest_SetupSpinAttack(this, play);
+        EnTest_SetupSlashUp(this);
+            //EnTest_SetupSpinAttack(this, play);
             break;
         case 3:
             EnTest_SetupSlashDown(this);
@@ -500,10 +502,12 @@ void EnTest_ChooseRand(EnTest* this, PlayState* play) {
             EnTest_SetupSlashUp(this);
             break;
         case 5:
-            EnTest_SetupSlashLeft(this, play);
+        EnTest_SetupJumpslash(this);
+            //EnTest_SetupSlashLeft(this, play);
             break;
         case 6:
-            EnTest_SetupThrust(this, play);
+            EnTest_SetupJumpslash(this);
+            //EnTest_SetupThrust(this, play);
             break;
         default:
             EnTest_SetupSlashDown(this);

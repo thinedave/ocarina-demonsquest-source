@@ -1,0 +1,5 @@
+extern Vtx gDemonsDoorLast_gDemonsDoorLast_mesh_layer_Opaque_vtx_cull[8];
+extern Vtx gDemonsDoorLast_gDemonsDoorLast_mesh_layer_Opaque_vtx_0[6];
+extern Gfx gDemonsDoorLast_gDemonsDoorLast_mesh_layer_Opaque_tri_0[];
+extern Gfx mat_gDemonsDoorLast_f3dlite_material_002_layerOpaque[];
+extern Gfx gDemonsDoorLast[];

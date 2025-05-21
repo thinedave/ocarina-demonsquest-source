@@ -52,6 +52,7 @@ typedef struct EnFz {
     /* 0x0264 */ Vec3f wallHitPos; // Position contact was made with a wall
     /* 0x0270 */ f32 distToTargetSq;
     /* 0x0274 */ EnFzEffect effects[EN_FZ_EFFECT_COUNT];
+    s32 drawIndex;
 } EnFz; // size = 0x0BD4
 
 #endif

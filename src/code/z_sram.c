@@ -198,7 +198,7 @@ static SavePlayerData sDebugSavePlayerData = {
     true,                                               // isMagicAcquired
     0,                                                  // unk_1F
     true,                                              // isDoubleMagicAcquired
-    true,                                              // isDoubleDefenseAcquired
+    false,                                              // isDoubleDefenseAcquired
     0,                                                  // bgsFlag
     0,                                                  // ocarinaGameRoundNum
     {
@@ -221,6 +221,7 @@ static SavePlayerData sDebugSavePlayerData = {
         10,  // endurance
         10,  // luck
         0,
+        100,
     },
 };
 
@@ -292,7 +293,7 @@ static Inventory sDebugSaveInventory = {
      (((1 << EQUIP_INV_BOOTS_KOKIRI) << (EQUIP_TYPE_BOOTS * 4)) |
       ((1 << EQUIP_INV_BOOTS_IRON) << (EQUIP_TYPE_BOOTS * 4)) |
       ((1 << EQUIP_INV_BOOTS_HOVER) << (EQUIP_TYPE_BOOTS * 4)))),
-    0x125249,                                                       // upgrades
+    0x1252C9,                                                       // upgrades
     0x1E3FFFF,                                                      // questItems
     { 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // dungeonItems
     { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 },    // dungeonKeys
@@ -319,7 +320,7 @@ void Sram_InitDebugSave(void) {
     gSaveContext.save.bgsDayCount = 0;
 
     gSaveContext.save.info.playerData = sDebugSavePlayerData;
-    gSaveContext.save.info.demonsCurse = true;
+    gSaveContext.save.info.demonsCurse = false;
     gSaveContext.save.info.dead = false;
     gSaveContext.save.info.heartsBlocked = 0x00;
     gSaveContext.save.info.equips = sDebugSaveEquips;
