@@ -244,6 +244,8 @@ void func_80A8F8D0(EnKakasi* this, PlayState* play) {
             this->actor.textId = 0x4077;
             this->unk_196 = TEXT_STATE_EVENT;
             Message_StartTextbox(play, this->actor.textId, NULL);
+            OnePointCutscene_EndCutscene(play, this->subCamId);
+            this->subCamId = CAM_ID_NONE;
             this->actionFunc = func_80A8F9C8;
         } else {
             OnePointCutscene_EndCutscene(play, this->subCamId);
@@ -262,10 +264,6 @@ void func_80A8F9C8(EnKakasi* this, PlayState* play) {
     Player_SetCsActionWithHaltedActors(play, NULL, PLAYER_CSACTION_8);
 
     if (this->unk_196 == Message_GetState(&play->msgCtx) && Message_ShouldAdvance(play)) {
-
-        if (this->subCamId != CAM_ID_NONE) {
-            Camera_SetFinishedFlag(play->cameraPtrs[this->subCamId]);
-        }
         this->subCamId = OnePointCutscene_Init(play, 2270, -99, &this->actor, CAM_ID_MAIN);
         play->msgCtx.msgMode = MSGMODE_PAUSED;
         Player_SetCsActionWithHaltedActors(play, NULL, PLAYER_CSACTION_8);
