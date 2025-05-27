@@ -197,7 +197,7 @@ void BossFd2_Destroy(Actor* thisx, PlayState* play) {
 void BossFd2_SetupEmerge(BossFd2* this, PlayState* play) {
     BossFd* bossFd = (BossFd*)this->actor.parent;
     s16 temp_rand;
-    s8 health;
+    s16 health;
 
     osSyncPrintf("UP INIT 1\n");
     Animation_PlayOnce(&this->skelAnime, &gHoleVolvagiaEmergeAnim);
@@ -212,19 +212,19 @@ void BossFd2_SetupEmerge(BossFd2* this, PlayState* play) {
     if (bossFd != NULL) {
         health = bossFd->actor.colChkInfo.health;
         if (health >= 180) {
-            this->work[FD2_FAKEOUT_COUNT] = 0;
-        } else if (health >= 120) {
-            this->work[FD2_FAKEOUT_COUNT] = 1;
-        } else if (health >= 60) {
             this->work[FD2_FAKEOUT_COUNT] = 2;
-        } else {
+        } else if (health >= 120) {
             this->work[FD2_FAKEOUT_COUNT] = 3;
+        } else if (health >= 60) {
+            this->work[FD2_FAKEOUT_COUNT] = 4;
+        } else {
+            this->work[FD2_FAKEOUT_COUNT] = 5;
         }
     }
 }
 
 void BossFd2_Emerge(BossFd2* this, PlayState* play) {
-    s8 health;
+    s16 health;
     BossFd* bossFd = (BossFd*)this->actor.parent;
     Player* player = GET_PLAYER(play);
     s16 i;
@@ -248,7 +248,7 @@ void BossFd2_Emerge(BossFd2* this, PlayState* play) {
                 this->work[FD2_HOLE_COUNTER]++;
                 this->actor.world.pos.y = -200.0f;
                 health = bossFd->actor.colChkInfo.health;
-                if (health == 240) {
+                if (health >= 240) {
                     holeTime = 30;
                 } else if (health >= 180) {
                     holeTime = 25;
@@ -307,7 +307,7 @@ void BossFd2_Emerge(BossFd2* this, PlayState* play) {
 
 void BossFd2_SetupIdle(BossFd2* this, PlayState* play) {
     BossFd* bossFd = (BossFd*)this->actor.parent;
-    s8 health;
+    s16 health;
     s16 idleTime;
 
     osSyncPrintf("UP INIT 1\n");
@@ -374,7 +374,7 @@ void BossFd2_Burrow(BossFd2* this, PlayState* play) {
     } else {
         Math_ApproachF(&this->actor.world.pos.y, -100.0f, 1.0f, 10.0f);
         if (this->timers[0] == 0) {
-            if ((this->work[FD2_HOLE_COUNTER] >= 3) && ((s8)bossFd->actor.colChkInfo.health < 240)) {
+            if ((this->work[FD2_HOLE_COUNTER] >= 3) && (bossFd->actor.colChkInfo.health < 240)) {
                 this->work[FD2_HOLE_COUNTER] = 0;
                 this->actionFunc = BossFd2_Wait;
                 bossFd->handoffSignal = FD2_SIGNAL_FLY;
@@ -834,7 +834,7 @@ void BossFd2_CollisionCheck(BossFd2* this, PlayState* play) {
         if (!bossFd->faceExposed) {
             if (hurtbox->toucher.dmgFlags & DMG_HAMMER) {
                 bossFd->actor.colChkInfo.health = MAX(bossFd->actor.colChkInfo.health-20, 0);
-                if ((s8)bossFd->actor.colChkInfo.health <= 20) {
+                if (bossFd->actor.colChkInfo.health <= 20) {
                     bossFd->actor.colChkInfo.health = 10;
                 }
                 bossFd->faceExposed = true;
@@ -871,7 +871,7 @@ void BossFd2_CollisionCheck(BossFd2* this, PlayState* play) {
             if (hurtbox->toucher.dmgFlags & DMG_HOOKSHOT) {
                 damage = 0;
             }
-            if (((s8)bossFd->actor.colChkInfo.health > 20) || canKill) {
+            if ((bossFd->actor.colChkInfo.health > 20) || canKill) {
                 bossFd->actor.colChkInfo.health = MAX(bossFd->actor.colChkInfo.health-damage, 0);
                 osSyncPrintf(VT_FGCOL(GREEN));
                 osSyncPrintf("damage   %d\n", damage);
@@ -879,7 +879,7 @@ void BossFd2_CollisionCheck(BossFd2* this, PlayState* play) {
             osSyncPrintf(VT_RST);
             osSyncPrintf("hp %d\n", bossFd->actor.colChkInfo.health);
 
-            if ((s8)bossFd->actor.colChkInfo.health <= 0) {
+            if (bossFd->actor.colChkInfo.health <= 0) {
                 bossFd->actor.colChkInfo.health = 0;
                 BossFd2_SetupDeath(this, play);
                 this->work[FD2_DAMAGE_FLASH_TIMER] = 10;
@@ -1191,7 +1191,7 @@ void BossFd2_Draw(Actor* thisx, PlayState* play) {
     BossFd2* this = (BossFd2*)thisx;
 
     OPEN_DISPS(play->state.gfxCtx, "../z_boss_fd2.c", 2617);
-    osSyncPrintf("FD2 draw start \n");
+    //osSyncPrintf("FD2 draw start \n");
     if (this->actionFunc != BossFd2_Wait) {
         Gfx_SetupDL_25Opa(play->state.gfxCtx);
         if (this->work[FD2_DAMAGE_FLASH_TIMER] & 2) {

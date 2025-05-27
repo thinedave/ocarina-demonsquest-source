@@ -4097,6 +4097,7 @@ void Player_ChangeStability(PlayState* play, s8 amount) {
 }
 
 void Player_ChangeStamina(PlayState* play, s8 amount) {
+    if(play->noStamina) return;
     if(amount == 0) return;
 
     if(amount < 0)

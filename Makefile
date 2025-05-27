@@ -112,7 +112,7 @@ FADO       := tools/fado/fado.elf
 SEQ_ASM    := tools/audio/assemble_sequence
 
 ifeq ($(COMPILER),gcc)
-  OPTFLAGS := -Og -g -g3 -ffast-math -fno-unsafe-math-optimizations
+  OPTFLAGS := -O2 -ffast-math -fno-unsafe-math-optimizations
 else
   OPTFLAGS := -O2
 endif

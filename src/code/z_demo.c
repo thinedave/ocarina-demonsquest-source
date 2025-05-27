@@ -934,12 +934,15 @@ void CutsceneCmd_Destination(PlayState* play, CutsceneContext* csCtx, CsCmdDesti
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 gSaveContext.save.cutsceneIndex = 0xFFF2;
                 play->transitionType = TRANS_TYPE_FADE_BLACK_FAST;
+                SET_EVENTCHKINF(EVENTCHKINF_65);
                 break;
 
             case CS_DEST_WINDMILL_FROM_WELL_DRAINED:
                 play->nextEntranceIndex = ENTR_WINDMILL_AND_DAMPES_GRAVE_2;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 play->transitionType = TRANS_TYPE_FADE_BLACK_FAST;
+                SET_EVENTCHKINF(EVENTCHKINF_67);
+                SET_EVENTCHKINF(EVENTCHKINF_65);
                 break;
 
             case CS_DEST_TEMPLE_OF_TIME_FROM_ALL_STONES_RESTORED:

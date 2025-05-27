@@ -67,7 +67,7 @@ static ColliderCylinderInit sCylinderInit = {
     },
     {
         ELEMTYPE_UNK6,
-        { 0x00100700, 0x03, 0x20 },
+        { 0x00100700, 0x03, 0x30 },
         { 0x0D900700, 0x00, 0x00 },
         TOUCH_ON,
         BUMP_ON,
@@ -141,7 +141,7 @@ void EnFhgFire_Init(Actor* thisx, PlayState* play) {
         f32 dzL;
         f32 dxzL;
 
-        this->actor.speed = (this->actor.world.rot.x == 0) ? 8.0f : 3.0f;
+        this->actor.speed = (this->actor.world.rot.x == 0) ? (f32)RANDOM_RANGE(10.0f, 13.0f) : (f32)RANDOM_RANGE(5.0f, 13.0f);
         EnFhgFire_SetUpdate(this, EnFhgFire_EnergyBall);
 
         this->work[FHGFIRE_TIMER] = 70;
@@ -514,7 +514,7 @@ void EnFhgFire_EnergyBall(EnFhgFire* this, PlayState* play) {
                                 this->actor.speed = 20.0f;
                                 this->work[FHGFIRE_RETURN_COUNT] = 4;
                             } else {
-                                this->actor.speed += 1.0f;
+                                this->actor.speed += 5.0f;
                             }
                         }
                         this->actor.world.rot.y = RAD_TO_BINANG(Math_FAtan2F(dxPG, dzPG)) + angleModY;
@@ -631,8 +631,8 @@ void EnFhgFire_EnergyBall(EnFhgFire* this, PlayState* play) {
         }
         Lights_PointNoGlowSetInfo(&this->lightInfo, (s16)this->actor.world.pos.x, (s16)this->actor.world.pos.y,
                                   (s16)this->actor.world.pos.z, 255, 255, 255, 200);
-        if (this->actor.speed > 20.0f) {
-            this->actor.speed = 20.0f;
+        if (this->actor.speed > 50.0f) {
+            this->actor.speed = 50.0f;
         }
         Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_FIRE - SFX_FLAG);
         // "Why ah ah ah ah"

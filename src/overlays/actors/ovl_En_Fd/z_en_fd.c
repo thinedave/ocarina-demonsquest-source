@@ -49,7 +49,7 @@ static ColliderJntSphElementInit sJntSphElementsInit[12] = {
             { 0xFFCFFFFF, 0x01, 0x04 },
             { 0x00040088, 0x00, 0x00 },
             TOUCH_ON | TOUCH_SFX_NORMAL,
-            BUMP_ON | BUMP_HOOKABLE,
+            BUMP_ON,
             OCELEM_ON,
         },
         { 21, { { 1600, 0, 0 }, 5 }, 300 },
@@ -277,13 +277,13 @@ s32 EnFd_ColliderCheck(EnFd* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
     ColliderInfo* info;
 
-    if (this->collider.base.acFlags & AC_HIT || EnFd_CheckHammer(this, play)) {
+    if (this->collider.base.acFlags & AC_HIT) {
         this->collider.base.acFlags &= ~AC_HIT;
         if (this->invincibilityTimer != 0) {
             return false;
         }
         info = &this->collider.elements[0].info;
-        if (info->acHitInfo != NULL && (info->acHitInfo->toucher.dmgFlags & DMG_HOOKSHOT)) {
+        if (info->acHitInfo != NULL) {
             return false;
         }
 
@@ -539,13 +539,7 @@ void EnFd_SpinAndSpawnFire(EnFd* this, PlayState* play) {
     if (DECR(this->spinTimer) != 0) {
         this->actor.shape.rot.y += (this->runDir * 0x2000);
         if (this->spinTimer == 20 && this->invincibilityTimer == 0) {
-            if (this->actor.xzDistToPlayer > 160.0f) {
-                // orange flames
-                EnFd_SpawnChildFire(this, play, 8, 0);
-            } else {
-                // blue flames
-                EnFd_SpawnChildFire(this, play, 8, 1);
-            }
+            EnFd_SpawnChildFire(this, play, 16, 1);
         }
     } else {
         // slow shape rotation down to meet `this` rotation within ~1.66 degrees

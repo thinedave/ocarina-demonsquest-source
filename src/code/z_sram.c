@@ -258,7 +258,7 @@ static Inventory sDebugSaveInventory = {
         ITEM_BOTTLE_POTION_RED,   // SLOT_BOTTLE_2
         ITEM_BOTTLE_POTION_GREEN, // SLOT_BOTTLE_3
         ITEM_BOTTLE_POTION_BLUE,  // SLOT_BOTTLE_4
-        ITEM_POCKET_EGG,          // SLOT_TRADE_ADULT
+        ITEM_POACHERS_SAW,          // SLOT_TRADE_ADULT
         ITEM_WEIRD_EGG,           // SLOT_TRADE_CHILD
     },
     // ammo
@@ -325,6 +325,8 @@ void Sram_InitDebugSave(void) {
     gSaveContext.save.info.heartsBlocked = 0x00;
     gSaveContext.save.info.equips = sDebugSaveEquips;
     gSaveContext.save.info.inventory = sDebugSaveInventory;
+
+    SET_ITEMGETINF(ITEMGETINF_1F);
 
     temp->save.info.checksum = sDebugSaveChecksum;
     gSaveContext.save.info.horseData.sceneId = SCENE_HYRULE_FIELD;

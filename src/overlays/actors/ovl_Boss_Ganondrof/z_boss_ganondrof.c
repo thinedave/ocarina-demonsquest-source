@@ -307,6 +307,9 @@ void BossGanondrof_Init(Actor* thisx, PlayState* play) {
         Actor_SpawnAsChild(&play->actorCtx, &this->actor, play, ACTOR_EN_FHG, this->actor.world.pos.x,
                            this->actor.world.pos.y, this->actor.world.pos.z, 0, 0, 0, this->actor.params);
     }
+
+    play->noStamina = true;
+
 }
 
 void BossGanondrof_Destroy(Actor* thisx, PlayState* play) {
@@ -621,7 +624,7 @@ void BossGanondrof_SetupThrow(BossGanondrof* this, PlayState* play) {
     s16 lightTime;
 
     this->fwork[GND_END_FRAME] = Animation_GetLastFrame(&gPhantomGanonThrowAnim);
-    Animation_MorphToPlayOnce(&this->skelAnime, &gPhantomGanonThrowAnim, -5.0f);
+    Animation_Change(&this->skelAnime, &gPhantomGanonThrowAnim, (f32)RANDOM_RANGE(1.3f, 2.0f), 0.0f, this->fwork[GND_END_FRAME], ANIMMODE_ONCE, -5.0f);
     this->actionFunc = BossGanondrof_Throw;
     if ((Rand_ZeroOne() <= 0.1f) && (this->work[GND_THROW_COUNT] >= 10) && (this->flyMode == GND_FLY_NEUTRAL)) {
         this->work[GND_ACTION_STATE] = THROW_SLOW;
@@ -639,6 +642,7 @@ void BossGanondrof_SetupThrow(BossGanondrof* this, PlayState* play) {
     this->actor.child = &horseTemp->actor;
     this->work[GND_THROW_COUNT]++;
     Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_STICK);
+
 }
 
 void BossGanondrof_Throw(BossGanondrof* this, PlayState* play) {
@@ -934,6 +938,7 @@ void BossGanondrof_SetupDeath(BossGanondrof* this, PlayState* play) {
     this->actor.flags &= ~ACTOR_FLAG_0;
     this->work[GND_VARIANCE_TIMER] = 0;
     this->shockTimer = 50;
+    play->noStamina = false;
 }
 
 void BossGanondrof_Death(BossGanondrof* this, PlayState* play) {

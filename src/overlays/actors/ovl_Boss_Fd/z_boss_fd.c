@@ -1634,7 +1634,7 @@ void BossFd_Draw(Actor* thisx, PlayState* play) {
     s32 pad;
     BossFd* this = (BossFd*)thisx;
 
-    osSyncPrintf("FD DRAW START\n");
+    //osSyncPrintf("FD DRAW START\n");
     if (this->actionFunc != BossFd_Wait) {
         OPEN_DISPS(play->state.gfxCtx, "../z_boss_fd.c", 4217);
         Gfx_SetupDL_25Opa(play->state.gfxCtx);
@@ -1647,9 +1647,9 @@ void BossFd_Draw(Actor* thisx, PlayState* play) {
         CLOSE_DISPS(play->state.gfxCtx, "../z_boss_fd.c", 4243);
     }
 
-    osSyncPrintf("FD DRAW END\n");
+    //osSyncPrintf("FD DRAW END\n");
     BossFd_DrawEffects(this->effects, play);
-    osSyncPrintf("FD DRAW END2\n");
+    //osSyncPrintf("FD DRAW END2\n");
 }
 
 s32 BossFd_OverrideRightArmDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3s* rot, void* thisx) {

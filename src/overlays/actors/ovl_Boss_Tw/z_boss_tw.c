@@ -710,8 +710,8 @@ void BossTw_SetupShootBeam(BossTw* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
     this->actionFunc = BossTw_ShootBeam;
-    Animation_MorphToPlayOnce(&this->skelAnime, &gTwinrovaKotakeKoumeChargeUpAttackStartAnim, -5.0f);
     this->workf[ANIM_SW_TGT] = Animation_GetLastFrame(&gTwinrovaKotakeKoumeChargeUpAttackStartAnim);
+    Animation_Change(&this->skelAnime, &gTwinrovaKotakeKoumeChargeUpAttackStartAnim, 1.7f, 0.0f, this->workf[ANIM_SW_TGT], ANIMMODE_ONCE, -5.0);
     this->timers[1] = 70;
     this->targetPos = player->actor.world.pos;
     this->csState1 = 0;
@@ -1056,8 +1056,8 @@ void BossTw_ShootBeam(BossTw* this, PlayState* play) {
         }
 
         if (this->timers[1] == 1) {
-            Animation_MorphToPlayOnce(&this->skelAnime, &gTwinrovaKotakeKoumeAttackStartAnim, 0.0f);
             this->workf[ANIM_SW_TGT] = Animation_GetLastFrame(&gTwinrovaKotakeKoumeAttackStartAnim);
+            Animation_Change(&this->skelAnime, &gTwinrovaKotakeKoumeAttackStartAnim, 1.7f, 0.0f, this->workf[ANIM_SW_TGT], ANIMMODE_ONCE, -5.0);
             this->unk_4DC = 0.0f;
             this->spawnPortalAlpha = 0.0f;
             this->flameAlpha = 0.0f;

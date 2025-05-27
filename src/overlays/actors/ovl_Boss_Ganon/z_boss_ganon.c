@@ -568,7 +568,7 @@ void BossGanon_Init(Actor* thisx, PlayState* play2) {
         }
 
         sGanondorf = this;
-        thisx->colChkInfo.health = 400;
+        thisx->colChkInfo.health = 800;
         Actor_ProcessInitChain(thisx, sInitChain);
         ActorShape_Init(&thisx->shape, 0, NULL, 0);
         Actor_SetScale(thisx, 0.01f);
@@ -656,7 +656,7 @@ void BossGanon_Init(Actor* thisx, PlayState* play2) {
             // light ball (anything from 0x64 - 0xC7)
             thisx->update = BossGanon_LightBall_Update;
             thisx->draw = BossGanon_LightBall_Draw;
-            thisx->speed = (f32)RANDOM_RANGE(12.0f, 20.0f);
+            thisx->speed = (f32)RANDOM_RANGE(19.0f, 25.0f);
 
             xDistFromPlayer = player->actor.world.pos.x - thisx->world.pos.x;
             yDistFromPlayer = (player->actor.world.pos.y + 30.0f) - thisx->world.pos.y;
@@ -1462,7 +1462,7 @@ void BossGanon_SwordPhaseCutscene(BossGanon* this, PlayState* play) {
             this->csState = 1;
             this->csTimer = 0;
             this->useOpenHand = true;
-            this->actor.colChkInfo.health = 2500;
+            this->actor.colChkInfo.health = 3000;
             this->actor.colChkInfo.damageTable = &sDamageTable;
             FALLTHROUGH;
         case 1:
@@ -2721,7 +2721,7 @@ void BossGanon_SetupWait(BossGanon* this, PlayState* play) {
     this->unk_1C2 = 0;
     sCape->minY = 2.0f;
 
-    this->actor.colChkInfo.health = 0;
+    //this->actor.colChkInfo.health = 0;
     //BossGanon_UpdateDamage(this, play);
 
     //if(!this->ladderFall) this->ladderFall = true;
@@ -2750,7 +2750,7 @@ void BossGanon_Wait(BossGanon* this, PlayState* play) {
         } else if ((this->timers[0] == 0) && !(player->stateFlags1 & PLAYER_STATE1_13)) {
             this->timers[0] = (s16)Rand_ZeroFloat(30.0f) + 30;
 
-            if ((s16)this->actor.colChkInfo.health >= 200) {
+            if (this->actor.colChkInfo.health >= 200) {
                 BossGanon_SetupChargeLightBall(this, play);
             } else if (Rand_ZeroOne() >= 0.5f) {
                 if ((Rand_ZeroOne() >= 0.5f) || (this->actor.xzDistToPlayer > 350.0f)) {
@@ -2831,6 +2831,8 @@ void BossGanon_ChargeLightBall(BossGanon* this, PlayState* play) {
 }
 
 void BossGanon_SetupPlayTennis(BossGanon* this, PlayState* play) {
+    play->noStamina = true;
+
     BossGanon_SetAnimationObject(this, play, OBJECT_GANON_ANIME1);
     this->fwork[GDF_FWORK_1] = Animation_GetLastFrame(&gGanondorfThrowAnim);
     Animation_MorphToPlayOnce(&this->skelAnime, &gGanondorfThrowAnim, 0.0f);
@@ -2947,6 +2949,8 @@ void BossGanon_Block(BossGanon* this, PlayState* play) {
 
 void BossGanon_SetupHitByLightBall(BossGanon* this, PlayState* play) {
     s16 i;
+
+    play->noStamina = false;
 
     BossGanon_SetAnimationObject(this, play, OBJECT_GANON_ANIME1);
     this->fwork[GDF_FWORK_1] = Animation_GetLastFrame(&gGanondorfBigMagicHitAnim);
@@ -4667,18 +4671,14 @@ void BossGanon_LightBall_Update(Actor* thisx, PlayState* play2) {
                         Rumble_Request(this->actor.xyzDistToPlayerSq, 180, 20, 100);
 
                         if (hitWithBottle == false) {
-                            // if ganondorf is 250 units away from link, at least 5 volleys are required
-                            if ((ganondorf->actor.xyzDistToPlayerSq > SQ(250.0f)) && (this->unk_1A4 < 5)) {
-                                this->unk_1C2 = 1;
-                            } else if (Rand_ZeroOne() < 0.7f || (this->unk_1A4 < 4)) {
+                            if (Rand_ZeroOne() < 0.4f || (this->unk_1A4 < 7) || (player->meleeWeaponAnimation >= PLAYER_MWA_SPIN_ATTACK_1H)) {
                                 this->unk_1C2 = 1;
                             } else {
                                 this->unk_1C2 = 3;
                             }
 
-                            if (player->meleeWeaponAnimation >= PLAYER_MWA_SPIN_ATTACK_1H) {
-                                this->actor.speed = 20.0f;
-                            }
+                            this->actor.speed += 2.5f;
+
                             break;
                         } else {
                             if (Rand_ZeroOne() < 0.9f) {
@@ -4708,14 +4708,9 @@ void BossGanon_LightBall_Update(Actor* thisx, PlayState* play2) {
 
             case 1:
                 if ((ganondorf->actionFunc == BossGanon_PlayTennis) && (ganondorf->unk_1C2 == 1)) {
-                    minReflectDist = (this->actor.speed >= 19.0f) ? 250.0f : 170.0f;
-
-                    if (sqrtf(SQ(xDistFromGanondorf) + SQ(yDistFromGanondorf) + SQ(zDistFromGanondorf)) <
-                        minReflectDist) {
-                        ganondorf->startVolley = true;
-                        this->timers[0] = 8;
-                        this->unk_1C2 = 2;
-                    }
+                    ganondorf->startVolley = true;
+                    this->timers[0] = 8;
+                    this->unk_1C2 = 2;
                 }
                 break;
 

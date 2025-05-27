@@ -1497,7 +1497,7 @@ void BossSst_HandSlam(BossSst* this, PlayState* play) {
         }
     } else {
         if (this->ready) {
-            this->timer = 30;
+            this->timer = 15;
             this->colliderJntSph.base.atFlags &= ~(AT_ON | AT_HIT);
         } else {
             this->actor.velocity.y *= 1.5f;

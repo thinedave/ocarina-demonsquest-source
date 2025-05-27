@@ -276,6 +276,7 @@ void Play_Init(GameState* thisx) {
         return;
     }
 
+    this->noStamina = false;
     this->blockPause = false;
 
     SystemArena_Display();
