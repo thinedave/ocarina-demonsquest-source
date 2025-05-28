@@ -36,7 +36,7 @@ void EnMag_Init(Actor* thisx, PlayState* play) {
     YREG(4) = 255;
     YREG(5) = 30;
     YREG(6) = 30;
-    YREG(7) = 119;
+    //YREG(7) = 119;
     YREG(8) = 7;
     YREG(9) = 5;
     YREG(10) = 3;
